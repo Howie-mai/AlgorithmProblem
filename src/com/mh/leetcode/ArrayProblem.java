@@ -19,6 +19,13 @@ public class ArrayProblem {
         System.out.println(isAnagramV2(s,t));
     }
 
+    /**
+     * 242
+     * 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+     * 示例 1:
+     * 输入: s = "anagram", t = "nagaram"
+     * 输出: true
+     */
     public static boolean isAnagram(String s, String t) {
         if(s.length() == t.length()){
 

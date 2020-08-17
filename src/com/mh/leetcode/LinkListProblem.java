@@ -17,13 +17,12 @@ public class LinkListProblem {
     }
 
     /**
+     * 25题
      * 给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
      * k 是一个正整数，它的值小于或等于链表的长度。
      * 如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
      * @param head
      * @param k
-     * @return com.mh.leetcode.bean.ListNode
-     * @author mh
      * @date 20/8/14 下午2:00
      */
     public ListNode reverseKGroup(ListNode head, int k) {
@@ -73,10 +72,9 @@ public class LinkListProblem {
     }
 
     /**
+     * 剑指offer 24
      * 两个指针解决链表反转
      * @param start
-     * @return com.mh.leetcode.bean.ListNode
-     * @author mh
      * @date 20/8/14 下午2:01
      */
     private ListNode reverse(ListNode start) {
@@ -99,6 +97,7 @@ public class LinkListProblem {
     }
 
     /**
+     * 24题
      * 链表两个为一组反转
      * @param head
      * @return com.mh.leetcode.bean.ListNode
