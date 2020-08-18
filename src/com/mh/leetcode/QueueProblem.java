@@ -1,6 +1,6 @@
 package com.mh.leetcode;
 
-import java.util.ArrayDeque;
+import java.util.*;
 
 /**
  * ClassName：
@@ -13,8 +13,9 @@ public class QueueProblem {
 
     public static void main(String[] args) {
         QueueProblem queue = new QueueProblem();
-        int[] nums = new int[]{1,3,-1,-3,0,3,6,7};
-        int[] x = queue.maxSlidingWindow(nums, 3);
+        int[] nums = new int[]{2,2,3,1,1,1,4,4,4,4,5,5};
+//        int[] x = queue.maxSlidingWindow(nums, 3);
+        int[] x = queue.topKFrequent(nums,3);
         for (int i : x) {
             System.out.print(i + ",");
         }
@@ -63,5 +64,42 @@ public class QueueProblem {
         if (!deq.isEmpty() && nums[i] > nums[deq.getFirst()]){
             deq.addFirst(i);
         }
+    }
+
+    /**
+     * 给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+     * 示例 1:
+     * 输入: nums = [1,1,1,2,2,3], k = 2
+     * 输出: [1,2]
+     */
+    @SuppressWarnings("unused")
+    public int[] topKFrequent(int[] nums, int k) {
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num: nums){
+            if(map.containsKey(num)){
+                map.put(num, map.get(num) + 1);
+            }else{
+                map.put(num, 1);
+            }
+        }
+
+        // Java8下，匿名类直接使用lamda表达式
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingInt(map::get));
+        for(int key: map.keySet()){
+            if(pq.size()<k){
+                pq.add(key);
+            }else if (map.get(key) > map.get(pq.peek())){
+                pq.remove();
+                pq.add(key);
+            }
+        }
+
+        int[] arr = new int[k];
+        Iterator<Integer> iterator = pq.iterator();
+        for (int i = 0; i < k; i++) {
+            arr[i] = iterator.next();
+        }
+        return arr;
     }
 }

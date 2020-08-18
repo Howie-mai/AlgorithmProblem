@@ -33,6 +33,7 @@ public class TreeProblem {
      *
      * @date 20/8/17 上午10:16
      */
+    @SuppressWarnings("unused")
     public boolean isBalanced(TreeNode root) {
         return height(root) != -1;
     }
@@ -63,7 +64,7 @@ public class TreeProblem {
      * 230 给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
      */
     int result;
-
+    @SuppressWarnings("unused")
     public int kthSmallest(TreeNode root, int k) {
         inorderTraversal(root, k);
         return result;
@@ -91,6 +92,7 @@ public class TreeProblem {
     /**
      * 中序遍历(迭代)，因为中序遍历二叉搜索树就是按从小到大顺序遍历树，所以当遍历了k次的时候，返回数值。
      */
+    @SuppressWarnings("unused")
     public List<Integer> inorderTraversalV2(TreeNode node, int k) {
         Stack<TreeNode> stack = new Stack<>();
         TreeNode curr = node;
@@ -115,11 +117,13 @@ public class TreeProblem {
     }
 
     /**
+     * 109题
      * 给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
      * 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
      */
     List<ListNode> listNodeList = new ArrayList<>();
     ListNode globalNode;
+    @SuppressWarnings("unused")
     public TreeNode sortedListToBST(ListNode head) {
         int len = 0;
         globalNode = head;
@@ -139,11 +143,18 @@ public class TreeProblem {
         if (start > end) {
             return null;
         }
+        /**
+         * 把链表存入list找中间值
+         */
 //        int mid = (start + end) / 2;
 //        TreeNode root = new TreeNode(listNodeList.get(mid).val);
 //        root.left = buildTree(start, mid - 1);
 //        root.right = buildTree(mid + 1, end);
 //        return root;
+
+        /**
+         * 通过指针找中间值
+         */
         int mid = (start + end) / 2;
         TreeNode left = buildTree(start, mid - 1);
         TreeNode root = new TreeNode(globalNode.val);
