@@ -12,6 +12,11 @@ public class ListNode {
     public ListNode next;
     public ListNode(int x) { val = x; }
 
+    public ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+
     public int getVal() {
     return val;
     }
@@ -26,5 +31,12 @@ public class ListNode {
 
     public void setNext(ListNode next) {
     this.next = next;
+    }
+
+    @Override
+    public String toString() {
+        return "ListNode{" +
+                "val=" + val +
+                '}';
     }
 }
