@@ -17,13 +17,25 @@ import java.util.Stack;
 public class TreeProblem {
     public static void main(String[] args) {
         TreeProblem treeProblem = new TreeProblem();
-        ListNode head = new ListNode(1);
-        ListNode p = head;
-        for (int i = 2; i < 7; i++) {
-            p.next = new ListNode(i);
-            p = p.next;
-        }
-        treeProblem.sortedListToBST(head);
+//        ListNode head = new ListNode(1);
+//        ListNode p = head;
+//        for (int i = 2; i < 7; i++) {
+//            p.next = new ListNode(i);
+//            p = p.next;
+//        }
+//        treeProblem.sortedListToBST(head);
+        TreeNode node = new TreeNode(1);
+        TreeNode left = new TreeNode(2);
+        left.left = new TreeNode(3);
+        left.right = new TreeNode(4);
+        node.left = left;
+
+        TreeNode right = new TreeNode(5);
+//        right.left = new TreeNode(6);
+        right.right = new TreeNode(6);
+        node.right = right;
+
+        treeProblem.flatten(node);
     }
 
     /**
@@ -166,6 +178,73 @@ public class TreeProblem {
         return root;
     }
 
+    /**
+     * 111. 二叉树的最小深度
+     * 给定一个二叉树，找出其最小深度。
+     *
+     * 最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+     */
+    public int minDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
 
+        if(root.left == null && root.right == null){
+            return 1;
+        }
 
+        int height = Integer.MAX_VALUE;
+        if(root.left != null){
+            height = Math.min(minDepth(root.left),height);
+        }
+
+        if(root.right != null){
+            height = Math.min(minDepth(root.right),height);
+        }
+
+        return height + 1;
+    }
+
+    /**
+     * 114. 二叉树展开为链表
+     * 给定一个二叉树，原地将它展开为一个单链表。
+     */
+    public void flatten(TreeNode root) {
+//        if(root == null){
+//            return;
+//        }
+//
+//        TreeNode oldRight = root.right;
+//
+//        root.right = root.left;
+//
+//        root.left = null;
+//
+//        TreeNode rightRoot = root;
+//        while (rightRoot.right != null){
+//            rightRoot = rightRoot.right;
+//        }
+//
+//        rightRoot.right = oldRight;
+//
+//        flatten(root.right);
+        List<TreeNode> list = new ArrayList<>();
+        preOrderTraverse(root,list);
+        for (int i = 1; i < list.size(); i++) {
+            TreeNode pre = list.get(i - 1),curr = list.get(i);
+            pre.left = null;
+            pre.right = curr;
+        }
+        System.out.println(root);
+
+    }
+
+    public void preOrderTraverse(TreeNode root,List<TreeNode> list){
+        if(root == null){
+            return;
+        }
+        list.add(root);
+        preOrderTraverse(root.left,list);
+        preOrderTraverse(root.right,list);
+    }
 }
