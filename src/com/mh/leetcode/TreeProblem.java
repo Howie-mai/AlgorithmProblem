@@ -247,4 +247,83 @@ public class TreeProblem {
         preOrderTraverse(root.left,list);
         preOrderTraverse(root.right,list);
     }
+
+    /**
+     * 100. 相同的树
+     * 给定两个二叉树，编写一个函数来检验它们是否相同。
+     *
+     * 如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
+     */
+    @SuppressWarnings("unused")
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+//        if(p == null && q == null){
+//            return true;
+//        } else if(p == null || q == null){
+//            return false;
+//        } else if(p.val != q.val){
+//            return false;
+//        }
+//        return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
+
+        List<Integer> tree1 = new ArrayList<>();
+        List<Integer> tree2 = new ArrayList<>();
+        preOrderTraverseByIntList(p,tree1);
+        preOrderTraverseByIntList(q,tree2);
+        return tree1.equals(tree2);
+    }
+
+    public void preOrderTraverseByIntList(TreeNode root,List<Integer> list){
+        if(root == null){
+            list.add(null);
+            return;
+        }
+        list.add(root.val);
+        preOrderTraverseByIntList(root.left,list);
+        preOrderTraverseByIntList(root.right,list);
+    }
+
+    /**
+     * 99. 恢复二叉搜索树
+     * 二叉搜索树中的两个节点被错误地交换。
+     *
+     * 请在不改变其结构的情况下，恢复这棵树。
+     */
+    @SuppressWarnings("unused")
+    public void recoverTree(TreeNode root) {
+        List<TreeNode> nodeList = new ArrayList<>();
+        inorderTraverseByTreeList(root,nodeList);
+        /**
+         * 查找哪两个节点需要调换
+         */
+        TreeNode x = null;
+        TreeNode y = null;
+        for (int i = 0;i < nodeList.size() - 1;i++){
+            if(nodeList.get(i).val > nodeList.get(i + 1).val){
+                if(x == null){
+                    x = nodeList.get(i);
+                }
+                y = nodeList.get(i + 1);
+            }
+        }
+        /**
+         * 更改两个节点的值
+         */
+        if(x != null && y != null){
+            int tem = x.val;
+            x.val = y.val;
+            y.val = tem;
+        }
+    }
+
+    /**
+     * 中序遍历二叉树，把结果保存到保存节点的list里面
+     */
+    public void inorderTraverseByTreeList(TreeNode node,List<TreeNode> list){
+        if(node == null){
+            return;
+        }
+        inorderTraverseByTreeList(node.left,list);
+        list.add(node);
+        inorderTraverseByTreeList(node.right,list);
+    }
 }

@@ -17,9 +17,10 @@ public class CommonProblem {
 //        System.out.println(commonProblem.fib(45));
 //        System.out.println(commonProblem.countSubstrings("aaaaa"));
 //        System.out.println(commonProblem.judgePoint24(new int[]{4, 7, 1, 8}));
-        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
+//        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
+        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
         Long end = System.currentTimeMillis();
-        System.out.println(end - start);
+        System.out.println("执行时间：" + (end - start));
     }
 
     /**
@@ -205,5 +206,41 @@ public class CommonProblem {
         }
         // 找到相同前缀后，再向左补位(即0)
         return m << sum;
+    }
+
+    /**
+     * 459. 重复的子字符串
+     * 给定一个非空的字符串，判断它是否可以由它的一个子串重复多次构成。给定的字符串只含有小写英文字母，并且长度不超过10000。
+     */
+    public boolean repeatedSubstringPattern(String s) {
+        boolean flag = false;
+        for(int i = 1;i <= s.length() / 2 && !flag;i++){
+            if(s.length() % i != 0){
+                continue;
+            }
+            String example = s.substring(0, i);
+            int j = i * 2;
+            if(j > s.length()){
+                break;
+            }
+            String str = s.substring(i,j);
+            if(example.equals(str)){
+                if(j == s.length()){
+                    return true;
+                }
+                for (int k = j;k < s.length();k += example.length()){
+                    int offset = k + example.length();
+
+                    String substring = s.substring(k, offset);
+                    if(!substring.equals(example)) {
+                        flag = false;
+                        break;
+                    }else {
+                        flag = true;
+                    }
+                }
+            }
+        }
+        return flag;
     }
 }
