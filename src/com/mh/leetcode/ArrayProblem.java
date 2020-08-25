@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 public class ArrayProblem {
 
     public static void main(String[] args) {
-       String s = "anagram";
-       String t = "nagaram";
-        System.out.println(isAnagramV2(s,t));
+//       String s = "anagram";
+//       String t = "nagaram";
+//        System.out.println(isAnagramV2(s,t));
+        ArrayProblem problem = new ArrayProblem();
+        System.out.println(problem.findSubsequences(new int[]{4,6,7,7}));
     }
 
     /**
@@ -83,5 +85,35 @@ public class ArrayProblem {
             map.put(nums[i],i);
         }
         return null;
+    }
+
+    /**
+     * 491. 递增子序列
+     * 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+     */
+    @SuppressWarnings("unused")
+    List<Integer> temp = new ArrayList<>();
+    List<List<Integer>> ans = new ArrayList<>();
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        dfs(0, Integer.MIN_VALUE, nums);
+        return ans;
+    }
+
+
+    public void dfs(int cur, int last, int[] nums) {
+        if (cur == nums.length) {
+            if (temp.size() >= 2) {
+                ans.add(new ArrayList<>(temp));
+            }
+            return;
+        }
+        if (nums[cur] >= last) {
+            temp.add(nums[cur]);
+            dfs(cur + 1, nums[cur], nums);
+            temp.remove(temp.size() - 1);
+        }
+        if (nums[cur] != last) {
+            dfs(cur + 1, last, nums);
+        }
     }
 }

@@ -326,4 +326,38 @@ public class TreeProblem {
         list.add(node);
         inorderTraverseByTreeList(node.right,list);
     }
+
+    /**
+     * 124. 二叉树中的最大路径和
+     * 给定一个非空二叉树，返回其最大路径和。
+     *
+     * 本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+     */
+    int totalPath = Integer.MIN_VALUE;
+    @SuppressWarnings("unused")
+    public int maxPathSum(TreeNode root) {
+        getNodeGain(root);
+        return totalPath;
+    }
+
+    public int getNodeGain(TreeNode node){
+        if(node == null){
+            return 0;
+        }
+
+        int rootVal = node.val;
+
+        // 获取左节点的值，如果小于0则不用计算。肯定不会是最大的。
+        int leftVal = Math.max(getNodeGain(node.left),0);
+        int rightVal = Math.max(getNodeGain(node.right),0);
+
+        // 计算该节点与它的子节点的路径和
+        int totalVal = leftVal + rightVal + rootVal;
+
+        // 比较最大的路径，并保存
+        totalPath = Math.max(totalVal,totalPath);
+
+        // 返回该节点 + 最大的子节点的路径，即为该节点能提供的最大路径
+        return Math.max(leftVal,rightVal) + rootVal;
+    }
 }
