@@ -1,9 +1,11 @@
 package com.mh.leetcode;
 
 import com.mh.leetcode.bean.ListNode;
+import com.mh.leetcode.bean.Node;
 import com.mh.leetcode.bean.TreeNode;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -35,7 +37,8 @@ public class TreeProblem {
         right.right = new TreeNode(6);
         node.right = right;
 
-        treeProblem.flatten(node);
+//        treeProblem.flatten(node);
+        System.out.println(treeProblem.postOrderTraversal(node));
     }
 
     /**
@@ -102,6 +105,32 @@ public class TreeProblem {
     }
 
     /**
+     * 144. 二叉树的前序遍历
+     * 二叉树前序遍历（迭代）
+     */
+    public List<Integer> preOrderTraversal(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> output = new ArrayList<>();
+        if (root == null) {
+            return output;
+        }
+
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            output.add(node.val);
+            if (node.right != null) {
+                stack.add(node.right);
+            }
+            if (node.left != null) {
+                stack.add(node.left);
+            }
+        }
+        return output;
+    }
+
+    /**
+     * 99
      * 中序遍历(迭代)，因为中序遍历二叉搜索树就是按从小到大顺序遍历树，所以当遍历了k次的时候，返回数值。
      */
     @SuppressWarnings("unused")
@@ -126,6 +155,32 @@ public class TreeProblem {
             curr = pop.right;
         }
         return traversalResult;
+    }
+
+    /**
+     * 145. 二叉树的后序遍历
+     * 给定一个二叉树，返回它的 后序 遍历
+     * 迭代方法
+     */
+    public List<Integer> postOrderTraversal(TreeNode root) {
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        LinkedList<Integer> output = new LinkedList<>();
+        if (root == null) {
+            return output;
+        }
+
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pollLast();
+            output.addFirst(node.val);
+            if (node.left != null) {
+                stack.add(node.left);
+            }
+            if (node.right != null) {
+                stack.add(node.right);
+            }
+        }
+        return output;
     }
 
     /**
@@ -359,5 +414,102 @@ public class TreeProblem {
 
         // 返回该节点 + 最大的子节点的路径，即为该节点能提供的最大路径
         return Math.max(leftVal,rightVal) + rootVal;
+    }
+
+    /**
+     * 700. 二叉搜索树中的搜索
+     * 给定二叉搜索树（BST）的根节点和一个值。 你需要在BST中找到节点值等于给定值的节点。 返回以该节点为根的子树。 如果节点不存在，则返回 NULL。
+     */
+    TreeNode treeNode = null;
+    @SuppressWarnings("unused")
+    public TreeNode searchBST(TreeNode root, int val) {
+        if(root == null){
+            return null;
+        }
+        if(root.val > val){
+            return searchBST(root.left,val);
+        }else if(root.val < val){
+            return searchBST(root.right,val);
+        }else {
+            return root;
+        }
+
+//        inorderTraversalV700(root,val);
+//        return treeNode;
+    }
+
+    @SuppressWarnings("unused")
+    public void inorderTraversalV700(TreeNode node,int val){
+        if(node == null){
+            return;
+        }
+        inorderTraversalV700(node.left,val);
+        if(node.val == val){
+            treeNode = node;
+        }
+        if(node.val > val){
+            return;
+        }
+        inorderTraversalV700(node.right,val);
+    }
+
+    /**
+     * 面试题 04.08. 首个共同祖先
+     * 设计并实现一个算法，找出二叉树中某两个节点的第一个共同祖先。不得将其他的节点存储在另外的数据结构中。注意：这不一定是二叉搜索树。
+     */
+    @SuppressWarnings("unused")
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null || root == p || root == q){
+            return root;
+        }
+        TreeNode leftNode = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightNode = lowestCommonAncestor(root.right, p, q);
+
+        if(leftNode != null && rightNode != null){
+            return root;
+        }
+        return leftNode == null ? rightNode : leftNode;
+    }
+
+    /**
+     * 590. N叉树的后序遍历
+     * 给定一个 N 叉树，返回其节点值的后序遍历。
+     */
+    public List<Integer> postorder(Node root) {
+        List<Integer> list = new ArrayList<>();
+        postOrderByDiGui(root,list);
+        return list;
+    }
+
+    private void postOrderByDiGui(Node root,List<Integer> list) {
+        if(root == null){
+            return;
+        }
+        List<Node> children = root.children;
+        for (Node child : children) {
+            preOrderByDiGui(child,list);
+        }
+        list.add(root.val);
+    }
+
+    /**
+     * 589. N叉树的前序遍历
+     * 给定一个 N 叉树，返回其节点值的前序遍历。
+     */
+    public List<Integer> preorder(Node root) {
+        List<Integer> list = new ArrayList<>();
+        preOrderByDiGui(root,list);
+        return list;
+    }
+
+    private void preOrderByDiGui(Node root,List<Integer> list) {
+        if(root == null){
+            return;
+        }
+        list.add(root.val);
+        List<Node> children = root.children;
+        for (Node child : children) {
+            preOrderByDiGui(child,list);
+        }
     }
 }
