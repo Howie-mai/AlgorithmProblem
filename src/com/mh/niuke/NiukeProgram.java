@@ -4,6 +4,8 @@ import com.mh.niuke.bean.ListNode;
 import com.mh.niuke.bean.TreeNode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -13,6 +15,10 @@ import java.util.Stack;
  * @create: 2019-08-27 12:22
  */
 public class NiukeProgram {
+    public static void main(String[] args) {
+        NiukeProgram niukeProgram = new NiukeProgram();
+        niukeProgram.reConstructBinaryTree(new int[]{3, 9, 20, 5, 7}, new int[]{9, 3, 15, 20, 7});
+    }
 
     /**
      * 1、
@@ -25,7 +31,7 @@ public class NiukeProgram {
      */
     @SuppressWarnings("unused")
     public boolean find(int target, int[][] array) {
-        if (array.length == 0){
+        if (array.length == 0) {
             return false;
         }
         int rowCount = array[0].length - 1;
@@ -33,9 +39,15 @@ public class NiukeProgram {
         int j = 0;
         while (i >= 0 && j < array.length) {
             int temp = array[i][j];
-            if (target > temp){ j++;}
-            if (target < temp){ i--;}
-            if (temp == target){ return true;}
+            if (target > temp) {
+                j++;
+            }
+            if (target < temp) {
+                i--;
+            }
+            if (temp == target) {
+                return true;
+            }
         }
         return false;
     }
@@ -89,35 +101,47 @@ public class NiukeProgram {
      * @date 2019/8/27
      */
     @SuppressWarnings("unused")
-    public TreeNode reconstructBinaryTree(int[] pre, int[] in) {
-        return reConstructBinaryTree(pre, 0, pre.length - 1, in, 0, in.length - 1);
+    public TreeNode reConstructBinaryTree(int[] pre, int[] in) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int inLen = 0;
+        for (int i = 0; i < in.length; i++) {
+            map.put(in[i], i);
+            inLen++;
+        }
+        return reConstructBinaryTree(pre, 0, pre.length - 1, in, 0, inLen - 1, map);
     }
 
     /**
      * 根据根节点分为左子树和有子树遍历
+     *
      * @author mh
      * @date 2019/8/27
      */
     @SuppressWarnings("unused")
-    private static TreeNode reConstructBinaryTree(int[] pre, int startPre, int endPre, int[] in, int startIn, int endIn) {
-        if (startPre > endPre || startIn > endIn){
+    private TreeNode reConstructBinaryTree(int[] pre, int startPre, int endPre, int[] in, int startIn, int endIn,
+                                           Map<Integer, Integer> indexMap) {
+        if (startPre > endPre || startIn > endIn) {
             return null;
         }
-        // 根节点的值
-        int root = pre[startPre];
-        TreeNode treeNode = new TreeNode(root);
-        for (int i = startIn; i <= endIn; i++) {
-            if (in[i] == pre[startPre]) {
-                treeNode.left = reConstructBinaryTree(pre, startPre + 1, startPre + i - startIn, in, startIn, i - 1);
-                treeNode.right = reConstructBinaryTree(pre, i - startIn + startPre + 1, endPre, in, i + 1, endIn);
-                break;
-            }
+
+        int rootVal = pre[startPre];
+        TreeNode root = new TreeNode(rootVal);
+        if (startPre == endPre) {
+            return root;
         }
-        return treeNode;
+        int i = indexMap.get(rootVal);
+        // 左右子树的数量
+        int leftNodes = i - startIn, rightNodes = endIn - startIn;
+        root.left = reConstructBinaryTree(pre, startPre + 1, startPre + leftNodes,
+                in, startIn, i - 1, indexMap);
+        root.right = reConstructBinaryTree(pre, endPre - rightNodes + 1, endPre,
+                in, i + 1, endIn, indexMap);
+        return root;
     }
 
     /**
      * 用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+     *
      * @author mh
      * @date 2019/8/27
      */

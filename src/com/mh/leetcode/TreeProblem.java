@@ -40,7 +40,8 @@ public class TreeProblem {
 //        treeProblem.flatten(node);
 //        System.out.println(treeProblem.postOrderTraversal(node));
 
-        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
+//        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
+        System.out.println(treeProblem.rangeSumBST(node,3,6));
     }
 
     /**
@@ -590,5 +591,28 @@ public class TreeProblem {
         return Math.max(leftHeight,rightHeight) + 1;
     }
 
+    /**
+     * 938. 二叉搜索树的范围和
+     * 给定二叉搜索树的根结点 root，返回 L 和 R（含）之间的所有结点的值的和。
+     */
+    int sum = 0;
+    public int rangeSumBST(TreeNode root, int L, int R) {
+        sumBstByInOrder(root,L,R);
+        return sum;
+    }
 
+    public void sumBstByInOrder(TreeNode root,int L,int R){
+        if(root == null){
+            return;
+        }
+
+        sumBstByInOrder(root.left,L,R);
+        int rootVal = root.val;
+        if(rootVal >= L && rootVal <= R){
+            sum += rootVal;
+        }else if (rootVal > R){
+            return;
+        }
+        sumBstByInOrder(root.right,L,R);
+    }
 }
