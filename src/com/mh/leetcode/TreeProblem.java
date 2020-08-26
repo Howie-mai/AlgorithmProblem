@@ -38,7 +38,9 @@ public class TreeProblem {
         node.right = right;
 
 //        treeProblem.flatten(node);
-        System.out.println(treeProblem.postOrderTraversal(node));
+//        System.out.println(treeProblem.postOrderTraversal(node));
+
+        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
     }
 
     /**
@@ -230,6 +232,28 @@ public class TreeProblem {
         root.left = left;
 
         root.right = buildTree(mid + 1, end);
+        return root;
+    }
+
+    /**
+     * 将一个按照升序排列的有序数组，转换为一棵高度平衡二叉搜索树。
+     *
+     * 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+     */
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return get(nums,0,nums.length-1);
+    }
+
+    public TreeNode get(int[] nums,int start ,int end){
+        if(start > end){
+            return null;
+        }
+
+        int mid = (start + end) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = get(nums,start,mid - 1);
+        root.right = get(nums,mid + 1,end);
+
         return root;
     }
 
@@ -496,6 +520,7 @@ public class TreeProblem {
      * 589. N叉树的前序遍历
      * 给定一个 N 叉树，返回其节点值的前序遍历。
      */
+    @SuppressWarnings("unused")
     public List<Integer> preorder(Node root) {
         List<Integer> list = new ArrayList<>();
         preOrderByDiGui(root,list);
@@ -519,20 +544,20 @@ public class TreeProblem {
      * 找出路径和等于给定数值的路径总数。
      * 路径不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
      */
-    @SuppressWarnings("unused")
 //    int totalPath = 0;
+    @SuppressWarnings("unused")
     public int pathSum(TreeNode root, int sum) {
         if(root == null){
             return 0;
         }
-        Sum(root,sum);
+        sum(root,sum);
         pathSum(root.left,sum);
         pathSum(root.right,sum);
 
         return totalPath;
     }
 
-    public void Sum(TreeNode root, int sum){
+    public void sum(TreeNode root, int sum){
         if(root == null){
             return;
         }
@@ -540,7 +565,30 @@ public class TreeProblem {
         if(sum == 0){
             totalPath++;
         }
-        Sum(root.left,sum);
-        Sum(root.right,sum);
+        sum(root.left,sum);
+        sum(root.right,sum);
     }
+
+    /**
+     * 104. 二叉树的最大深度
+     * 给定一个二叉树，找出其最大深度。
+     *
+     * 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+     */
+    public int maxDepth(TreeNode root) {
+        return getMaxHeight(root);
+    }
+
+    public int getMaxHeight(TreeNode node){
+        if(node == null){
+            return 0;
+        }
+
+        int leftHeight = getMaxHeight(node.left);
+        int rightHeight = getMaxHeight(node.right);
+
+        return Math.max(leftHeight,rightHeight) + 1;
+    }
+
+
 }
