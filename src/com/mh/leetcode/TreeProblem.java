@@ -4,10 +4,7 @@ import com.mh.leetcode.bean.ListNode;
 import com.mh.leetcode.bean.Node;
 import com.mh.leetcode.bean.TreeNode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * ClassName：
@@ -26,22 +23,39 @@ public class TreeProblem {
 //            p = p.next;
 //        }
 //        treeProblem.sortedListToBST(head);
-        TreeNode node = new TreeNode(1);
+        TreeNode treeNode = new TreeNode(1);
         TreeNode left = new TreeNode(2);
         left.left = new TreeNode(3);
         left.right = new TreeNode(4);
-        node.left = left;
+        treeNode.left = left;
 
-        TreeNode right = new TreeNode(5);
-//        right.left = new TreeNode(6);
-        right.right = new TreeNode(6);
-        node.right = right;
+        TreeNode right = new TreeNode(2);
+        right.left = new TreeNode(4);
+        right.right = new TreeNode(3);
+        treeNode.right = right;
 
 //        treeProblem.flatten(node);
 //        System.out.println(treeProblem.postOrderTraversal(node));
 
 //        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
-        System.out.println(treeProblem.rangeSumBST(node,3,6));
+//        System.out.println(treeProblem.rangeSumBST(node,3,6));
+        Node listNode = new Node();
+        List<Node> child1 = new ArrayList<>();
+
+        Node node3 = new Node(3);
+        List<Node> child = new ArrayList<>();
+        child.add(new Node(5));
+        child.add(new Node(6));
+        node3.children = child;
+
+        Node node2 = new Node(2);
+        Node node4 = new Node(4);
+        child1.add(node3);
+        child1.add(node2);
+        child1.add(node4);
+        listNode.children = child1;
+//        System.out.println(treeProblem.maxDepth(listNode));
+        System.out.println(treeProblem.isSymmetric(treeNode));
     }
 
     /**
@@ -408,6 +422,18 @@ public class TreeProblem {
     }
 
     /**
+     * 中序遍历二叉树，把节点的值保存到list里面
+     */
+    public void inorderTraverseByList(TreeNode node,List<Integer> list){
+        if(node == null){
+            return;
+        }
+        inorderTraverseByList(node.left,list);
+        list.add(node.val);
+        inorderTraverseByList(node.right,list);
+    }
+
+    /**
      * 124. 二叉树中的最大路径和
      * 给定一个非空二叉树，返回其最大路径和。
      *
@@ -615,4 +641,51 @@ public class TreeProblem {
         }
         sumBstByInOrder(root.right,L,R);
     }
+
+    /**
+     * 559. N叉树的最大深度
+     * 给定一个 N 叉树，找到其最大深度。
+     *
+     * 最大深度是指从根节点到最远叶子节点的最长路径上的节点总数。
+     */
+    public int maxDepth(Node root) {
+        if(root == null){
+            return 0;
+        }
+
+        if(root.children.isEmpty()){
+            return 1;
+        }
+
+        List<Node> children = root.children;
+        List<Integer> list = new ArrayList<>();
+        for (Node child : children) {
+            list.add(maxDepth(child));
+        }
+
+        return Collections.max(list) + 1;
+    }
+
+    /**
+     * 101. 对称二叉树
+     * 给定一个二叉树，检查它是否是镜像对称的
+     */
+    public boolean isSymmetric(TreeNode root) {
+        return isSymmetric(root,root);
+    }
+
+    public boolean isSymmetric(TreeNode leftNode,TreeNode rightNode) {
+        if(leftNode == null && rightNode == null){
+            return true;
+        }
+        if(leftNode == null || rightNode == null){
+            return false;
+        }
+
+        return leftNode.val == rightNode.val &&
+                isSymmetric(leftNode.left , rightNode.right) &&
+                isSymmetric(leftNode.right,rightNode.left);
+    }
+
+
 }

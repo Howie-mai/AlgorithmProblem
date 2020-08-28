@@ -166,4 +166,5 @@ public class NiukeProgram {
             return stack2.pop();
         }
     }
+
 }
