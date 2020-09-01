@@ -1,5 +1,7 @@
 package com.mh.leetcode;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -18,7 +20,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.countSubstrings("aaaaa"));
 //        System.out.println(commonProblem.judgePoint24(new int[]{4, 7, 1, 8}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
-        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
+//        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
+        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -120,7 +123,7 @@ public class CommonProblem {
     }
 
     public static boolean solve(double[] nums) {
-        if(nums.length == 0){
+        if (nums.length == 0) {
             return false;
         }
 
@@ -134,7 +137,7 @@ public class CommonProblem {
         //其中，括号不用考虑，因为是任意两个数的所有允许符都参与，所以有括号，没括号的情况，都包含在内了
         for (int x = 0; x < nums.length - 1; x++) {
             for (int y = x + 1; y < nums.length; y++) {
-                if(x == 0 && y == 2){
+                if (x == 0 && y == 2) {
                     System.out.println("123");
                 }
                 //是否合法
@@ -198,7 +201,7 @@ public class CommonProblem {
     public int rangeBitwiseAnd(int m, int n) {
         int sum = 0;
         // 比如从5(0101)到7(0111) 因为与是有0就为0，所以只要找相同的前缀，在范围数里面肯定有为0的，所以后面必定计算出为0
-        while (m != n){
+        while (m != n) {
             // 通过右移动并赋值找出一样的前缀
             m >>= 1;
             n >>= 1;
@@ -214,33 +217,102 @@ public class CommonProblem {
      */
     public boolean repeatedSubstringPattern(String s) {
         boolean flag = false;
-        for(int i = 1;i <= s.length() / 2 && !flag;i++){
-            if(s.length() % i != 0){
+        for (int i = 1; i <= s.length() / 2 && !flag; i++) {
+            if (s.length() % i != 0) {
                 continue;
             }
             String example = s.substring(0, i);
             int j = i * 2;
-            if(j > s.length()){
+            if (j > s.length()) {
                 break;
             }
-            String str = s.substring(i,j);
-            if(example.equals(str)){
-                if(j == s.length()){
+            String str = s.substring(i, j);
+            if (example.equals(str)) {
+                if (j == s.length()) {
                     return true;
                 }
-                for (int k = j;k < s.length();k += example.length()){
+                for (int k = j; k < s.length(); k += example.length()) {
                     int offset = k + example.length();
 
                     String substring = s.substring(k, offset);
-                    if(!substring.equals(example)) {
+                    if (!substring.equals(example)) {
                         flag = false;
                         break;
-                    }else {
+                    } else {
                         flag = true;
                     }
                 }
             }
         }
         return flag;
+    }
+
+    /**
+     * 486. 预测赢家
+     * 给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
+     * <p>
+     * 给定一个表示分数的数组，预测玩家1是否会成为赢家。你可以假设每个玩家的玩法都会使他的分数最大化。
+     */
+    public boolean PredictTheWinner(int[] nums) {
+        int length = nums.length;
+        int[] dp = new int[length];
+        for (int i = 0; i < length; i++) {
+            dp[i] = nums[i];
+        }
+        for (int i = length - 2; i >= 0; i--) {
+            for (int j = i + 1; j < length; j++) {
+                dp[j] = Math.max(nums[i] - dp[j], nums[j] - dp[j - 1]);
+            }
+        }
+        return dp[length - 1] >= 0;
+    }
+
+    /**
+     * 1360. 日期之间隔几天
+     * 请你编写一个程序来计算两个日期之间隔了多少天。
+     * <p>
+     * 日期以字符串形式给出，格式为 YYYY-MM-DD，如示例所示。
+     */
+    public int daysBetweenDates(String date1,String date2) {
+        return Math.abs(daysBetweenDates(date1)-daysBetweenDates(date2));
+    }
+
+    public int daysBetweenDates(String date) {
+        int day = 0;
+        String[] split1 = date.split("-");
+        int[] monthDay = new int[]{-1,31,28,31,30,31,30,31,31,30,31,30,31};
+        // 处理年份
+        int year = Integer.parseInt(split1[0]);
+        int preYear = 1971;
+        while (preYear == year) {
+
+            day += 365;
+            if (isleap(preYear)){
+                day += 1;
+            }
+
+            preYear++;
+        }
+
+        // 处理月份
+        int month = Integer.parseInt(split1[1]);
+        int preMonth = 1;
+        while (preMonth == month){
+            if(preMonth == 2){
+                day += monthDay[preMonth];
+                if(isleap(year)){
+                    day += 1;
+                }
+            }else {
+                day += monthDay[preMonth];
+            }
+            preMonth++;
+        }
+
+        return day;
+    }
+
+    boolean isleap(int y) {
+        return y % 4 == 0 && y % 100 != 0 || y % 400 == 0;
     }
 }
