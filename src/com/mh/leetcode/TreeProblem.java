@@ -741,4 +741,26 @@ public class TreeProblem {
 //        }
 //        inorderTraverseByListV2(node.right,list);
 //    }
+
+    /**
+     * 剑指 Offer 26. 树的子结构
+     * 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+     *
+     * B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+     */
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        List<Integer> listA = new ArrayList<>();
+        List<Integer> listB = new ArrayList<>();
+        inorderTraverseByList(A,listA);
+        inorderTraverseByList(B,listB);
+        int b = listB.get(0);
+        for(int j = 0;j < listA.size();j++){
+            if(listA.get(j) != b){
+                continue;
+            }
+
+
+        }
+        return listA.containsAll(listB);
+    }
 }
