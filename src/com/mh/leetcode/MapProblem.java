@@ -133,4 +133,27 @@ public class MapProblem {
         }
         result.addFirst(curr);
     }
+
+    /**
+     * 847. 访问所有节点的最短路径
+     * 给出 graph 为有 N 个节点（编号为 0, 1, 2, ..., N-1）的无向连通图。
+     *
+     * graph.length = N，且只有节点 i 和 j 连通时，j != i 在列表 graph[i] 中恰好出现一次。
+     *
+     * 返回能够访问所有节点的最短路径的长度。你可以在任一节点开始和停止，也可以多次重访节点，并且可以重用边。
+     */
+//    public int shortestPathLength(int[][] graph) {
+//        if(graph.length == 0){
+//            return 0;
+//        }
+//        boolean[] visit = new boolean[graph.length];
+//        dfs(graph,visit,0);
+//    }
+//
+//    public void dfs(int[][] graph,boolean[] visit,int index){
+//        int[] nowGraph = graph[index];
+//        for (int i = 0; i < nowGraph.length; i++) {
+//            if(visit)
+//        }
+//    }
 }
