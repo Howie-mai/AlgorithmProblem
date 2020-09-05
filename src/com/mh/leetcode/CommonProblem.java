@@ -21,7 +21,9 @@ public class CommonProblem {
 //        System.out.println(commonProblem.judgePoint24(new int[]{4, 7, 1, 8}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
-        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
+//        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
+//        System.out.println(commonProblem.getPermutation(4,9));
+        System.out.println(commonProblem.permute(new int[]{1}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -334,6 +336,93 @@ public class CommonProblem {
         }
     }
 
+    /**
+     * 60. 第k个排列
+     * 给出集合 [1,2,3,…,n]，其所有元素共有 n! 种排列。
+     * 给定 n 和 k，返回第 k 个排列。
+     */
 
+    int[] fc ;
+    boolean[] used;
+    int k;
+    int n;
+    public String getPermutation(int n, int k) {
+        this.n = n;
+        this.k = k;
+        used = new boolean[n + 1];
+        fc = new int[n + 1];
+        fc[0] = 1;
+        for (int i = 1;i <= n;i++){
+            fc[i] = fc[i - 1] * i;
+        }
 
+        StringBuilder sb = new StringBuilder();
+        dfs(0,sb);
+        return sb.toString();
+    }
+
+    /**
+     * 在这一步之前已经选择了几个数字，其值恰好等于这一步需要确定的下标位置
+     */
+    public void dfs(int index,StringBuilder path){
+        if(index == n){
+            return;
+        }
+
+        // // 计算还未确定的数字的全排列的个数
+        int cnt = fc[n - 1 - index];
+        for (int i = 1;i <= n;i++){
+            if(used[i]){
+                continue;
+            }
+
+            if(cnt < k){
+                k -= cnt;
+                continue;
+            }
+
+            path.append(i);
+            used[i] = true;
+            dfs(index + 1, path);
+            // 注意 1：没有回溯（状态重置）的必要
+
+            // 注意 2：这里要加 return，后面的数没有必要遍历去尝试了
+            return;
+        }
+    }
+
+    /**
+     * 46. 全排列
+     * 给定一个 没有重复 数字的序列，返回其所有可能的全排列。
+     */
+    List<List<Integer>> ans46List = new ArrayList<>();
+    public List<List<Integer>> permute(int[] nums) {
+        if(nums.length == 0){
+            return ans46List;
+        }
+
+        List<Integer> list = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+        dfs(nums,0,list,used);
+        return ans46List;
+    }
+
+    public void dfs(int[] nums,int index,List<Integer> list,boolean[] used){
+        if(index == nums.length){
+            ans46List.add(new ArrayList<>(list));
+            return;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if(used[i]){
+                continue;
+            }
+
+            list.add(nums[i]);
+            used[i] = true;
+            dfs(nums,index + 1,list,used);
+            list.remove(list.size() - 1);
+            used[i] = false;
+        }
+    }
 }

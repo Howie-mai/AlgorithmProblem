@@ -55,30 +55,28 @@ public class Main7 {
     }
 
     private static void addNum() {
-        Random random = new Random();
+        double[] userSeed = {5.0};
+        double[] stepSeed = {10.0};
+//        Random random = new Random();
         int stepAvg = StepNum / totalCount <= 0 ? 10000 :  StepNum / totalCount;
-        int stepMax = stepAvg;
-        int stepMin = Math.max(stepAvg - 500, 1);
+        int stepMax = stepAvg + 50;
+        int stepMin = Math.max(stepAvg - 100, 1);
         System.out.println("步数平均值===" + stepAvg);
         System.out.println("步数左区间===" + stepMin);
         System.out.println("步数右区间===" + stepMax);
 
         int userAvg = UserNum / totalCount <= 0 ? 50 : UserNum / totalCount;
-        int userMax = userAvg;
+//        userAvg += 5;
+        int userMax = userAvg + 5;
         int userMin = Math.max(userAvg - 10, 1);
         System.out.println("用户平均值===" + userAvg);
         System.out.println("用户左区间===" + userMin);
         System.out.println("用户右区间===" + userMax);
 
         while (count <= totalCount) {
-            if (count % 2 == 0){
-                userMax *= 2;
-                stepMax *= 2;
-            }else {
-                userMax /= 2;
-                stepMax /= 2;
-            }
-            int user = random.nextInt(userMax - userMin + 1) + userMin;
+
+            int user = (int)Main8.randZT(userAvg,10.0,userSeed);
+//            int user =  userMin +(int)((userMax - userMin) * Main8.rand01(userSeed));
 //            if(user <= userAvg){
 ////                user += userAvg;
 //                userMax *= 2;
@@ -88,7 +86,8 @@ public class Main7 {
 //                userMin -= userAvg/2;
 //            }
 
-            int step = random.nextInt(stepMax - stepMin + 1) + stepMin;
+            int step = (int)Main8.randZT(stepAvg,100.0,stepSeed);
+//            int step = stepMin +(int)((stepMax - stepMin) * Main8.rand01(stepSeed));
 //            if(step < stepAvg){
 ////                step += stepAvg;
 //                stepMax *= 2;
@@ -98,9 +97,11 @@ public class Main7 {
 //                stepMin -= userAvg/2;
 //            }
 
+//            UserNum -= Math.abs(user);
             UserNum -= user;
             System.out.println("" + new Date() + "===增加人数" + user);
 
+//            StepNum -= Math.abs(step);
             StepNum -= step;
             System.out.println("" + new Date() + "===增加步数" + step);
 
