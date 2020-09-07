@@ -8,10 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * ClassName：
- * Time：20/9/3 上午9:00
  * Description：
- *
- * @author mh
  */
 public class Main7 {
 
@@ -54,6 +51,51 @@ public class Main7 {
         executor.shutdown();
     }
 
+    static double rand01(double[] r) {
+        double base, u, v, p, temp1, temp2, temp3;
+        // 基数 2的倍数 可以修改这个来改变取值
+        base = 216.0;
+        // 两个常数随意取
+        u = 17.0;
+        v = 139.0;
+
+        // 计算总值
+        temp1 = u * r[0] + v;
+        // 计算商
+        temp2 = (int) (temp1 / base);
+        // 计算余数
+        temp3 = temp1 - temp2 * base;
+        // 更换随机种子
+        r[0] = temp3;
+        //随机数
+        p = r[0] / base;
+
+        return p;
+    }
+
+    /**
+     * 正态分布的随机数生成，平均数太小，方差太大会取得负数
+     * @param avg 平均数
+     * @param fc 方差
+     * @param r 随机种子
+     * @return double
+     */
+    static double randZT(double avg, double fc, double[] r) {
+        double total = 0.0;
+        double result;
+        /**
+         * 方便计算 上式分母中的根号便可以忽略， 实现正态分布
+         */
+        for (int i = 0; i < 12; i++) {
+            total += rand01(r);
+        }
+        /**
+         * 取随机数
+         */
+        result = avg + fc * (total - 6.0);
+        return result;
+    }
+
     private static void addNum() {
         double[] userSeed = {5.0};
         double[] stepSeed = {10.0};
@@ -75,27 +117,10 @@ public class Main7 {
 
         while (count <= totalCount) {
 
-            int user = (int)Main8.randZT(userAvg,10.0,userSeed);
+            int user = (int)randZT(userAvg,10.0,userSeed);
 //            int user =  userMin +(int)((userMax - userMin) * Main8.rand01(userSeed));
-//            if(user <= userAvg){
-////                user += userAvg;
-//                userMax *= 2;
-//                userMin += userAvg/2;
-//            }else {
-//                userMax /= 2;
-//                userMin -= userAvg/2;
-//            }
 
-            int step = (int)Main8.randZT(stepAvg,100.0,stepSeed);
-//            int step = stepMin +(int)((stepMax - stepMin) * Main8.rand01(stepSeed));
-//            if(step < stepAvg){
-////                step += stepAvg;
-//                stepMax *= 2;
-//                stepMin += userAvg/2;
-//            }else {
-//                stepMax /= 2;
-//                stepMin -= userAvg/2;
-//            }
+            int step = (int)randZT(stepAvg,100.0,stepSeed);
 
 //            UserNum -= Math.abs(user);
             UserNum -= user;
@@ -106,16 +131,19 @@ public class Main7 {
             System.out.println("" + new Date() + "===增加步数" + step);
 
             count++;
-//            try {
-//                Thread.sleep(sleepTime);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         System.out.println("用户剩余====" + UserNum);
         System.out.println("步数剩余====" + StepNum);
 
+        /**
+         * 最后补足步数和用户
+         */
         if (UserNum > 0) {
             UserNum -= UserNum;
         }
@@ -124,5 +152,4 @@ public class Main7 {
             StepNum -= StepNum;
         }
     }
-
 }

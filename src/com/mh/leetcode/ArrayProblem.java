@@ -21,12 +21,15 @@ public class ArrayProblem {
         ArrayProblem problem = new ArrayProblem();
 //        System.out.println(problem.findSubsequences(new int[]{4,6,7,7}));
 //        System.out.println(problem.letterCombinations(""));
-//        System.out.println(problem.minPathSum(new int[][]{{1,3,1},{1,5,1},{4,2,1}}));
+//        System.out.println(problem.diagonalSum(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}));
+//        System.out.println(problem.findLengthOfShortestSubarray(new int[]{1,2,3}));
 //        System.out.println(problem.solveNQueens(3));
-        int[] x = problem.missingTwo(new int[]{1,2,5});
-        for (int i : x) {
-            System.out.println(i);
-        }
+//        int[] x = problem.missingTwo(new int[]{1,2,5});
+//        for (int i : x) {
+//            System.out.println(i);
+//        }
+//        System.out.println(problem.maximalSquare(new char[][]{{'1','0','1','0'},{'1','0','1','1'},{'1','0','1','1'},{'1','1','1','1'}}));
+        System.out.println(problem.maximalSquare(new char[][]{{'0','1'}}));
     }
 
     /**
@@ -220,6 +223,7 @@ public class ArrayProblem {
      * n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
      */
     List<List<String>> ansList = new ArrayList<>();
+
     public List<List<String>> solveNQueens(int n) {
         String[][] board = new String[n][n];
         for (int i = 0; i < n; i++) {
@@ -303,15 +307,113 @@ public class ArrayProblem {
             sum += num;
         }
 
-        int sumTwo = n * (n + 1) / 2 - sum,limit = sumTwo / 2;
+        int sumTwo = n * (n + 1) / 2 - sum, limit = sumTwo / 2;
         sum = 0;
-        for (int x: nums){
+        for (int x : nums) {
             // 两个数不相同那么一个大于，一个小于
-            if (x <= limit){
+            if (x <= limit) {
                 sum += x;
             }
         }
         int one = limit * (limit + 1) / 2 - sum;
-        return new int[]{one,sumTwo - one};
+        return new int[]{one, sumTwo - one};
+    }
+
+    /**
+     * 二维数组的两条对角线和 ，交点只算一次
+     */
+    public int diagonalSum(int[][] mat) {
+        if (mat.length == 1 && mat[0].length == 1) {
+            return mat[0][0];
+        }
+
+        // 0,0 ,1,1
+        int i = 0, j = 0;
+        int x = 0, y = mat.length - 1;
+        int sum = 0;
+        for (; i < mat.length && j < mat.length; i++, j++) {
+            sum += mat[i][j];
+        }
+
+        // 0,4
+        for (; x < mat.length && y >= 0; x++, y--) {
+            if (x == y) {
+                continue;
+            }
+            sum += mat[x][y];
+        }
+
+        return sum;
+    }
+
+    /**
+     * 221. 最大正方形
+     * 在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。
+     */
+    public int maximalSquare(char[][] matrix) {
+        if(matrix.length == 0){
+            return 0;
+        }
+
+        int[][] dp = new int[matrix.length][matrix[0].length];
+        int sum = 0;
+        // 设置第一行 第一列
+//        for (int i = 0; i < matrix.length; i++) {
+//            dp[0][i] = matrix[0][i] - '0';
+//        }
+//
+//        for (int i = 0; i < matrix.length; i++) {
+//            dp[i][0] = matrix[i][0] - '0';
+//        }
+
+        for (int i = 0;i < matrix.length;i++){
+            for (int j = 0;j < matrix[i].length;j++){
+                if(matrix[i][j] == '0'){
+                    continue;
+                }
+
+                if(i == 0 || j == 0){
+                    dp[i][j] = matrix[i][j] - '0';
+                    sum = Math.max(sum,dp[i][j]);
+                    continue;
+                }
+
+                int a =  Math.min(dp[i][j - 1],dp[i - 1][j]);
+                int b =  Math.min(a,dp[i - 1][j - 1]) + 1;
+                dp[i][j] = b;
+                sum = Math.max(b * b , sum);
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * 1277. 统计全为 1 的正方形子矩阵
+     * 给你一个 m * n 的矩阵，矩阵中的元素不是 0 就是 1，请你统计并返回其中完全由 1 组成的 正方形 子矩阵的个数。
+     */
+    public int countSquares(int[][] matrix) {
+        int sum = 0;
+        if(matrix.length == 0){
+            return sum;
+        }
+
+        int[][] dp = new int[matrix.length][matrix[0].length];
+
+        for (int i = 0;i < matrix.length;i++){
+            for (int j = 0;j < matrix[i].length;j++){
+                if(matrix[i][j] == 0){
+                    dp[i][j] = 0;
+                }else if(i == 0 || j == 0){
+                   dp[i][j] = matrix[i][j];
+                }else {
+                    int a =  Math.min(dp[i][j - 1],dp[i - 1][j]);
+                    int b =  Math.min(a,dp[i - 1][j - 1]) + 1;
+                    dp[i][j] = b;
+                }
+                sum += dp[i][j];
+            }
+        }
+
+        return sum;
     }
 }

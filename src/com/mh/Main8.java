@@ -36,8 +36,6 @@ public class Main8 {
         double total = 0.0;
         double result;
         for (i = 0; i < 12; i++) {
-//            double rand = min + (max - min) * rand01(r);
-//            total += rand;
             total += rand01(r);
         }
         result = avg + fc * (total - 6.0);

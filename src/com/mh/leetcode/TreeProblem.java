@@ -23,15 +23,15 @@ public class TreeProblem {
 //            p = p.next;
 //        }
 //        treeProblem.sortedListToBST(head);
-        TreeNode treeNode = new TreeNode(1);
-        TreeNode left = new TreeNode(2);
+        TreeNode treeNode = new TreeNode(3);
+        TreeNode left = new TreeNode(9);
 //        left.left = new TreeNode(3);
-        left.right = new TreeNode(5);
+//        left.right = new TreeNode(5);
         treeNode.left = left;
 
-        TreeNode right = new TreeNode(3);
-//        right.left = new TreeNode(4);
-//        right.right = new TreeNode(3);
+        TreeNode right = new TreeNode(20);
+        right.left = new TreeNode(15);
+        right.right = new TreeNode(7);
         treeNode.right = right;
 
 //        treeProblem.flatten(node);
@@ -56,7 +56,9 @@ public class TreeProblem {
         listNode.children = child1;
 //        System.out.println(treeProblem.maxDepth(listNode));
 //        System.out.println(treeProblem.isSymmetric(treeNode));
-        System.out.println(treeProblem.binaryTreePaths(treeNode));
+//        System.out.println(treeProblem.binaryTreePaths(treeNode));
+//        System.out.println(treeProblem.levelOrderBottom(treeNode));
+        System.out.println(treeProblem.averageOfLevels(treeNode));
     }
 
     /**
@@ -610,6 +612,7 @@ public class TreeProblem {
     public int maxDepth(TreeNode root) {
         return getMaxHeight(root);
     }
+
     public int getMaxHeight(TreeNode node) {
         if (node == null) {
             return 0;
@@ -780,6 +783,7 @@ public class TreeProblem {
      */
     List<String> resultList = new ArrayList<>();
     List<Integer> list = new ArrayList<>();
+
     public List<String> binaryTreePaths(TreeNode root) {
         if (root == null) {
             return resultList;
@@ -830,19 +834,76 @@ public class TreeProblem {
             newLevel.add(node.val);
             results.add(newLevel);
         } else {
-            if (level % 2 == 0){
+            if (level % 2 == 0) {
                 results.get(level).add(node.val);
-            }else {
+            } else {
                 results.get(level).add(0, node.val);
             }
         }
 
-        if (node.left != null){
+        if (node.left != null) {
             DFS(node.left, level + 1, results);
         }
-        if (node.right != null){
+        if (node.right != null) {
             DFS(node.right, level + 1, results);
         }
     }
 
+
+    /**
+     * 107. 二叉树的层次遍历 II
+     * 给定一个二叉树，返回其节点值自底向上的层次遍历。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+     */
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        levelHelper(res, root, 0);
+        return res;
+    }
+
+    public void levelHelper(List<List<Integer>> list, TreeNode root, int level) {
+        //边界条件判断
+        if (root == null) {
+            return;
+        }
+        if (level >= list.size()) {
+            list.add(0, new ArrayList<>());
+        }
+        //这里就相当于从后往前打印了
+        list.get(list.size() - level - 1).add(root.val);
+        //当前节点访问完之后，再使用递归的方式分别访问当前节点的左右子节点
+        levelHelper(list, root.left, level + 1);
+        levelHelper(list, root.right, level + 1);
+    }
+
+    /**
+     * 637. 二叉树的层平均值
+     * 给定一个非空二叉树, 返回一个由每层节点平均值组成的数组。
+     */
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Integer> levels = new ArrayList<>();
+        List<Double> res = new ArrayList<>();
+        dfs(res, levels, root, 0);
+        return res;
+    }
+
+    public void dfs(List<Double> list, List<Integer> levels, TreeNode root, int level) {
+        //边界条件判断
+        if (root == null) {
+            return;
+        }
+        if (level >= list.size()) {
+            list.add(0.0);
+            levels.add(0);
+        }
+
+        int count = levels.get(level);
+        double levelTotal = list.get(level) * count;
+        levelTotal += root.val;
+        list.set(level, levelTotal / (count + 1));
+        levels.set(level, count + 1);
+
+        //当前节点访问完之后，再使用递归的方式分别访问当前节点的左右子节点
+        dfs(list, levels, root.left, level + 1);
+        dfs(list, levels, root.right, level + 1);
+    }
 }
