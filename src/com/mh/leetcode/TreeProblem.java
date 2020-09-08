@@ -23,18 +23,18 @@ public class TreeProblem {
 //            p = p.next;
 //        }
 //        treeProblem.sortedListToBST(head);
-        TreeNode treeNode = new TreeNode(3);
-        TreeNode left = new TreeNode(9);
-//        left.left = new TreeNode(3);
-//        left.right = new TreeNode(5);
+        TreeNode treeNode = new TreeNode(4);
+        TreeNode left = new TreeNode(2);
+        left.left = new TreeNode(1);
+        left.right = new TreeNode(3);
         treeNode.left = left;
 
-        TreeNode right = new TreeNode(20);
-        right.left = new TreeNode(15);
-        right.right = new TreeNode(7);
+        TreeNode right = new TreeNode(5);
+//        right.left = new TreeNode(15);
+        right.right = new TreeNode(6);
         treeNode.right = right;
 
-//        treeProblem.flatten(node);
+        treeProblem.flatten(treeNode);
 //        System.out.println(treeProblem.postOrderTraversal(node));
 
 //        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
@@ -58,7 +58,7 @@ public class TreeProblem {
 //        System.out.println(treeProblem.isSymmetric(treeNode));
 //        System.out.println(treeProblem.binaryTreePaths(treeNode));
 //        System.out.println(treeProblem.levelOrderBottom(treeNode));
-        System.out.println(treeProblem.averageOfLevels(treeNode));
+//        System.out.println(treeProblem.averageOfLevels(treeNode));
     }
 
     /**
@@ -342,9 +342,45 @@ public class TreeProblem {
         if (root == null) {
             return;
         }
-        list.add(root);
         preOrderTraverse(root.left, list);
+        list.add(root);
         preOrderTraverse(root.right, list);
+    }
+
+    /**
+     * 面试题 17.12. BiNode
+     * 二叉树数据结构TreeNode可用来表示单向链表（其中left置空，right为下一个链表节点）。
+     * 实现一个方法，把二叉搜索树转换为单向链表，要求依然符合二叉搜索树的性质，转换操作应是原址的，也就是在原始的二叉搜索树上直接修改。
+     *
+     * 返回转换后的单向链表的头节点。
+     */
+    TreeNode head = new TreeNode(-1);
+    TreeNode perv = null;
+    public TreeNode convertBiNode(TreeNode root) {
+        preOrderTraverse(root);
+        return head.right;
+    }
+
+    public void preOrderTraverse(TreeNode root){
+        if(root == null){
+            return;
+        }
+        preOrderTraverse(root.left);
+        // 第一个节点
+        if (perv == null) {
+            // 记录第一个节点
+            perv = root;
+            // 记录它，它将作为单链表的表头
+            head.right = root;
+        } else {
+            // 第一个节点之后的节点
+            // 前一个节点的右指针指向当前节点
+            perv.right = root;
+            // 更新perv指向
+            perv = root;
+        }
+        root.left = null;
+        preOrderTraverse(root.right);
     }
 
     /**

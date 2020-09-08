@@ -23,7 +23,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
 //        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
 //        System.out.println(commonProblem.getPermutation(4,9));
-        System.out.println(commonProblem.permute(new int[]{1}));
+//        System.out.println(commonProblem.permute(new int[]{1}));
+        System.out.println(commonProblem.combine(4,2));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -424,5 +425,38 @@ public class CommonProblem {
             list.remove(list.size() - 1);
             used[i] = false;
         }
+    }
+
+    /**
+     * 77. 组合
+     * 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
+     */
+    List<List<Integer>> ans77List = new ArrayList<>();
+    public List<List<Integer>> combine(int n, int k) {
+        if(n == 0){
+            return ans77List;
+        }
+
+        Deque<Integer> list = new ArrayDeque<>();
+        dfs(1,n,k,list);
+        return ans77List;
+    }
+
+    public void dfs(int index,int n, int k,Deque<Integer> list){
+        // 剪枝：temp 长度加上区间 [index, n] 的长度小于 k，不可能构造出长度为 k 的 temp
+        if (list.size() + (n - index + 1) < k) {
+            return;
+        }
+
+        if(list.size() == k){
+            ans77List.add(new ArrayList<>(list));
+            return;
+        }
+
+        list.addLast(index);
+        dfs(index + 1,n,k,list);
+        list.removeLast();
+
+        dfs(index + 1,n,k,list);
     }
 }
