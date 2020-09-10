@@ -794,19 +794,17 @@ public class TreeProblem {
      * B是A的子结构， 即 A中有出现和B相同的结构和节点值。
      */
     public boolean isSubStructure(TreeNode A, TreeNode B) {
-        List<Integer> listA = new ArrayList<>();
-        List<Integer> listB = new ArrayList<>();
-        inorderTraverseByList(A, listA);
-        inorderTraverseByList(B, listB);
-        int b = listB.get(0);
-        for (int j = 0; j < listA.size(); j++) {
-            if (listA.get(j) != b) {
-                continue;
-            }
+        return (A != null && B != null) && (recur(A,B) || isSubStructure(A.left,B) || isSubStructure(A.right,B));
+    }
 
-
+    public boolean recur(TreeNode A,TreeNode B){
+        if(B == null){
+            return true;
         }
-        return listA.containsAll(listB);
+        if(A == null || A.val != B.val){
+            return false;
+        }
+        return recur(A.left,B.left) && recur(A.right,B.right);
     }
 
     /**

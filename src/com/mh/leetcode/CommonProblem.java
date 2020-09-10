@@ -24,7 +24,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
 //        System.out.println(commonProblem.getPermutation(4,9));
 //        System.out.println(commonProblem.permute(new int[]{1}));
-        System.out.println(commonProblem.combine(4,2));
+//        System.out.println(commonProblem.combine(4,2));
+        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -49,42 +50,6 @@ public class CommonProblem {
             }
             ans = ans * 10 + pop;
             x /= 10;
-        }
-        return ans;
-    }
-
-    /**
-     * 第647题
-     * 给定一个字符串，你的任务是计算这个字符串中有多少个回文子串。
-     * 具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。
-     * 示例 ：
-     * 输入："aaa"
-     * 输出：6
-     * 解释：6个回文子串: "a", "a", "a", "aa", "aa", "aaa"
-     */
-    @SuppressWarnings("unused")
-    public int countSubstrings(String s) {
-        int n = s.length(), ans = 0;
-        // result[i][j] 表示字符串的下标为i到下标j的字符串是否为回文串
-        // 0 : 不是 1 : 是
-        int[][] result = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j <= i; j++) {
-                if (i == j) {
-                    result[i][j] = 1;
-                    ans++;
-                } else {
-                    boolean isSame = s.charAt(i) == s.charAt(j);
-                    if (i - j == 1 && isSame) {
-                        // 相邻字符相同也为回文串
-                        result[i][j] = 1;
-                        ans++;
-                    } else if (i - j > 1 && isSame && result[i - 1][j + 1] == 1) {
-                        result[i][j] = 1;
-                        ans++;
-                    }
-                }
-            }
         }
         return ans;
     }
@@ -458,5 +423,52 @@ public class CommonProblem {
         list.removeLast();
 
         dfs(index + 1,n,k,list);
+    }
+
+    /**
+     * 1574. 删除最短的子数组使剩余数组有序
+     * 给你一个整数数组 arr ，请你删除一个子数组（可以为空），使得 arr 中剩下的元素是 非递减 的。
+     * 一个子数组指的是原数组中连续的一个子序列。
+     * 请你返回满足题目要求的最短子数组的长度。
+     */
+    public int findLengthOfShortestSubarray(int[] arr) {
+        int len = arr.length;
+        if(len == 1 || len == 0){
+            return 0;
+        }
+
+        int left = -1;
+        for (int i = 0; i < arr.length - 1; i++) {
+            if(arr[i + 1] < arr[i]){
+                left = i;
+                break;
+            }
+        }
+
+        // 已经是正确的顺序
+        if(left == -1){
+            return 0;
+        }
+
+        int right = len - 1;
+        while (right - 1 > 0 && arr[right] >= arr[right - 1]){
+            right--;
+        }
+
+        // 删除[left + 1....len] 或者 [0....right-1]区间的数
+        int result = Math.min(len - left - 1,right);
+
+        int i = 0,j = right;
+        for (;i <= left && j <= len - 1;){
+            if(arr[i] <= arr[j]){
+                // 从左边找到 小于等于 右边的数，删除[i+1....j-1]区间的数据
+                result = Math.min(result,j - i - 1);
+                i++;
+            }else {
+                j++;
+            }
+        }
+
+        return result;
     }
 }
