@@ -3,9 +3,7 @@ package com.mh.leetcode;
 
 import com.mh.leetcode.bean.ListNode;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * ClassName：
@@ -19,10 +17,24 @@ public class LinkListProblem {
     public static void main(String[] args) {
 //        LinkedList<int> list = new LinkedList<>();
         LinkListProblem linkListProblem = new LinkListProblem();
-        ListNode listNode1 = new ListNode(9);
-        ListNode listNode2 = new ListNode(1);
+        ListNode listNode1 = new ListNode(1);
+        ListNode listNode2 = new ListNode(2);
+        ListNode listNode3 = new ListNode(3);
+        ListNode listNode4 = new ListNode(3);
+        ListNode listNode5 = new ListNode(4);
+        ListNode listNode6 = new ListNode(4);
+        ListNode listNode7 = new ListNode(5);
+
+        listNode6.next = listNode7;
+        listNode5.next = listNode6;
+        listNode4.next = listNode5;
+        listNode3.next = listNode4;
+        listNode2.next = listNode3;
+        listNode1.next = listNode2;
+
+//        ListNode listNode2 = new ListNode(1);
 //        ListNode node1 = listNode1;
-        ListNode node2 = listNode2;
+//        ListNode node2 = listNode2;
 //        for (int i = 4;i < 6;i++){
 //            node1.next = new ListNode(i);
 //            node1 = node1.next;
@@ -32,11 +44,12 @@ public class LinkListProblem {
             if(i == 6){
                 val = 8;
             }
-            node2.next = new ListNode(val);
-            node2 = node2.next;
+//            node2.next = new ListNode(val);
+//            node2 = node2.next;
         }
         // 541 + 762 = 613
-        linkListProblem.addTwoNumbers(listNode1,listNode2);
+//        linkListProblem.addTwoNumbers(listNode1,listNode2);
+        linkListProblem.deleteDuplicatesKeep(listNode1);
     }
 
     /**
@@ -226,5 +239,65 @@ public class LinkListProblem {
             }
             return result;
         }
+    }
+
+    /**
+     * 83. 删除排序链表中的重复元素
+     * 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
+     */
+    public ListNode deleteDuplicatesKeep(ListNode head) {
+//        ListNode root = new ListNode(0);
+//        root.next = head;
+//        ListNode pre = root;
+//        ListNode curr;
+//        while (pre.next != null){
+//            curr = pre.next;
+//            if(pre.val != curr.val){
+//                pre = pre.next;
+//                continue;
+//            }
+//
+//            while (curr != null && curr.val == pre.val){
+//                curr = curr.next;
+//            }
+//
+//            pre.next = curr;
+//        }
+//        return root.next;
+        ListNode curr = head;
+        while (curr != null && curr.next != null){
+            if(curr.val == curr.next.val){
+                curr.next = curr.next.next;
+            }else {
+                curr = curr.next;
+            }
+        }
+        return head;
+    }
+
+    /**
+     * 82. 删除排序链表中的重复元素 II
+     * 给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 没有重复出现 的数字。
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode root = new ListNode(0);
+        root.next = head;
+        ListNode pre = root;
+        ListNode l,r;
+        while (pre.next != null && pre.next.next != null){
+            l = pre.next;
+            r = pre.next;
+            if(l.val != l.next.val){
+                pre = pre.next;
+                continue;
+            }
+
+            while (r != null && l.val == r.val){
+                r = r.next;
+            }
+
+            pre.next = r;
+        }
+        return root.next;
     }
 }

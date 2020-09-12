@@ -76,30 +76,31 @@ public class QueueProblem {
     @SuppressWarnings("unused")
     public int[] topKFrequent(int[] nums, int k) {
 
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int num: nums){
+        /**
+         * PriorityQueue 最小堆解决
+         */
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int num : nums) {
             if(map.containsKey(num)){
-                map.put(num, map.get(num) + 1);
-            }else{
-                map.put(num, 1);
+                map.put(num,map.get(num) + 1);
+            }else {
+                map.put(num,1);
             }
         }
 
-        // Java8下，匿名类直接使用lamda表达式
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingInt(map::get));
-        for(int key: map.keySet()){
-            if(pq.size()<k){
-                pq.add(key);
-            }else if (map.get(key) > map.get(pq.peek())){
-                pq.remove();
-                pq.add(key);
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(map::get));
+        for (Integer key : map.keySet()) {
+            if(priorityQueue.size() < k){
+                priorityQueue.add(key);
+            }else if(map.get(key) > map.get(priorityQueue.peek())){
+                priorityQueue.remove();
+                priorityQueue.add(key);
             }
         }
 
-        int[] arr = new int[k];
-        Iterator<Integer> iterator = pq.iterator();
-        for (int i = 0; i < k; i++) {
-            arr[i] = iterator.next();
+        int[] arr= new int[k];
+        for (int i = 0; !priorityQueue.isEmpty(); i++) {
+            arr[i] = priorityQueue.remove();
         }
         return arr;
     }
