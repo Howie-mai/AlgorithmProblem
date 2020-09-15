@@ -25,7 +25,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.getPermutation(4,9));
 //        System.out.println(commonProblem.permute(new int[]{1}));
 //        System.out.println(commonProblem.combine(4,2));
-        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
+//        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
+        System.out.println(commonProblem.findMedianSortedArrays(new int[]{1, 2}, new int[]{3, 4}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -241,21 +242,21 @@ public class CommonProblem {
      * <p>
      * 日期以字符串形式给出，格式为 YYYY-MM-DD，如示例所示。
      */
-    public int daysBetweenDates(String date1,String date2) {
-        return Math.abs(daysBetweenDates(date1)-daysBetweenDates(date2));
+    public int daysBetweenDates(String date1, String date2) {
+        return Math.abs(daysBetweenDates(date1) - daysBetweenDates(date2));
     }
 
     public int daysBetweenDates(String date) {
         int day = 0;
         String[] split1 = date.split("-");
-        int[] monthDay = new int[]{-1,31,28,31,30,31,30,31,31,30,31,30,31};
+        int[] monthDay = new int[]{-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         // 处理年份
         int year = Integer.parseInt(split1[0]);
         int preYear = 1971;
         while (preYear == year) {
 
             day += 365;
-            if (isleap(preYear)){
+            if (isleap(preYear)) {
                 day += 1;
             }
 
@@ -265,13 +266,13 @@ public class CommonProblem {
         // 处理月份
         int month = Integer.parseInt(split1[1]);
         int preMonth = 1;
-        while (preMonth == month){
-            if(preMonth == 2){
+        while (preMonth == month) {
+            if (preMonth == 2) {
                 day += monthDay[preMonth];
-                if(isleap(year)){
+                if (isleap(year)) {
                     day += 1;
                 }
-            }else {
+            } else {
                 day += monthDay[preMonth];
             }
             preMonth++;
@@ -291,13 +292,13 @@ public class CommonProblem {
      * 但"12e"、"1a3.14"、"1.2.3"、"+-5"及"12e+5.4"都不是。
      */
     public boolean isNumber(String s) {
-        if(s.endsWith("f") || s.endsWith("d") || s.endsWith("D")){
+        if (s.endsWith("f") || s.endsWith("d") || s.endsWith("D")) {
             return false;
         }
-        try{
+        try {
             Double.parseDouble(s);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -308,41 +309,42 @@ public class CommonProblem {
      * 给定 n 和 k，返回第 k 个排列。
      */
 
-    int[] fc ;
+    int[] fc;
     boolean[] used;
     int k;
     int n;
+
     public String getPermutation(int n, int k) {
         this.n = n;
         this.k = k;
         used = new boolean[n + 1];
         fc = new int[n + 1];
         fc[0] = 1;
-        for (int i = 1;i <= n;i++){
+        for (int i = 1; i <= n; i++) {
             fc[i] = fc[i - 1] * i;
         }
 
         StringBuilder sb = new StringBuilder();
-        dfs(0,sb);
+        dfs(0, sb);
         return sb.toString();
     }
 
     /**
      * 在这一步之前已经选择了几个数字，其值恰好等于这一步需要确定的下标位置
      */
-    public void dfs(int index,StringBuilder path){
-        if(index == n){
+    public void dfs(int index, StringBuilder path) {
+        if (index == n) {
             return;
         }
 
         // // 计算还未确定的数字的全排列的个数
         int cnt = fc[n - 1 - index];
-        for (int i = 1;i <= n;i++){
-            if(used[i]){
+        for (int i = 1; i <= n; i++) {
+            if (used[i]) {
                 continue;
             }
 
-            if(cnt < k){
+            if (cnt < k) {
                 k -= cnt;
                 continue;
             }
@@ -362,31 +364,32 @@ public class CommonProblem {
      * 给定一个 没有重复 数字的序列，返回其所有可能的全排列。
      */
     List<List<Integer>> ans46List = new ArrayList<>();
+
     public List<List<Integer>> permute(int[] nums) {
-        if(nums.length == 0){
+        if (nums.length == 0) {
             return ans46List;
         }
 
         List<Integer> list = new ArrayList<>();
         boolean[] used = new boolean[nums.length];
-        dfs(nums,0,list,used);
+        dfs(nums, 0, list, used);
         return ans46List;
     }
 
-    public void dfs(int[] nums,int index,List<Integer> list,boolean[] used){
-        if(index == nums.length){
+    public void dfs(int[] nums, int index, List<Integer> list, boolean[] used) {
+        if (index == nums.length) {
             ans46List.add(new ArrayList<>(list));
             return;
         }
 
         for (int i = 0; i < nums.length; i++) {
-            if(used[i]){
+            if (used[i]) {
                 continue;
             }
 
             list.add(nums[i]);
             used[i] = true;
-            dfs(nums,index + 1,list,used);
+            dfs(nums, index + 1, list, used);
             list.remove(list.size() - 1);
             used[i] = false;
         }
@@ -397,32 +400,33 @@ public class CommonProblem {
      * 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
      */
     List<List<Integer>> ans77List = new ArrayList<>();
+
     public List<List<Integer>> combine(int n, int k) {
-        if(n == 0){
+        if (n == 0) {
             return ans77List;
         }
 
         Deque<Integer> list = new ArrayDeque<>();
-        dfs(1,n,k,list);
+        dfs(1, n, k, list);
         return ans77List;
     }
 
-    public void dfs(int index,int n, int k,Deque<Integer> list){
+    public void dfs(int index, int n, int k, Deque<Integer> list) {
         // 剪枝：temp 长度加上区间 [index, n] 的长度小于 k，不可能构造出长度为 k 的 temp
         if (list.size() + (n - index + 1) < k) {
             return;
         }
 
-        if(list.size() == k){
+        if (list.size() == k) {
             ans77List.add(new ArrayList<>(list));
             return;
         }
 
         list.addLast(index);
-        dfs(index + 1,n,k,list);
+        dfs(index + 1, n, k, list);
         list.removeLast();
 
-        dfs(index + 1,n,k,list);
+        dfs(index + 1, n, k, list);
     }
 
     /**
@@ -433,42 +437,134 @@ public class CommonProblem {
      */
     public int findLengthOfShortestSubarray(int[] arr) {
         int len = arr.length;
-        if(len == 1 || len == 0){
+        if (len == 1 || len == 0) {
             return 0;
         }
 
         int left = -1;
         for (int i = 0; i < arr.length - 1; i++) {
-            if(arr[i + 1] < arr[i]){
+            if (arr[i + 1] < arr[i]) {
                 left = i;
                 break;
             }
         }
 
         // 已经是正确的顺序
-        if(left == -1){
+        if (left == -1) {
             return 0;
         }
 
         int right = len - 1;
-        while (right - 1 > 0 && arr[right] >= arr[right - 1]){
+        while (right - 1 > 0 && arr[right] >= arr[right - 1]) {
             right--;
         }
 
         // 删除[left + 1....len] 或者 [0....right-1]区间的数
-        int result = Math.min(len - left - 1,right);
+        int result = Math.min(len - left - 1, right);
 
-        int i = 0,j = right;
-        for (;i <= left && j <= len - 1;){
-            if(arr[i] <= arr[j]){
+        int i = 0, j = right;
+        for (; i <= left && j <= len - 1; ) {
+            if (arr[i] <= arr[j]) {
                 // 从左边找到 小于等于 右边的数，删除[i+1....j-1]区间的数据
-                result = Math.min(result,j - i - 1);
+                result = Math.min(result, j - i - 1);
                 i++;
-            }else {
+            } else {
                 j++;
             }
         }
 
         return result;
+    }
+
+    /**
+     * 4. 寻找两个正序数组的中位数
+     * 给定两个大小为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。
+     * <p>
+     * 请你找出这两个正序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
+     * <p>
+     * 你可以假设 nums1 和 nums2 不会同时为空。
+     *
+     * 第四题的二分法解决方法
+     */
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int length1 = nums1.length, length2 = nums2.length;
+        int totalLength = length1 + length2;
+        if (totalLength % 2 == 1) {
+            int midIndex = totalLength / 2;
+            return getKthElement(nums1, nums2, midIndex + 1);
+        } else {
+            int midIndex1 = totalLength / 2 - 1, midIndex2 = totalLength / 2;
+            return (getKthElement(nums1, nums2, midIndex1 + 1) + getKthElement(nums1, nums2, midIndex2 + 1)) / 2.0;
+        }
+    }
+//    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+//        int n = nums1.length;
+//        int m = nums2.length;
+//        int mid = (n + m) / 2;
+//        int i = 0, j = 0;
+//
+//        int left = 0, right = 0;
+//        for (int z = 0;z <= mid;z++) {
+//            left = right;
+//            if (i < nums1.length && j == nums2.length) {
+//                right = nums1[i++];
+//            } else if (j < nums2.length && i == nums1.length) {
+//                right = nums2[j++];
+//            } else if (j < nums2.length && i < nums1.length) {
+//                if (nums1[i] < nums2[j]) {
+//                    right = nums1[i++];
+//                } else {
+//                    right = nums2[j++];
+//                }
+//            }
+//        }
+//
+//        if((n + m) % 2 != 0){
+//            return right;
+//        }else {
+//            return (left + right) / 2.0;
+//        }
+//    }
+
+    public int getKthElement(int[] nums1, int[] nums2, int k) {
+        /* 主要思路：要找到第 k (k>1) 小的元素，那么就取 pivot1 = nums1[k/2-1] 和 pivot2 = nums2[k/2-1] 进行比较
+         * 这里的 "/" 表示整除
+         * nums1 中小于等于 pivot1 的元素有 nums1[0 .. k/2-2] 共计 k/2-1 个
+         * nums2 中小于等于 pivot2 的元素有 nums2[0 .. k/2-2] 共计 k/2-1 个
+         * 取 pivot = min(pivot1, pivot2)，两个数组中小于等于 pivot 的元素共计不会超过 (k/2-1) + (k/2-1) <= k-2 个
+         * 这样 pivot 本身最大也只能是第 k-1 小的元素
+         * 如果 pivot = pivot1，那么 nums1[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums1 数组
+         * 如果 pivot = pivot2，那么 nums2[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums2 数组
+         * 由于我们 "删除" 了一些元素（这些元素都比第 k 小的元素要小），因此需要修改 k 的值，减去删除的数的个数
+         */
+        int length1 = nums1.length, length2 = nums2.length;
+        int index1 = 0, index2 = 0;
+        int kthElement = 0;
+
+        while (true) {
+            // 边界情况
+            if (index1 == length1) {
+                return nums2[index2 + k - 1];
+            }
+            if (index2 == length2) {
+                return nums1[index1 + k - 1];
+            }
+            if (k == 1) {
+                return Math.min(nums1[index1], nums2[index2]);
+            }
+
+            // 正常情况
+            int half = k / 2;
+            int newIndex1 = Math.min(index1 + half, length1) - 1;
+            int newIndex2 = Math.min(index2 + half, length2) - 1;
+            int pivot1 = nums1[newIndex1], pivot2 = nums2[newIndex2];
+            if (pivot1 <= pivot2) {
+                k -= (newIndex1 - index1 + 1);
+                index1 = newIndex1 + 1;
+            } else {
+                k -= (newIndex2 - index2 + 1);
+                index2 = newIndex2 + 1;
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ public class BacktrackProblem {
 
 //        System.out.println(backtrack.combinationSum2(new int[]{10,1,2,7,6,1,5},8));
 //        System.out.println(backtrack.combinationSum3(3,15));
-        System.out.println(backtrack.combinationSum4(new int[]{1, 2, 5}, 5));
+//        System.out.println(backtrack.combinationSum4(new int[]{1, 2, 5}, 5));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start) + "ms");
     }
@@ -201,24 +201,66 @@ public class BacktrackProblem {
     }
 
     /**
-     * 377. 组合总和 Ⅳ
-     * 给定一个由正整数组成且不存在重复数字的数组，找出和为给定目标正整数的组合的个数。
+     * 37. 解数独
+     * 编写一个程序，通过已填充的空格来解决数独问题。
+     * 一个数独的解法需遵循如下规则：
+     * 数字 1-9 在每一行只能出现一次。
+     * 数字 1-9 在每一列只能出现一次。
+     * 数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+     * 空白格用 '.' 表示。
+     * 所有的数组规格都是9X9
      */
-    public int combinationSum4(int[] nums, int target) {
-        int[] dp = new int[target + 1];
-        // 这个值被其它状态参考，设置为 1 是合理的
-        dp[0] = 1;
-        /**
-         * dp[4] = dp[3] + dp[2] + dp[1]
-         * 即：4 的组合数可以由三部分组成，1 和 dp[3]，2 和 dp[2], 3 和dp[1];
-         */
-        for (int i = 1; i <= target; i++) {
-            for (int num : nums) {
-                if (num <= i) {
-                    dp[i] += dp[i - num];
-                }
+    public void solveSudoku(char[][] board) {
+        backTrackBy37(board,0,0);
+    }
+
+    public boolean backTrackBy37(char[][] board, int row, int col) {
+        // 结束一行换另一行
+        if (col == board[0].length) {
+            return backTrackBy37(board, row + 1, 0);
+        }
+
+        // 所有行被遍历完，base case
+        if (row == board.length) {
+            return true;
+        }
+
+        // 判断是否有数字
+        if(board[row][col] != '.'){
+            return backTrackBy37(board,row,col + 1);
+        }
+
+        // 循环1-9
+        for (char ch = '1'; ch <= '9'; ch++) {
+            if(!isVaild(board,row,col,ch)){
+                continue;
+            }
+            // 做选择
+            board[row][col] = ch;
+            if(backTrackBy37(board, row, col + 1)){
+                return true;
+            }
+            board[row][col] = '.';
+        }
+        return false;
+    }
+
+    public boolean isVaild(char[][] board,int row ,int col,char ch){
+        for (int i = 0;i < 9;i++){
+            // 判断行有没有重复字符
+            if(board[row][i] == ch){
+                return false;
+            }
+            // 判断列有没有重复字符
+            if(board[i][col] == ch){
+                return false;
+            }
+
+            // 判断九宫格有没有重复字符
+            if(board[(row/3)*3 + i/3][(col/3)*3 + i%3] == ch){
+                return false;
             }
         }
-        return dp[target];
+        return true;
     }
 }
