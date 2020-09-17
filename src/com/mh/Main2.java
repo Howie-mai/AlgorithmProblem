@@ -25,14 +25,15 @@ public class Main2 {
 //        System.out.println(Double.valueOf(df.format(calories)));
 //        System.out.println(Double.valueOf(kmTotalD));
 
-        for (int i = 1;i <= 9;i++){
-            char x = (char) (i + '0');
-            System.out.println(x);
-        }
+//        for (int i = 1;i <= 9;i++){
+//            char x = (char) (i + '0');
+//            System.out.println(x);
+//        }
 
-
-
-
+        int i = 0;
+        String a = "    -123213";
+        int i1 = Integer.parseInt(a);
+        System.out.println(i1);
     }
 
     public static float getDistanceFromSteps(int steps, int gender, int height) {

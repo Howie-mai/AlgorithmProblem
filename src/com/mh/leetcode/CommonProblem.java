@@ -1,7 +1,5 @@
 package com.mh.leetcode;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -26,7 +24,9 @@ public class CommonProblem {
 //        System.out.println(commonProblem.permute(new int[]{1}));
 //        System.out.println(commonProblem.combine(4,2));
 //        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
-        System.out.println(commonProblem.findMedianSortedArrays(new int[]{1, 2}, new int[]{3, 4}));
+//        System.out.println(commonProblem.findMedianSortedArrays(new int[]{1, 2}, new int[]{3, 4}));
+//        System.out.println(commonProblem.convert("LEETCODEISHIRING" , 3));
+        System.out.println(commonProblem.myAtoi("+1"));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -483,7 +483,7 @@ public class CommonProblem {
      * 请你找出这两个正序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
      * <p>
      * 你可以假设 nums1 和 nums2 不会同时为空。
-     *
+     * <p>
      * 第四题的二分法解决方法
      */
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -566,5 +566,112 @@ public class CommonProblem {
                 index2 = newIndex2 + 1;
             }
         }
+    }
+
+    /**
+     * 6. Z 字形变换
+     * 将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
+     * 比如输入字符串为 "LEETCODEISHIRING" 行数为 3 时，排列如下：
+     * L   C   I   R
+     * E T O E S I I G
+     * E   D   H   N
+     * 之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如："LCIRETOESIIGEDHN"。
+     */
+    public String convert(String s, int numRows) {
+        if(numRows == 1){
+            return s;
+        }
+        List<StringBuilder> list = new ArrayList<>();
+        for (int i = 0;i < numRows;i++){
+            list.add(new StringBuilder());
+        }
+
+        char[] chars = s.toCharArray();
+        int curIndex = 0;
+        for (char ch : chars) {
+           list.get(curIndex).append(ch);
+           if(curIndex == 0){
+               curIndex++;
+           }else if(curIndex == numRows - 1){
+               curIndex--;
+           }
+        }
+        StringBuilder ans = new StringBuilder();
+        for (StringBuilder stringBuilder : list) {
+            System.out.println(stringBuilder.toString());
+            ans.append(stringBuilder);
+        }
+        return ans.toString();
+    }
+
+    public int myAtoi(String str) {
+        char[] chars = str.toCharArray();
+        int ans;
+        int start = -1;
+        boolean flag = true,first = true;
+
+        for (int i = 0; i < chars.length; i++) {
+            char ch = chars[i];
+            if(ch == ' '){
+                continue;
+            }
+
+            if(ch!= '+' && ch != '-' && !(ch >= '0' && ch <= '9')){
+                break;
+            }
+
+            if( (ch == '-' || ch == '+') && (i == chars.length - 1) ){
+                break;
+            }
+
+            if(ch == '-'){
+                start = i;
+                flag = false;
+                first = false;
+                break;
+            }
+
+            if(ch == '+'){
+                start = i;
+                first = false;
+                break;
+            }
+
+            start = i;
+            break;
+        }
+
+        if(start == -1 || (start == chars.length - 1 && !first)){
+            return 0;
+        }
+
+        if(start == chars.length - 1){
+            return Integer.parseInt(str.substring(start));
+        }
+
+        int end = start + 1;
+
+        if(!first){
+            if(!(chars[end] >= '0' && chars[end] <= '9')){
+                return 0;
+            }
+        }
+
+        while (end < chars.length) {
+            char ch = chars[end];
+            if(!(ch >= '0' && ch <= '9')){
+                break;
+            }
+            end++;
+        }
+
+        String substring = str.substring(start, end);
+        try {
+          ans = Integer.parseInt(substring);
+        }catch (Exception e){
+            ans = flag ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+        }
+
+        return ans;
     }
 }

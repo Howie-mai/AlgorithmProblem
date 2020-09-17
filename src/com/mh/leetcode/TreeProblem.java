@@ -940,4 +940,21 @@ public class TreeProblem {
         dfs(list, levels, root.left, level + 1);
         dfs(list, levels, root.right, level + 1);
     }
+
+    /**
+     * 226. 翻转二叉树
+     * 翻转一棵二叉树。
+     */
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+
+        TreeNode left = invertTree(root.left);
+        root.left = invertTree(root.right);
+        root.right = left;
+
+        return root;
+
+    }
 }
