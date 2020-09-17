@@ -19,6 +19,7 @@ public class CommonProblem {
 //        System.out.println(commonProblem.judgePoint24(new int[]{4, 7, 1, 8}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
+        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
 //        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
 //        System.out.println(commonProblem.getPermutation(4,9));
 //        System.out.println(commonProblem.permute(new int[]{1}));
@@ -217,6 +218,49 @@ public class CommonProblem {
     }
 
     /**
+     * 557. 反转字符串中的单词 III
+     * 给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+     */
+    public String reverseWords(String s) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] s1 = s.split(" ");
+        for (int i = 0; i < s1.length; i++) {
+            StringBuilder builder = new StringBuilder(s1[i]);
+            stringBuilder.append(builder.reverse());
+        }
+        return stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length()).toString();
+    }
+
+    /**
+     * 841. 钥匙和房间
+     * 有 N 个房间，开始时你位于 0 号房间。每个房间有不同的号码：0，1，2，...，N-1，并且房间里可能有一些钥匙能使你进入下一个房间。
+     * 在形式上，对于每个房间 i 都有一个钥匙列表 rooms[i]，每个钥匙 rooms[i][j] 由 [0,1，...，N-1] 中的一个整数表示，
+     * 其中 N = rooms.length。 钥匙 rooms[i][j] = v 可以打开编号为 v 的房间。
+     * 最初，除 0 号房间外的其余所有房间都被锁住。
+     * 你可以自由地在房间之间来回走动。
+     * 如果能进入每个房间返回 true，否则返回 false。
+     */
+    boolean[] visit;
+    int roomVisitNum = 0;
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        if(rooms.isEmpty()){
+            return true;
+        }
+        visit = new boolean[rooms.size()];
+        dfs(rooms,0);
+        return roomVisitNum == rooms.size();
+    }
+
+    public void dfs(List<List<Integer>> rooms,int roomNum){
+        visit[roomNum] = true;
+        roomVisitNum++;
+        for (Integer room : rooms.get(roomNum)) {
+            if(!visit[room]){
+                dfs(rooms,room);
+            }
+        }
+    }
+    /*
      * 486. 预测赢家
      * 给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
      * <p>
