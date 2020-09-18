@@ -158,4 +158,35 @@ public class DpProblem {
         }
         return dp[target];
     }
+
+    /**
+     * 1277. 统计全为 1 的正方形子矩阵
+     * 给你一个 m * n 的矩阵，矩阵中的元素不是 0 就是 1，请你统计并返回其中完全由 1 组成的 正方形 子矩阵的个数。
+     */
+    public int countSquares(int[][] matrix) {
+        int sum = 0;
+        if(matrix.length == 0){
+            return sum;
+        }
+
+        int[][] dp = new int[matrix.length][matrix[0].length];
+
+        for (int i = 0;i < matrix.length;i++){
+            for (int j = 0;j < matrix[i].length;j++){
+                if(matrix[i][j] == 0){
+                    dp[i][j] = 0;
+                }else if(i == 0 || j == 0){
+                    dp[i][j] = matrix[i][j];
+                }else {
+                    int a =  Math.min(dp[i][j - 1],dp[i - 1][j]);
+                    int b =  Math.min(a,dp[i - 1][j - 1]) + 1;
+                    dp[i][j] = b;
+                }
+                sum += dp[i][j];
+            }
+        }
+
+        return sum;
+    }
+
 }

@@ -19,7 +19,7 @@ public class CommonProblem {
 //        System.out.println(commonProblem.judgePoint24(new int[]{4, 7, 1, 8}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
-        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
+//        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
 //        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
 //        System.out.println(commonProblem.getPermutation(4,9));
 //        System.out.println(commonProblem.permute(new int[]{1}));
@@ -27,7 +27,10 @@ public class CommonProblem {
 //        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
 //        System.out.println(commonProblem.findMedianSortedArrays(new int[]{1, 2}, new int[]{3, 4}));
 //        System.out.println(commonProblem.convert("LEETCODEISHIRING" , 3));
-        System.out.println(commonProblem.myAtoi("+1"));
+//        System.out.println(commonProblem.myAtoi("+1"));
+//        System.out.println(commonProblem.permuteUnique(new int[]{1,1,2}));
+//        System.out.println(commonProblem.romanToInt("IX"));
+        System.out.println(commonProblem.intToRoman(3124));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -231,38 +234,10 @@ public class CommonProblem {
         return stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length()).toString();
     }
 
-    /**
-     * 841. 钥匙和房间
-     * 有 N 个房间，开始时你位于 0 号房间。每个房间有不同的号码：0，1，2，...，N-1，并且房间里可能有一些钥匙能使你进入下一个房间。
-     * 在形式上，对于每个房间 i 都有一个钥匙列表 rooms[i]，每个钥匙 rooms[i][j] 由 [0,1，...，N-1] 中的一个整数表示，
-     * 其中 N = rooms.length。 钥匙 rooms[i][j] = v 可以打开编号为 v 的房间。
-     * 最初，除 0 号房间外的其余所有房间都被锁住。
-     * 你可以自由地在房间之间来回走动。
-     * 如果能进入每个房间返回 true，否则返回 false。
-     */
-    boolean[] visit;
-    int roomVisitNum = 0;
-    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-        if(rooms.isEmpty()){
-            return true;
-        }
-        visit = new boolean[rooms.size()];
-        dfs(rooms,0);
-        return roomVisitNum == rooms.size();
-    }
-
-    public void dfs(List<List<Integer>> rooms,int roomNum){
-        visit[roomNum] = true;
-        roomVisitNum++;
-        for (Integer room : rooms.get(roomNum)) {
-            if(!visit[room]){
-                dfs(rooms,room);
-            }
-        }
-    }
     /*
      * 486. 预测赢家
-     * 给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
+     * 给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。
+     * 每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
      * <p>
      * 给定一个表示分数的数组，预测玩家1是否会成为赢家。你可以假设每个玩家的玩法都会使他的分数最大化。
      */
@@ -345,132 +320,6 @@ public class CommonProblem {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    /**
-     * 60. 第k个排列
-     * 给出集合 [1,2,3,…,n]，其所有元素共有 n! 种排列。
-     * 给定 n 和 k，返回第 k 个排列。
-     */
-
-    int[] fc;
-    boolean[] used;
-    int k;
-    int n;
-
-    public String getPermutation(int n, int k) {
-        this.n = n;
-        this.k = k;
-        used = new boolean[n + 1];
-        fc = new int[n + 1];
-        fc[0] = 1;
-        for (int i = 1; i <= n; i++) {
-            fc[i] = fc[i - 1] * i;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        dfs(0, sb);
-        return sb.toString();
-    }
-
-    /**
-     * 在这一步之前已经选择了几个数字，其值恰好等于这一步需要确定的下标位置
-     */
-    public void dfs(int index, StringBuilder path) {
-        if (index == n) {
-            return;
-        }
-
-        // // 计算还未确定的数字的全排列的个数
-        int cnt = fc[n - 1 - index];
-        for (int i = 1; i <= n; i++) {
-            if (used[i]) {
-                continue;
-            }
-
-            if (cnt < k) {
-                k -= cnt;
-                continue;
-            }
-
-            path.append(i);
-            used[i] = true;
-            dfs(index + 1, path);
-            // 注意 1：没有回溯（状态重置）的必要
-
-            // 注意 2：这里要加 return，后面的数没有必要遍历去尝试了
-            return;
-        }
-    }
-
-    /**
-     * 46. 全排列
-     * 给定一个 没有重复 数字的序列，返回其所有可能的全排列。
-     */
-    List<List<Integer>> ans46List = new ArrayList<>();
-
-    public List<List<Integer>> permute(int[] nums) {
-        if (nums.length == 0) {
-            return ans46List;
-        }
-
-        List<Integer> list = new ArrayList<>();
-        boolean[] used = new boolean[nums.length];
-        dfs(nums, 0, list, used);
-        return ans46List;
-    }
-
-    public void dfs(int[] nums, int index, List<Integer> list, boolean[] used) {
-        if (index == nums.length) {
-            ans46List.add(new ArrayList<>(list));
-            return;
-        }
-
-        for (int i = 0; i < nums.length; i++) {
-            if (used[i]) {
-                continue;
-            }
-
-            list.add(nums[i]);
-            used[i] = true;
-            dfs(nums, index + 1, list, used);
-            list.remove(list.size() - 1);
-            used[i] = false;
-        }
-    }
-
-    /**
-     * 77. 组合
-     * 给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
-     */
-    List<List<Integer>> ans77List = new ArrayList<>();
-
-    public List<List<Integer>> combine(int n, int k) {
-        if (n == 0) {
-            return ans77List;
-        }
-
-        Deque<Integer> list = new ArrayDeque<>();
-        dfs(1, n, k, list);
-        return ans77List;
-    }
-
-    public void dfs(int index, int n, int k, Deque<Integer> list) {
-        // 剪枝：temp 长度加上区间 [index, n] 的长度小于 k，不可能构造出长度为 k 的 temp
-        if (list.size() + (n - index + 1) < k) {
-            return;
-        }
-
-        if (list.size() == k) {
-            ans77List.add(new ArrayList<>(list));
-            return;
-        }
-
-        list.addLast(index);
-        dfs(index + 1, n, k, list);
-        list.removeLast();
-
-        dfs(index + 1, n, k, list);
     }
 
     /**
@@ -622,23 +471,23 @@ public class CommonProblem {
      * 之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如："LCIRETOESIIGEDHN"。
      */
     public String convert(String s, int numRows) {
-        if(numRows == 1){
+        if (numRows == 1) {
             return s;
         }
         List<StringBuilder> list = new ArrayList<>();
-        for (int i = 0;i < numRows;i++){
+        for (int i = 0; i < numRows; i++) {
             list.add(new StringBuilder());
         }
 
         char[] chars = s.toCharArray();
         int curIndex = 0;
         for (char ch : chars) {
-           list.get(curIndex).append(ch);
-           if(curIndex == 0){
-               curIndex++;
-           }else if(curIndex == numRows - 1){
-               curIndex--;
-           }
+            list.get(curIndex).append(ch);
+            if (curIndex == 0) {
+                curIndex++;
+            } else if (curIndex == numRows - 1) {
+                curIndex--;
+            }
         }
         StringBuilder ans = new StringBuilder();
         for (StringBuilder stringBuilder : list) {
@@ -648,34 +497,44 @@ public class CommonProblem {
         return ans.toString();
     }
 
+    /**
+     * 8. 字符串转换整数 (atoi)
+     * 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
+     * 首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。接下来的转化规则如下：
+     * 如果第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字字符组合起来，形成一个有符号整数。
+     * 假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成一个整数。
+     * 该字符串在有效的整数部分之后也可能会存在多余的字符，那么这些字符可以被忽略，它们对函数不应该造成影响。
+     * 注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换，即无法进行有效转换。
+     * 在任何情况下，若函数不能进行有效的转换时，请返回 0 。
+     */
     public int myAtoi(String str) {
         char[] chars = str.toCharArray();
         int ans;
         int start = -1;
-        boolean flag = true,first = true;
+        boolean flag = true, first = true;
 
         for (int i = 0; i < chars.length; i++) {
             char ch = chars[i];
-            if(ch == ' '){
+            if (ch == ' ') {
                 continue;
             }
 
-            if(ch!= '+' && ch != '-' && !(ch >= '0' && ch <= '9')){
+            if (ch != '+' && ch != '-' && !(ch >= '0' && ch <= '9')) {
                 break;
             }
 
-            if( (ch == '-' || ch == '+') && (i == chars.length - 1) ){
+            if ((ch == '-' || ch == '+') && (i == chars.length - 1)) {
                 break;
             }
 
-            if(ch == '-'){
+            if (ch == '-') {
                 start = i;
                 flag = false;
                 first = false;
                 break;
             }
 
-            if(ch == '+'){
+            if (ch == '+') {
                 start = i;
                 first = false;
                 break;
@@ -685,25 +544,25 @@ public class CommonProblem {
             break;
         }
 
-        if(start == -1 || (start == chars.length - 1 && !first)){
+        if (start == -1 || (start == chars.length - 1 && !first)) {
             return 0;
         }
 
-        if(start == chars.length - 1){
+        if (start == chars.length - 1) {
             return Integer.parseInt(str.substring(start));
         }
 
         int end = start + 1;
 
-        if(!first){
-            if(!(chars[end] >= '0' && chars[end] <= '9')){
+        if (!first) {
+            if (!(chars[end] >= '0' && chars[end] <= '9')) {
                 return 0;
             }
         }
 
         while (end < chars.length) {
             char ch = chars[end];
-            if(!(ch >= '0' && ch <= '9')){
+            if (!(ch >= '0' && ch <= '9')) {
                 break;
             }
             end++;
@@ -711,11 +570,62 @@ public class CommonProblem {
 
         String substring = str.substring(start, end);
         try {
-          ans = Integer.parseInt(substring);
-        }catch (Exception e){
+            ans = Integer.parseInt(substring);
+        } catch (Exception e) {
             ans = flag ? Integer.MAX_VALUE : Integer.MIN_VALUE;
         }
 
         return ans;
+    }
+
+    /**
+     * 13. 罗马数字转整数
+     * 如果前面的数字比后面的小，则为IV、IX这种4，9的数字。
+     */
+    public int romanToInt(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        map.put('I', 1);
+        map.put('V', 5);
+        map.put('X', 10);
+        map.put('L', 50);
+        map.put('C', 100);
+        map.put('D', 500);
+        map.put('M', 1000);
+
+        int ans = 0;
+        char[] charArray = s.toCharArray();
+        // 第二种解法
+        // I -> V,X | X -> L,C | C ->D,M
+        int pre = map.get(charArray[0]);
+        for (int i = 1; i < charArray.length; i++) {
+            int cur = map.get(charArray[i]);
+            if (pre < cur) {
+                ans -= pre;
+            } else {
+                ans += pre;
+            }
+            pre = cur;
+        }
+        ans += pre;
+        return ans;
+    }
+
+    /**
+     * 12. 整数转罗马数字
+     * 贪心算法
+     */
+    public String intToRoman(int num) {
+        int[] romanValue = new int[]{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        String[] romanStr = new String[]{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < romanValue.length && num >= 0; i++) {
+            while (romanValue[i] <= num) {
+                num -= romanValue[i];
+                sb.append(romanStr[i]);
+            }
+        }
+
+        return sb.toString();
     }
 }
