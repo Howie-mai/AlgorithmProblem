@@ -219,82 +219,6 @@ public class ArrayProblem {
     }
 
     /**
-     * 51. N 皇后
-     * n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
-     */
-    List<List<String>> ansList = new ArrayList<>();
-
-    public List<List<String>> solveNQueens(int n) {
-        String[][] board = new String[n][n];
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(board[i], ".");
-        }
-
-        backtrack(board, 0);
-        return ansList;
-    }
-
-    private void backtrack(String[][] board, int row) {
-        // 结束条件并添加进结果集
-        if (row == board.length) {
-            ansList.add(changeList(board));
-            return;
-        }
-
-        int n = board[row].length;
-        // 回溯算法
-        for (int col = 0; col < n; col++) {
-            if (!isValid(board, row, col)) {
-                continue;
-            }
-            // 做选择
-            board[row][col] = "Q";
-            // 进入下一决策
-            backtrack(board, row + 1);
-            // 撤销选择
-            board[row][col] = ".";
-        }
-    }
-
-    /**
-     * 是否可以在board[row][col]放置皇后
-     */
-    private boolean isValid(String[][] board, int row, int col) {
-        int n = board.length;
-        for (int i = 0; i < n; i++) {
-            // 检查列是否有皇后冲突
-            if ("Q".equals(board[i][col])) {
-                return false;
-            }
-        }
-        // 检查右上方是否有皇后相互冲突
-        for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-            if ("Q".equals(board[i][j])) {
-                return false;
-            }
-        }
-        // 检查左上方是否有皇后相互冲突
-        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-            if ("Q".equals(board[i][j])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private List<String> changeList(String[][] board) {
-        List<String> temp = new ArrayList<>();
-        for (String[] strings : board) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String string : strings) {
-                stringBuilder.append(string);
-            }
-            temp.add(stringBuilder.toString());
-        }
-        return temp;
-    }
-
-    /**
      * 面试题 17.19. 消失的两个数字
      * 给定一个数组，包含从 1 到 N 所有的整数，但其中缺了两个数字。你能在 O(N) 时间内只用 O(1) 的空间找到它们吗？
      * <p>
@@ -320,6 +244,7 @@ public class ArrayProblem {
     }
 
     /**
+     * LCP
      * 二维数组的两条对角线和 ，交点只算一次
      */
     public int diagonalSum(int[][] mat) {
@@ -388,32 +313,54 @@ public class ArrayProblem {
     }
 
     /**
-     * 1277. 统计全为 1 的正方形子矩阵
-     * 给你一个 m * n 的矩阵，矩阵中的元素不是 0 就是 1，请你统计并返回其中完全由 1 组成的 正方形 子矩阵的个数。
+     * 31. 下一个排列
+     * 实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。
+     * 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+     * 必须原地修改，只允许使用额外常数空间。
+     * 以下是一些例子，输入位于左侧列，其相应输出位于右侧列。
+     * 1,2,3 → 1,3,2
+     * 3,2,1 → 1,2,3
+     * 1,1,5 → 1,5,1
      */
-    public int countSquares(int[][] matrix) {
-        int sum = 0;
-        if(matrix.length == 0){
-            return sum;
-        }
-
-        int[][] dp = new int[matrix.length][matrix[0].length];
-
-        for (int i = 0;i < matrix.length;i++){
-            for (int j = 0;j < matrix[i].length;j++){
-                if(matrix[i][j] == 0){
-                    dp[i][j] = 0;
-                }else if(i == 0 || j == 0){
-                   dp[i][j] = matrix[i][j];
-                }else {
-                    int a =  Math.min(dp[i][j - 1],dp[i - 1][j]);
-                    int b =  Math.min(a,dp[i - 1][j - 1]) + 1;
-                    dp[i][j] = b;
-                }
-                sum += dp[i][j];
+    public void nextPermutation(int[] nums) {
+        int start = -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if(nums[i] <= nums[i + 1]){
+                start = i;
+                break;
             }
         }
 
-        return sum;
+        if(start == -1){
+            Arrays.sort(nums);
+            return;
+        }
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if(nums[i] > nums[start]){
+                // 交换
+                swapNum(nums,i,start);
+                break;
+            }
+        }
+        // 把[end,nums.length-1]区间的数变为升序
+        reverse(nums,start + 1);
     }
+
+    private void swapNum(int[] nums, int i, int start) {
+        int temp = nums[i];
+        nums[i] = nums[start];
+        nums[start] = temp;
+    }
+
+
+    private void reverse(int[] nums, int start) {
+        int i = start, j = nums.length - 1;
+        while (i < j) {
+            swapNum(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
 }

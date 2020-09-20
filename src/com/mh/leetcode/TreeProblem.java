@@ -985,23 +985,38 @@ public class TreeProblem {
 
     TreeNode parent1,parent2;
     int len1,len2;
-    public void dfs(TreeNode node,TreeNode parent,int x,int y,int depth){
-        if(parent1 != null && parent2 != null){
+    public void dfs(TreeNode node,TreeNode parent,int x,int y,int depth) {
+        if (parent1 != null && parent2 != null) {
             return;
         }
-        if(node.val == x){
+        if (node.val == x) {
             parent1 = parent;
             len1 = depth;
-        }else if(node.val == y){
+        } else if (node.val == y) {
             parent2 = parent;
             len2 = depth;
-        }else {
-            if(node.left != null){
-                dfs(node.left,node,x,y,depth + 1);
+        } else {
+            if (node.left != null) {
+                dfs(node.left, node, x, y, depth + 1);
             }
-            if(node.right != null){
-                dfs(node.right,node,x,y,depth + 1);
+            if (node.right != null) {
+                dfs(node.right, node, x, y, depth + 1);
             }
         }
+    }
+    /*
+     * 226. 翻转二叉树
+     * 翻转一棵二叉树。
+     */
+    public TreeNode invertTree(TreeNode root) {
+        if(root == null){
+            return null;
+        }
+
+        TreeNode left = invertTree(root.left);
+        root.left = invertTree(root.right);
+        root.right = left;
+
+        return root;
     }
 }

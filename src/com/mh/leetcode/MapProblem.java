@@ -13,16 +13,19 @@ public class MapProblem {
 
     public static void main(String[] args) {
         MapProblem mapProblem = new MapProblem();
-        char[][] board = {{'E','E','E','E','E'},{'E','E','M','E','E'},{'E','E','E','E','E'},{'E','E','E','E','E'}};
-//        char[][] chars = mapProblem.updateBoard(board, new int[]{3, 0});
-//        System.out.println(chars);
-        List<List<String>> tickets = new ArrayList<>();
-        tickets.add(Arrays.asList("JFK","SFO"));
-        tickets.add(Arrays.asList("JFK","ATL"));
-        tickets.add(Arrays.asList("SFO","ATL"));
-        tickets.add(Arrays.asList("ATL","JFK"));
-        tickets.add(Arrays.asList("ATL","SFO"));
-        mapProblem.findItinerary(tickets);
+//        char[][] board = {{'E','E','E','E','E'},{'E','E','M','E','E'},{'E','E','E','E','E'},{'E','E','E','E','E'}};
+////        char[][] chars = mapProblem.updateBoard(board, new int[]{3, 0});
+////        System.out.println(chars);
+//        List<List<String>> tickets = new ArrayList<>();
+//        tickets.add(Arrays.asList("JFK","SFO"));
+//        tickets.add(Arrays.asList("JFK","ATL"));
+//        tickets.add(Arrays.asList("SFO","ATL"));
+//        tickets.add(Arrays.asList("ATL","JFK"));
+//        tickets.add(Arrays.asList("ATL","SFO"));
+//        mapProblem.findItinerary(tickets);
+
+//        System.out.println(Arrays.toString(mapProblem.findRedundantConnection(new int[][]{{1,2},{1,3},{2,3}})));
+        System.out.println(Arrays.toString(mapProblem.findRedundantDirectedConnection(new int[][]{{1,2},{1,3},{2,3}})));
     }
 
     /**
@@ -135,25 +138,109 @@ public class MapProblem {
     }
 
     /**
-     * 847. 访问所有节点的最短路径
-     * 给出 graph 为有 N 个节点（编号为 0, 1, 2, ..., N-1）的无向连通图。
+     *  684. 冗余连接
+     * 在本问题中, 树指的是一个连通且无环的无向图。
+     * 输入一个图，该图由一个有着N个节点 (节点值不重复1, 2, ..., N) 的树及一条附加的边构成。
+     * 附加的边的两个顶点包含在1到N中间，这条附加的边不属于树中已存在的边。
+     * 结果图是一个以边组成的二维数组。每一个边的元素是一对[u, v] ，满足 u < v，表示连接顶点u 和v的无向图的边。
+     * 返回一条可以删去的边，使得结果图是一个有着N个节点的树。如果有多个答案，则返回二维数组中最后出现的边。
+     * 答案边 [u, v] 应满足相同的格式 u < v。
      *
-     * graph.length = N，且只有节点 i 和 j 连通时，j != i 在列表 graph[i] 中恰好出现一次。
+     * 输入: [[1,2], [2,3], [3,4], [1,4], [1,5]]
+     * 输出: [1,4]
+     * 解释: 给定的无向图为:
+     * 5 - 1 - 2
+     *     |   |
+     *     4 - 3
      *
-     * 返回能够访问所有节点的最短路径的长度。你可以在任一节点开始和停止，也可以多次重访节点，并且可以重用边。
+     *     使用并查集算法，找各个节点的共同节点。如果[u,v]中两个节点是同一个节点，便形成了一个环，所以[u,v]为答案
      */
-//    public int shortestPathLength(int[][] graph) {
-//        if(graph.length == 0){
-//            return 0;
-//        }
-//        boolean[] visit = new boolean[graph.length];
-//        dfs(graph,visit,0);
-//    }
-//
-//    public void dfs(int[][] graph,boolean[] visit,int index){
-//        int[] nowGraph = graph[index];
-//        for (int i = 0; i < nowGraph.length; i++) {
-//            if(visit)
-//        }
-//    }
+    public int[] findRedundantConnection(int[][] edges) {
+        int[] index = new int[edges.length + 1];
+        int[] ans = new int[2];
+        // 初始化各个节点，索引等于自身
+        for (int i = 0; i < index.length; i++) {
+            index[i] = i;
+        }
+
+        for (int[] edge : edges) {
+            int xFather = find(index, edge[0]);
+            int yFather = find(index, edge[1]);
+            if (xFather != yFather) {
+                index[xFather] = yFather;
+            } else {
+                ans = edge;
+                break;
+            }
+
+        }
+        return ans;
+    }
+
+    public int find(int[] index,int x){
+        while (index[x] != x){
+            x = index[x];
+        }
+        return x;
+    }
+
+    /**
+     * 685. 冗余连接 II
+     * 与684差不多，不过该题为有向图。
+     * 树中的每个节点都有一个父节点，除了根节点没有父节点。在多了一条附加的边之后，可能有以下两种情况：
+     *
+     * 附加的边指向根节点，则包括根节点在内的每个节点都有一个父节点，此时图中一定有环路；
+     *
+     * 附加的边指向非根节点，则恰好有一个节点（即被附加的边指向的节点）有两个父节点，此时图中可能有环路也可能没有环路。
+     */
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        int nodes = edges.length;
+        // 记录每个节点的父节点,看该节点是否有两个父节点，如果是则为冲突边
+        int[] parent = new int[nodes + 1];
+
+        // 记录并集，查看哪条边导致回环
+        int[] ancestor = new int[nodes + 1];
+
+        for (int i = 1;i <= nodes;i++){
+            parent[i] = i;
+            ancestor[i] = i;
+        }
+
+        int conflict = -1;
+        int cycle = -1;
+        for (int i = 0; i < edges.length; i++) {
+            int node1 = edges[i][0],node2 = edges[i][1];
+            // 判断子节点是否已经有父节点，说明node2有两个父节点，该边为冲突边
+            if(parent[node2] != node2){
+                conflict = i;
+            }else {
+                // 更改node2的父节点为node1
+                parent[node2] = node1;
+                // 判断是否有回环路，没有则合并集合
+                int x = find(ancestor, node1);
+                int y = find(ancestor, node2);
+                if(x == y){
+                    cycle = i;
+                }else {
+                    ancestor[x] = y;
+                }
+            }
+
+        }
+
+         //同一条边不可能同时被记为导致冲突的边和导致环路出现的边。如果访问到的边确实同时导致冲突和环路出现，则这条边被记为导致冲突的边。
+        if(conflict < 0){
+          // 没有冲突的边，则附加的边一定为回环的边
+          return edges[cycle];
+        }else {
+            // 如果有冲突的边，需要通过判断是否有导致环路的边决定哪条边是附加的边。
+            if(cycle >= 0){
+                // 如果有回环的边，则返回[parent[v],v]
+                return new int[]{parent[edges[conflict][1]],edges[conflict][1]};
+            }else {
+                // 如果有冲突的边，无回环的边，则附加的边是后被访问到的指向 v 的边
+                return edges[conflict];
+            }
+        }
+    }
 }

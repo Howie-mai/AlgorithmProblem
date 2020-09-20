@@ -11,23 +11,29 @@ import java.text.DecimalFormat;
 public class Main2 {
 
     public static void main(String[] args) {
-        DecimalFormat df = new DecimalFormat("#.00");
-        double kmTotalD = 0.00d;
-        double calories = 0.00d;
+//        DecimalFormat df = new DecimalFormat("#.00");
+//        double kmTotalD = 0.00d;
+//        double calories = 0.00d;
+//
+//        //计算总公里
+//        float kmTotal = getDistanceFromSteps(2922,1,170);
+//        kmTotalD = Double.valueOf(df.format(kmTotal));
+//        // 计算热量：1步约等于0.04千卡
+//        calories = 2922 * 0.04;
+//
+//
+//        System.out.println(Double.valueOf(df.format(calories)));
+//        System.out.println(Double.valueOf(kmTotalD));
 
-        //计算总公里
-        float kmTotal = getDistanceFromSteps(2922,1,170);
-        kmTotalD = Double.valueOf(df.format(kmTotal));
-        // 计算热量：1步约等于0.04千卡
-        calories = 2922 * 0.04;
+//        for (int i = 1;i <= 9;i++){
+//            char x = (char) (i + '0');
+//            System.out.println(x);
+//        }
 
-
-        System.out.println(Double.valueOf(df.format(calories)));
-        System.out.println(Double.valueOf(kmTotalD));
-
-
-
-
+        int i = 0;
+        String a = "    -123213";
+        int i1 = Integer.parseInt(a);
+        System.out.println(i1);
     }
 
     public static float getDistanceFromSteps(int steps, int gender, int height) {

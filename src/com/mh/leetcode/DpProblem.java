@@ -92,7 +92,7 @@ public class DpProblem {
                 if(s.charAt(i) == s.charAt(j) && (i - j <= 1 || result[j + 1] == 1)){
                     result[j] = 1;
                     if(i - j + 1 > max){
-                        max = i -j + 1;
+                        max = i - j + 1;
                         index[0] = j;
                         index[1] = i;
                     }
@@ -133,7 +133,60 @@ public class DpProblem {
                 }
             }
         }
-        // 最后返回左上角即为最大值
+        // 最后返回右上角即为最大值
         return dp[0][len-1];
     }
+
+    /**
+     * 377. 组合总和 Ⅳ（使用动态规划），回溯算法会超时
+     * 给定一个由正整数组成且不存在重复数字的数组，找出和为给定目标正整数的组合的个数。
+     */
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        // 这个值被其它状态参考，设置为 1 是合理的
+        dp[0] = 1;
+        /**
+         * dp[4] = dp[3] + dp[2] + dp[1]
+         * 即：4 的组合数可以由三部分组成，1 和 dp[3]，2 和 dp[2], 3 和dp[1];
+         */
+        for (int i = 1; i <= target; i++) {
+            for (int num : nums) {
+                if (num <= i) {
+                    dp[i] += dp[i - num];
+                }
+            }
+        }
+        return dp[target];
+    }
+
+    /**
+     * 1277. 统计全为 1 的正方形子矩阵
+     * 给你一个 m * n 的矩阵，矩阵中的元素不是 0 就是 1，请你统计并返回其中完全由 1 组成的 正方形 子矩阵的个数。
+     */
+    public int countSquares(int[][] matrix) {
+        int sum = 0;
+        if(matrix.length == 0){
+            return sum;
+        }
+
+        int[][] dp = new int[matrix.length][matrix[0].length];
+
+        for (int i = 0;i < matrix.length;i++){
+            for (int j = 0;j < matrix[i].length;j++){
+                if(matrix[i][j] == 0){
+                    dp[i][j] = 0;
+                }else if(i == 0 || j == 0){
+                    dp[i][j] = matrix[i][j];
+                }else {
+                    int a =  Math.min(dp[i][j - 1],dp[i - 1][j]);
+                    int b =  Math.min(a,dp[i - 1][j - 1]) + 1;
+                    dp[i][j] = b;
+                }
+                sum += dp[i][j];
+            }
+        }
+
+        return sum;
+    }
+
 }
