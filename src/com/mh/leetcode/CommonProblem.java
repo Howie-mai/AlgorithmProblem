@@ -18,15 +18,15 @@ public class CommonProblem {
 //        commonProblem.reverse(123456);
 //        System.out.println(commonProblem.fib(45));
 //        System.out.println(commonProblem.countSubstrings("aaaaa"));
-//        System.out.println(commonProblem.judgePoint24(new int[]{4, 7, 1, 8}));
+        System.out.println(commonProblem.judgePoint24(new int[]{2,4,10,10}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
-        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
+//        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
 //        System.out.println(commonProblem.daysBetweenDates("2020-01-15", "2019-12-31"));
 //        System.out.println(commonProblem.getPermutation(4,9));
 //        System.out.println(commonProblem.permute(new int[]{1}));
 //        System.out.println(commonProblem.combine(4,2));
-        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
+//        System.out.println(commonProblem.findLengthOfShortestSubarray(new int[]{61,19,38,47,38,30,1,16,40,56,25,59,52,1,56,47,36,12,17,56,3,30,39,28,42,41,16,57,33,15,15}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -106,9 +106,9 @@ public class CommonProblem {
         //其中，括号不用考虑，因为是任意两个数的所有允许符都参与，所以有括号，没括号的情况，都包含在内了
         for (int x = 0; x < nums.length - 1; x++) {
             for (int y = x + 1; y < nums.length; y++) {
-                if (x == 0 && y == 2) {
-                    System.out.println("123");
-                }
+//                if (x == 0 && y == 2) {
+//                    System.out.println("123");
+//                }
                 //是否合法
                 boolean isValid;
 
@@ -125,6 +125,7 @@ public class CommonProblem {
                 temp[x] = nums[x] + nums[y];
                 //合法就返回
                 if (solve(temp)) {
+                    System.out.println(Arrays.toString(temp));
                     return true;
                 }
 
@@ -132,6 +133,7 @@ public class CommonProblem {
                 temp[x] = Math.abs(nums[x] - nums[y]);
                 //合法就返回
                 if (solve(temp)) {
+                    System.out.println(Arrays.toString(temp));
                     return true;
                 }
 
@@ -139,6 +141,7 @@ public class CommonProblem {
                 temp[x] = nums[x] * nums[y];
                 //合法就返回
                 if (solve(temp)) {
+                    System.out.println(Arrays.toString(temp));
                     return true;
                 }
 
@@ -147,6 +150,7 @@ public class CommonProblem {
                     temp[x] = nums[x] / nums[y];
                     //合法就返回
                     if (solve(temp)) {
+                        System.out.println(Arrays.toString(temp));
                         return true;
                     }
                 }
@@ -154,6 +158,7 @@ public class CommonProblem {
                     temp[x] = nums[y] / nums[x];
                     //合法就返回
                     if (solve(temp)) {
+                        System.out.println(Arrays.toString(temp));
                         return true;
                     }
                 }
