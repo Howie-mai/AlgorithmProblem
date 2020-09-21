@@ -23,6 +23,7 @@ public class TreeProblem {
 //            p = p.next;
 //        }
 //        treeProblem.sortedListToBST(head);
+
         TreeNode treeNode = new TreeNode(4);
         TreeNode left = new TreeNode(2);
         left.left = new TreeNode(1);
@@ -33,8 +34,9 @@ public class TreeProblem {
 //        right.left = new TreeNode(15);
         right.right = new TreeNode(6);
         treeNode.right = right;
-
-        treeProblem.flatten(treeNode);
+        System.out.println(treeProblem.convertBST(treeNode));
+        System.out.println(treeProblem.preOrderTraversal(treeNode));
+//        treeProblem.flatten(treeNode);
 //        System.out.println(treeProblem.postOrderTraversal(node));
 
 //        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
@@ -59,6 +61,7 @@ public class TreeProblem {
 //        System.out.println(treeProblem.binaryTreePaths(treeNode));
 //        System.out.println(treeProblem.levelOrderBottom(treeNode));
 //        System.out.println(treeProblem.averageOfLevels(treeNode));
+
     }
 
     /**
@@ -1004,7 +1007,8 @@ public class TreeProblem {
             }
         }
     }
-    /*
+
+   /**
      * 226. 翻转二叉树
      * 翻转一棵二叉树。
      */
@@ -1017,6 +1021,22 @@ public class TreeProblem {
         root.left = invertTree(root.right);
         root.right = left;
 
+        return root;
+    }
+
+    /**
+     * 538. 把二叉搜索树转换为累加树
+     * 给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，
+     * 使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+     */
+    int sumBy538 = 0;
+    public TreeNode convertBST(TreeNode root) {
+        if(root != null){
+            convertBST(root.right);
+            sumBy538 += root.val;
+            root.val = sumBy538;
+            convertBST(root.left);
+        }
         return root;
     }
 }

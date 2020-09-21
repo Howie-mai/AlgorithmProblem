@@ -39,9 +39,9 @@ public class LinkListProblem {
 //            node1.next = new ListNode(i);
 //            node1 = node1.next;
 //        }
-        for (int i = 1;i <= 9;i++){
+        for (int i = 1; i <= 9; i++) {
             int val = 9;
-            if(i == 6){
+            if (i == 6) {
                 val = 8;
             }
 //            node2.next = new ListNode(val);
@@ -49,7 +49,8 @@ public class LinkListProblem {
         }
         // 541 + 762 = 613
 //        linkListProblem.addTwoNumbers(listNode1,listNode2);
-        linkListProblem.deleteDuplicatesKeep(listNode1);
+//        linkListProblem.deleteDuplicatesKeep(listNode1);
+        linkListProblem.removeNthFromEnd(listNode1, 2);
     }
 
     /**
@@ -108,6 +109,7 @@ public class LinkListProblem {
     /**
      * 剑指offer 24
      * 两个指针解决链表反转
+     *
      * @date 20/8/14 下午2:01
      */
     private ListNode reverse(ListNode start) {
@@ -132,6 +134,7 @@ public class LinkListProblem {
     /**
      * 24题
      * 链表两个为一组反转
+     *
      * @author mh
      * @date 20/8/14 下午2:01
      */
@@ -183,9 +186,9 @@ public class LinkListProblem {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         int j = 0;
 //        List<Integer> resultList = new ArrayList<>();
-        ListNode node = new ListNode(0) , result = node;
+        ListNode node = new ListNode(0), result = node;
 
-        for (; l1 != null || l2 != null;) {
+        for (; l1 != null || l2 != null; ) {
             int s1 = 0, s2 = 0;
 
             if (l1 != null) {
@@ -202,7 +205,7 @@ public class LinkListProblem {
             if (sum >= 10) {
                 j = sum / 10;
                 i = sum - j * 10;
-                if(l2 == null && l1 == null){
+                if (l2 == null && l1 == null) {
                     node.next = new ListNode(i);
                     node = node.next;
                     node.next = new ListNode(j);
@@ -225,15 +228,15 @@ public class LinkListProblem {
      * 根据列表建立链表
      */
     @SuppressWarnings("unused")
-    public ListNode buildListNodeByList(List<Integer> list){
-        if(list.size() == 0){
+    public ListNode buildListNodeByList(List<Integer> list) {
+        if (list.size() == 0) {
             return null;
-        }else if(list.size() == 1){
+        } else if (list.size() == 1) {
             return new ListNode(list.get(0));
-        }else {
+        } else {
             ListNode result = new ListNode(list.get(0));
             ListNode node = result;
-            for (int i = 1;i < list.size();i++){
+            for (int i = 1; i < list.size(); i++) {
                 node.next = new ListNode(list.get(i));
                 node = node.next;
             }
@@ -265,10 +268,10 @@ public class LinkListProblem {
 //        }
 //        return root.next;
         ListNode curr = head;
-        while (curr != null && curr.next != null){
-            if(curr.val == curr.next.val){
+        while (curr != null && curr.next != null) {
+            if (curr.val == curr.next.val) {
                 curr.next = curr.next.next;
-            }else {
+            } else {
                 curr = curr.next;
             }
         }
@@ -283,21 +286,75 @@ public class LinkListProblem {
         ListNode root = new ListNode(0);
         root.next = head;
         ListNode pre = root;
-        ListNode l,r;
-        while (pre.next != null && pre.next.next != null){
+        ListNode l, r;
+        while (pre.next != null && pre.next.next != null) {
             l = pre.next;
             r = pre.next;
-            if(l.val != l.next.val){
+            if (l.val != l.next.val) {
                 pre = pre.next;
                 continue;
             }
 
-            while (r != null && l.val == r.val){
+            while (r != null && l.val == r.val) {
                 r = r.next;
             }
 
             pre.next = r;
         }
         return root.next;
+    }
+
+    /**
+     * 19. 删除链表的倒数第N个节点
+     * 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode p = dummy, q = dummy;
+        for (int i = 1; i <= n; i++) {
+            p = p.next;
+        }
+
+        while (p.next != null) {
+            q = q.next;
+            p = p.next;
+        }
+        q.next = q.next.next;
+        return dummy.next;
+    }
+
+    /**
+     * 21. 合并两个有序链表
+     * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+//        ListNode dummy = new ListNode(-1);
+//
+//        ListNode head = dummy;
+//        while (l1 != null && l2 != null) {
+//            if (l1.val < l2.val) {
+//                head.next = l1;
+//                l1 = l1.next;
+//            } else {
+//                head.next = l2;
+//                l2 = l2.next;
+//            }
+//            head = head.next;
+//        }
+//
+//        head.next = l1 == null ? l2 : l1;
+//        return dummy.next;
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        } else if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next,l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1,l2.next);
+            return l2;
+        }
     }
 }
