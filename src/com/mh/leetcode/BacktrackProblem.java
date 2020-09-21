@@ -530,4 +530,65 @@ public class BacktrackProblem {
             }
         }
     }
+
+    /**
+     * 752. 打开转盘锁
+     * 你有一个带有四个圆形拨轮的转盘锁。每个拨轮都有10个数字： '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' 。
+     * 每个拨轮可以自由旋转：例如把 '9' 变为  '0'，'0' 变为 '9' 。每次旋转都只能旋转一个拨轮的一位数字。
+     * 锁的初始数字为 '0000' ，一个代表四个拨轮的数字的字符串。
+     * 列表 deadends 包含了一组死亡数字，一旦拨轮的数字和列表里的任何一个元素相同，这个锁将会被永久锁定，无法再被旋转。
+     * 字符串 target 代表可以解锁的数字，你需要给出最小的旋转次数，如果无论如何不能解锁，返回 -1。
+     */
+    public int openLock(String[] deadEnds, String target) {
+        Queue<String> queue = new ArrayDeque<>();
+        Set<String> visited = new HashSet<>(Arrays.asList(deadEnds));
+        queue.offer("0000");
+        visited.add("0000");
+        int step = 0;
+        while (!queue.isEmpty()){
+            int len = queue.size();
+            for (int i = 0;i < len;i++){
+                String cur = queue.poll();
+
+                if(cur.equals(target)){
+                    return step;
+                }
+
+                for (int j = 0;j < 4;j++){
+                    String up = plusOne(cur, j);
+                    if(!visited.contains(up)){
+                        visited.add(up);
+                        queue.add(up);
+                    }
+                    String down = minusOne(cur, j);
+                    if(!visited.contains(down)){
+                        visited.add(down);
+                        queue.add(down);
+                    }
+                }
+            }
+            step++;
+        }
+        return -1;
+    }
+
+    public String plusOne(String s, int j) {
+        char[] chars = s.toCharArray();
+        if (chars[j] == '9') {
+            chars[j] = '0';
+        } else {
+            chars[j] += 1;
+        }
+        return Arrays.toString(chars);
+    }
+
+    public String minusOne(String s, int j) {
+        char[] chars = s.toCharArray();
+        if (chars[j] == '0') {
+            chars[j] = '9';
+        } else {
+            chars[j] -= 1;
+        }
+        return Arrays.toString(chars);
+    }
 }

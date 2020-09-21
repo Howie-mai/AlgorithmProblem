@@ -305,6 +305,36 @@ public class TreeProblem {
     }
 
     /**
+     * 111 题 使用广度优先搜索（BFS）
+     */
+    public int minDepthByBFS(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        int depth = 1;
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            int size = queue.size();
+            for (int i = 0;i < size;i++){
+                TreeNode poll = queue.poll();
+                if(poll.left == null && poll.right == null){
+                    return depth;
+                }
+
+                if(poll.left != null){
+                    queue.offer(poll.left);
+                }
+                if(poll.right != null){
+                    queue.offer(poll.right);
+                }
+            }
+            depth++;
+        }
+        return depth;
+    }
+
+    /**
      * 114. 二叉树展开为链表
      * 给定一个二叉树，原地将它展开为一个单链表。
      */
@@ -942,6 +972,39 @@ public class TreeProblem {
     }
 
     /**
+     * 993. 二叉树的堂兄弟节点
+     * 在二叉树中，根节点位于深度 0 处，每个深度为 k 的节点的子节点位于深度 k+1 处。
+     * 如果二叉树的两个节点深度相同，但父节点不同，则它们是一对堂兄弟节点。
+     * 我们给出了具有唯一值的二叉树的根节点 root，以及树中两个不同节点的值 x 和 y。
+     * 只有与值 x 和 y 对应的节点是堂兄弟节点时，才返回 true。否则，返回 false。
+     */
+    public boolean isCousins(TreeNode root, int x, int y) {
+        dfs(root,null,x,y,1);
+        return parent2 != parent1 && len1 == len2;
+    }
+
+    TreeNode parent1,parent2;
+    int len1,len2;
+    public void dfs(TreeNode node,TreeNode parent,int x,int y,int depth) {
+        if (parent1 != null && parent2 != null) {
+            return;
+        }
+        if (node.val == x) {
+            parent1 = parent;
+            len1 = depth;
+        } else if (node.val == y) {
+            parent2 = parent;
+            len2 = depth;
+        } else {
+            if (node.left != null) {
+                dfs(node.left, node, x, y, depth + 1);
+            }
+            if (node.right != null) {
+                dfs(node.right, node, x, y, depth + 1);
+            }
+        }
+    }
+    /*
      * 226. 翻转二叉树
      * 翻转一棵二叉树。
      */
@@ -955,6 +1018,5 @@ public class TreeProblem {
         root.right = left;
 
         return root;
-
     }
 }
