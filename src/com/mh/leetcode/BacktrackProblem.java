@@ -20,6 +20,7 @@ public class BacktrackProblem {
 //        System.out.println(backtrack.combinationSum2(new int[]{10,1,2,7,6,1,5},8));
 //        System.out.println(backtrack.combinationSum3(3,15));
 //        System.out.println(backtrack.combinationSum4(new int[]{1, 2, 5}, 5));
+        System.out.println(backtrack.subsets(new int[]{1, 1, 2, 3}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start) + "ms");
     }
@@ -245,7 +246,7 @@ public class BacktrackProblem {
      * 所有的数组规格都是9X9
      */
     public void solveSudoku(char[][] board) {
-        backTrackBy37(board,0,0);
+        backTrackBy37(board, 0, 0);
     }
 
     public boolean backTrackBy37(char[][] board, int row, int col) {
@@ -260,18 +261,18 @@ public class BacktrackProblem {
         }
 
         // 判断是否有数字
-        if(board[row][col] != '.'){
-            return backTrackBy37(board,row,col + 1);
+        if (board[row][col] != '.') {
+            return backTrackBy37(board, row, col + 1);
         }
 
         // 循环1-9
         for (char ch = '1'; ch <= '9'; ch++) {
-            if(!isVaild(board,row,col,ch)){
+            if (!isVaild(board, row, col, ch)) {
                 continue;
             }
             // 做选择
             board[row][col] = ch;
-            if(backTrackBy37(board, row, col + 1)){
+            if (backTrackBy37(board, row, col + 1)) {
                 return true;
             }
             board[row][col] = '.';
@@ -279,19 +280,19 @@ public class BacktrackProblem {
         return false;
     }
 
-    public boolean isVaild(char[][] board,int row ,int col,char ch){
-        for (int i = 0;i < 9;i++){
+    public boolean isVaild(char[][] board, int row, int col, char ch) {
+        for (int i = 0; i < 9; i++) {
             // 判断行有没有重复字符
-            if(board[row][i] == ch){
+            if (board[row][i] == ch) {
                 return false;
             }
             // 判断列有没有重复字符
-            if(board[i][col] == ch){
+            if (board[i][col] == ch) {
                 return false;
             }
 
             // 判断九宫格有没有重复字符
-            if(board[(row/3)*3 + i/3][(col/3)*3 + i%3] == ch){
+            if (board[(row / 3) * 3 + i / 3][(col / 3) * 3 + i % 3] == ch) {
                 return false;
             }
         }
@@ -313,6 +314,7 @@ public class BacktrackProblem {
     }
 
     List<List<String>> ansList = new ArrayList<>();
+
     private void backtrack(String[][] board, int row) {
         // 结束条件并添加进结果集
         if (row == board.length) {
@@ -414,6 +416,7 @@ public class BacktrackProblem {
      * 给定一个可包含重复数字的序列，返回所有不重复的全排列。
      */
     List<List<Integer>> ans47List = new ArrayList<>();
+
     public List<List<Integer>> permuteUnique(int[] nums) {
         if (nums.length == 0) {
             return ans47List;
@@ -426,14 +429,14 @@ public class BacktrackProblem {
         return ans47List;
     }
 
-    public void dfsBy47(int[] nums, int index, List<Integer> list,boolean[] used) {
+    public void dfsBy47(int[] nums, int index, List<Integer> list, boolean[] used) {
         if (index == nums.length) {
             ans47List.add(new ArrayList<>(list));
             return;
         }
 
         for (int i = 0; i < nums.length; i++) {
-            if (used[i] || ( i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) {
                 continue;
             }
 
@@ -512,21 +515,22 @@ public class BacktrackProblem {
      */
     boolean[] visit;
     int roomVisitNum = 0;
+
     public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-        if(rooms.isEmpty()){
+        if (rooms.isEmpty()) {
             return true;
         }
         visit = new boolean[rooms.size()];
-        dfs(rooms,0);
+        dfs(rooms, 0);
         return roomVisitNum == rooms.size();
     }
 
-    public void dfs(List<List<Integer>> rooms,int roomNum){
+    public void dfs(List<List<Integer>> rooms, int roomNum) {
         visit[roomNum] = true;
         roomVisitNum++;
         for (Integer room : rooms.get(roomNum)) {
-            if(!visit[room]){
-                dfs(rooms,room);
+            if (!visit[room]) {
+                dfs(rooms, room);
             }
         }
     }
@@ -545,23 +549,23 @@ public class BacktrackProblem {
         queue.offer("0000");
         visited.add("0000");
         int step = 0;
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             int len = queue.size();
-            for (int i = 0;i < len;i++){
+            for (int i = 0; i < len; i++) {
                 String cur = queue.poll();
 
-                if(cur.equals(target)){
+                if (cur.equals(target)) {
                     return step;
                 }
 
-                for (int j = 0;j < 4;j++){
+                for (int j = 0; j < 4; j++) {
                     String up = plusOne(cur, j);
-                    if(!visited.contains(up)){
+                    if (!visited.contains(up)) {
                         visited.add(up);
                         queue.add(up);
                     }
                     String down = minusOne(cur, j);
-                    if(!visited.contains(down)){
+                    if (!visited.contains(down)) {
                         visited.add(down);
                         queue.add(down);
                     }
@@ -590,5 +594,31 @@ public class BacktrackProblem {
             chars[j] -= 1;
         }
         return Arrays.toString(chars);
+    }
+
+    /**
+     * 78. 子集
+     * 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        Deque<Integer> deque = new ArrayDeque<>();
+//        boolean[] used = new boolean[nums.length];
+//        Arrays.sort(nums);
+//        ansBy78.add(new ArrayList<>());
+        dfsBy78(nums, deque, used, 0);
+        return ansBy78;
+    }
+
+    List<List<Integer>> ansBy78 = new ArrayList<>();
+    public void dfsBy78(int[] nums, Deque<Integer> deque, boolean[] used, int index) {
+        if (index == nums.length) {
+            ansBy78.add(new ArrayList<>(deque));
+            return;
+        }
+
+        deque.addLast(nums[index]);
+        dfsBy78(nums, deque, used, index + 1);
+        deque.removeLast();
+        dfsBy78(nums, deque, used, index + 1);
     }
 }
