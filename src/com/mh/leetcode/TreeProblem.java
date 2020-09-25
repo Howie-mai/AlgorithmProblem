@@ -24,18 +24,30 @@ public class TreeProblem {
 //        }
 //        treeProblem.sortedListToBST(head);
 
-        TreeNode treeNode = new TreeNode(4);
-        TreeNode left = new TreeNode(2);
-        left.left = new TreeNode(1);
-        left.right = new TreeNode(3);
-        treeNode.left = left;
+        TreeNode treeNode1 = new TreeNode(1);
+        TreeNode left1 = new TreeNode(3);
+        left1.left = new TreeNode(5);
+//        left.right = new TreeNode(3);
+        treeNode1.left = left1;
 
-        TreeNode right = new TreeNode(5);
+        TreeNode right1 = new TreeNode(2);
 //        right.left = new TreeNode(15);
-        right.right = new TreeNode(6);
-        treeNode.right = right;
-        System.out.println(treeProblem.convertBST(treeNode));
-        System.out.println(treeProblem.preOrderTraversal(treeNode));
+//        right.right = new TreeNode(6);
+        treeNode1.right = right1;
+
+        TreeNode treeNode2 = new TreeNode(2);
+        TreeNode left2 = new TreeNode(1);
+//        left.left = new TreeNode(5);
+        left2.right = new TreeNode(4);
+        treeNode2.left = left2;
+
+        TreeNode right2 = new TreeNode(3);
+//        right.left = new TreeNode(15);
+        right2.right = new TreeNode(7);
+        treeNode2.right = right2;
+//        System.out.println(treeProblem.mergeTrees(treeNode1,treeNode2));
+//        System.out.println(treeProblem.convertBST(treeNode));
+//        System.out.println(treeProblem.preOrderTraversal(treeNode));
 //        treeProblem.flatten(treeNode);
 //        System.out.println(treeProblem.postOrderTraversal(node));
 
@@ -61,6 +73,8 @@ public class TreeProblem {
 //        System.out.println(treeProblem.binaryTreePaths(treeNode));
 //        System.out.println(treeProblem.levelOrderBottom(treeNode));
 //        System.out.println(treeProblem.averageOfLevels(treeNode));
+
+        System.out.println(treeProblem.buildTree(new int[]{9,3,15,20,7},new int[]{9,15,7,20,3}));
 
     }
 
@@ -310,25 +324,25 @@ public class TreeProblem {
     /**
      * 111 题 使用广度优先搜索（BFS）
      */
-    public int minDepthByBFS(TreeNode root){
-        if(root == null){
+    public int minDepthByBFS(TreeNode root) {
+        if (root == null) {
             return 0;
         }
         Queue<TreeNode> queue = new LinkedList<>();
         int depth = 1;
         queue.offer(root);
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             int size = queue.size();
-            for (int i = 0;i < size;i++){
+            for (int i = 0; i < size; i++) {
                 TreeNode poll = queue.poll();
-                if(poll.left == null && poll.right == null){
+                if (poll.left == null && poll.right == null) {
                     return depth;
                 }
 
-                if(poll.left != null){
+                if (poll.left != null) {
                     queue.offer(poll.left);
                 }
-                if(poll.right != null){
+                if (poll.right != null) {
                     queue.offer(poll.right);
                 }
             }
@@ -384,18 +398,19 @@ public class TreeProblem {
      * 面试题 17.12. BiNode
      * 二叉树数据结构TreeNode可用来表示单向链表（其中left置空，right为下一个链表节点）。
      * 实现一个方法，把二叉搜索树转换为单向链表，要求依然符合二叉搜索树的性质，转换操作应是原址的，也就是在原始的二叉搜索树上直接修改。
-     *
+     * <p>
      * 返回转换后的单向链表的头节点。
      */
     TreeNode head = new TreeNode(-1);
     TreeNode perv = null;
+
     public TreeNode convertBiNode(TreeNode root) {
         preOrderTraverse(root);
         return head.right;
     }
 
-    public void preOrderTraverse(TreeNode root){
-        if(root == null){
+    public void preOrderTraverse(TreeNode root) {
+        if (root == null) {
             return;
         }
         preOrderTraverse(root.left);
@@ -827,17 +842,17 @@ public class TreeProblem {
      * B是A的子结构， 即 A中有出现和B相同的结构和节点值。
      */
     public boolean isSubStructure(TreeNode A, TreeNode B) {
-        return (A != null && B != null) && (recur(A,B) || isSubStructure(A.left,B) || isSubStructure(A.right,B));
+        return (A != null && B != null) && (recur(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B));
     }
 
-    public boolean recur(TreeNode A,TreeNode B){
-        if(B == null){
+    public boolean recur(TreeNode A, TreeNode B) {
+        if (B == null) {
             return true;
         }
-        if(A == null || A.val != B.val){
+        if (A == null || A.val != B.val) {
             return false;
         }
-        return recur(A.left,B.left) && recur(A.right,B.right);
+        return recur(A.left, B.left) && recur(A.right, B.right);
     }
 
     /**
@@ -982,13 +997,14 @@ public class TreeProblem {
      * 只有与值 x 和 y 对应的节点是堂兄弟节点时，才返回 true。否则，返回 false。
      */
     public boolean isCousins(TreeNode root, int x, int y) {
-        dfs(root,null,x,y,1);
+        dfs(root, null, x, y, 1);
         return parent2 != parent1 && len1 == len2;
     }
 
-    TreeNode parent1,parent2;
-    int len1,len2;
-    public void dfs(TreeNode node,TreeNode parent,int x,int y,int depth) {
+    TreeNode parent1, parent2;
+    int len1, len2;
+
+    public void dfs(TreeNode node, TreeNode parent, int x, int y, int depth) {
         if (parent1 != null && parent2 != null) {
             return;
         }
@@ -1008,12 +1024,12 @@ public class TreeProblem {
         }
     }
 
-   /**
+    /**
      * 226. 翻转二叉树
      * 翻转一棵二叉树。
      */
     public TreeNode invertTree(TreeNode root) {
-        if(root == null){
+        if (root == null) {
             return null;
         }
 
@@ -1030,13 +1046,178 @@ public class TreeProblem {
      * 使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
      */
     int sumBy538 = 0;
+
     public TreeNode convertBST(TreeNode root) {
-        if(root != null){
+        if (root != null) {
             convertBST(root.right);
             sumBy538 += root.val;
             root.val = sumBy538;
             convertBST(root.left);
         }
+        return root;
+    }
+
+    /**
+     * 968. 监控二叉树
+     * 给定一个二叉树，我们在树的节点上安装摄像头。
+     * 节点上的每个摄影头都可以监视其父对象、自身及其直接子对象。
+     * 计算监控树的所有节点所需的最小摄像头数量。
+     */
+    public int minCameraCover(TreeNode root) {
+        /**
+         * 后序遍历遍历 ，设置三种状态
+         * 0：待被监控
+         * 1：已被监控
+         * 2：需要安装监控
+         */
+
+        // 如果返回的root状态为0 root需要装监控
+        if (installCamera(root) == 0) {
+            ansBy968++;
+        }
+        return ansBy968;
+    }
+
+    int ansBy968 = 0;
+
+    public int installCamera(TreeNode node) {
+
+        // 为空返回0
+        if (node == null) {
+            return 1;
+        }
+
+        //左右子树状态
+        int right = installCamera(node.right);
+        int left = installCamera(node.left);
+
+        // 有6中情况：00，01，02，11，12，22
+
+        // 当左右子树状态其中一个为0的时候，表示该父母节点需要装监控
+        if (left == 0 || right == 0) {
+            ansBy968++;
+            return 2;
+        }
+
+        // 当左右子树都为1的时候，则该父母节点需要被监视
+        if (left == 1 && right == 1) {
+            return 0;
+        }
+
+        // 当其中一个子节点装了监控，该父母节点为已监控状态
+        if (left == 2 || right == 2) {
+            return 1;
+        }
+
+        // 随便返回一个数 ，程序走不到这里
+        return 0;
+    }
+
+    /**
+     * 617. 合并二叉树
+     * 给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。
+     * 你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，
+     * 否则不为 NULL 的节点将直接作为新二叉树的节点。
+     */
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+
+        if(t1 == null){
+            return t2;
+        }
+
+        if(t2 == null){
+            return t1;
+        }
+
+        TreeNode root = new TreeNode(t1.val + t2.val);
+        root.left = mergeTrees(t1.left,t2.left);
+        root.right = mergeTrees(t1.right,t2.right);
+        return root;
+    }
+
+    /**
+     * 501. 二叉搜索树中的众数
+     * 给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
+     * 不使用额外的空间吗(假设由递归产生的隐式调用栈的开销不被计算在内）
+     */
+    public int[] findMode(TreeNode root) {
+        traversalBy501(root);
+        int[] ans = new int[ansListBy501.size()];
+        for (int i = 0; i < ansListBy501.size(); i++) {
+            ans[i] = ansListBy501.get(i);
+        }
+        return ans;
+    }
+
+    int currValBy501 = 0;
+    int currCountBy501 = 0;
+    int maxCountBy501 = 0;
+    List<Integer> ansListBy501 = new ArrayList<>();
+    public void traversalBy501(TreeNode node){
+        if(node == null){
+            return;
+        }
+
+        traversalBy501(node.left);
+
+        int nodeVal = node.val;
+        if(nodeVal == currValBy501){
+            // 当前值与前一个值相同，count++;
+            currCountBy501++;
+        }else {
+            currValBy501 = nodeVal;
+            currCountBy501 = 1;
+        }
+
+        if(currCountBy501 > maxCountBy501){
+            // 目前的众数比之前最大的还大，则清空列表，并加上
+            list.clear();
+            list.add(nodeVal);
+            maxCountBy501 = currCountBy501;
+        }else if(currCountBy501 == maxCountBy501){
+            list.add(nodeVal);
+        }
+
+        traversalBy501(node.right);
+    }
+
+    /**
+     * 106. 从中序与后序遍历序列构造二叉树
+     * 根据一棵树的中序遍历与后序遍历构造二叉树。
+     * 注意:
+     * 你可以假设树中没有重复的元素。
+     * 中序遍历 inorder = [9,3,15,20,7]
+     * 后序遍历 postorder = [9,15,7,20,3]
+     */
+    public TreeNode buildTree(int[] inOrder, int[] postOrder) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        for (int i = 0; i < inOrder.length; i++) {
+            map.put(inOrder[i],i);
+        }
+        return buildTree(map,inOrder,0,inOrder.length - 1,postOrder,0,postOrder.length - 1);
+    }
+
+    public TreeNode buildTree(HashMap<Integer,Integer> map,
+                              int[] inOrder,int inStart,int inEnd,int[] postOrder,int postStart,int postEnd){
+        if(inStart > inEnd || postStart > postEnd){
+            return null;
+        }
+
+        // 后序遍历数组中最后一个为根节点
+        int rootVal = postOrder[postEnd];
+        TreeNode root = new TreeNode(rootVal);
+        if(postStart == postEnd || inStart == inEnd){
+            return root;
+        }
+
+        int index = map.get(rootVal);
+        int leftNodes = index - inStart,rightNodes = inEnd - index;
+        root.left = buildTree(map,inOrder,inStart,index - 1,
+                postOrder,postStart,postStart + leftNodes - 1);
+
+        root.right = buildTree(map,inOrder,index + 1,index + rightNodes,
+                postOrder,postEnd - rightNodes,postEnd - 1);
+
         return root;
     }
 }
