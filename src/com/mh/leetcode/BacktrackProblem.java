@@ -20,7 +20,8 @@ public class BacktrackProblem {
 //        System.out.println(backtrack.combinationSum2(new int[]{10,1,2,7,6,1,5},8));
 //        System.out.println(backtrack.combinationSum3(3,15));
 //        System.out.println(backtrack.combinationSum4(new int[]{1, 2, 5}, 5));
-        System.out.println(backtrack.subsets(new int[]{1, 1, 2, 3}));
+//        System.out.println(backtrack.subsets(new int[]{1, 1, 2, 3}));
+        System.out.println(backtrack.canFinish(3,new int[][]{ {1,0},{2,0} }));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start) + "ms");
     }
@@ -597,6 +598,7 @@ public class BacktrackProblem {
     }
 
     /**
+<<<<<<< HEAD
      * 78. 子集
      * 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
      */
@@ -620,5 +622,99 @@ public class BacktrackProblem {
         dfsBy78(nums, deque, used, index + 1);
         deque.removeLast();
         dfsBy78(nums, deque, used, index + 1);
+    }
+    /**
+     * 207. 课程表
+     * 你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
+     *
+     * 在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：[0,1]
+     */
+    public boolean backTrackBy207(List<List<Integer>> adjacency,int[] learn,int i){
+        /**
+         * 借助一个标志列表 flags，用于判断每个节点 i （课程）的状态：
+         * 未被 DFS 访问：i == 0；
+         * 已被其他节点启动的 DFS 访问：i == -1；
+         * 已被当前节点启动的 DFS 访问：i == 1。
+         */
+
+        // 当 flag[i] == -1，说明当前访问节点已被其他节点启动的 DFS 访问，无需再重复搜索，直接返回 true。
+        if(learn[i] == -1){
+            return true;
+        }
+
+        // 当 flag[i] == 1，说明在本轮 DFS 搜索中节点 i 被第 22 次访问，即 课程安排图有环 ，直接返回 False。
+        if(learn[i] == 1){
+            return false;
+        }
+
+        learn[i] = 1;
+        for (Integer index : adjacency.get(i)) {
+            if(!backTrackBy207(adjacency, learn, index)){
+                return false;
+            }
+        }
+        learn[i] = -1;
+        return true;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+
+        List<List<Integer>> adjacency = new ArrayList<>();
+        for(int i = 0; i < numCourses; i++){
+            adjacency.add(new ArrayList<>());
+        }
+
+        int[] flags = new int[numCourses];
+        for(int[] cp : prerequisites){
+            adjacency.get(cp[1]).add(cp[0]);
+        }
+        for(int i = 0; i < numCourses; i++){
+            if(!backTrackBy207(adjacency, flags, i)){
+                return false;
+            }
+        }
+        return true;
+//        /**
+//         * 使用广度优先解决
+//         */
+//        if(numCourses <= 0){
+//            return false;
+//        }
+//
+//        int len = prerequisites.length;
+//
+//        // 记录入度
+//        int[] inDegree = new int[numCourses];
+//        // 记录 prerequisite[0] -> prerequisite[1]
+//        List<Set<Integer>> list = new ArrayList<>();
+//        for (int i = 0; i < numCourses; i++) {
+//            list.add(new HashSet<>());
+//        }
+//
+//        for (int[] prerequisite : prerequisites) {
+//            inDegree[prerequisite[0]]++;
+//            list.get(prerequisite[1]).add(prerequisite[0]);
+//        }
+//
+//        Deque<Integer> deque = new LinkedList<>();
+//        for (int i = 0; i < inDegree.length; i++) {
+//            if(inDegree[i] == 0){
+//                deque.add(i);
+//            }
+//        }
+//
+//        int cnt = 0;
+//        while (!deque.isEmpty()){
+//            Integer poll = deque.poll();
+//            cnt++;
+//            for (Integer course : list.get(poll)) {
+//                inDegree[course]--;
+//                if(inDegree[course] == 0){
+//                    deque.add(course);
+//                }
+//            }
+//        }
+//
+//        return cnt == numCourses;
     }
 }

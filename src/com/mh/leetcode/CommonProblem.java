@@ -633,4 +633,59 @@ public class CommonProblem {
 
         return sb.toString();
     }
+
+    /**
+     * 11. 盛最多水的容器
+     * 给你 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，
+     * 垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
+     *
+     * 说明：你不能倾斜容器，且 n 的值至少为 2。
+     *
+     * 解法：双指针
+     */
+    public int maxArea(int[] height) {
+        int left = 0,right = height.length - 1;
+        int ans = Integer.MIN_VALUE;
+        while (left < right){
+            int count = Math.min(height[left],height[right]) * (right - left);
+            ans = Math.max(count,ans);
+
+            if(height[left] > height[right]){
+                right--;
+            }else {
+                left++;
+            }
+        }
+        return ans;
+    }
+
+    /**
+     * 14. 最长公共前缀
+     * 编写一个函数来查找字符串数组中的最长公共前缀。
+     *
+     * 如果不存在公共前缀，返回空字符串 ""。
+     *
+     * 示例 1:
+     *
+     * 输入: ["flower","flow","flight"]
+     * 输出: "fl"
+     */
+    public String longestCommonPrefix(String[] strs) {
+        String commonPrefix = strs[0];
+        for (int i = 1; i < strs.length; i++) {
+            int index = 0;
+            int minLen = Math.min(commonPrefix.length(), strs[i].length());
+            while (index < minLen && commonPrefix.charAt(index) == strs[i].charAt(index)){
+                index++;
+            }
+            commonPrefix = commonPrefix.substring(0,index);
+            if(commonPrefix.length() == 0){
+                break;
+            }
+        }
+        return commonPrefix;
+    }
+
+
+
 }

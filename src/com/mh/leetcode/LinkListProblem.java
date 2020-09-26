@@ -329,32 +329,62 @@ public class LinkListProblem {
      * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
      */
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-//        ListNode dummy = new ListNode(-1);
-//
-//        ListNode head = dummy;
-//        while (l1 != null && l2 != null) {
-//            if (l1.val < l2.val) {
-//                head.next = l1;
-//                l1 = l1.next;
-//            } else {
-//                head.next = l2;
-//                l2 = l2.next;
-//            }
-//            head = head.next;
-//        }
-//
-//        head.next = l1 == null ? l2 : l1;
-//        return dummy.next;
-        if (l1 == null) {
-            return l2;
-        } else if (l2 == null) {
-            return l1;
-        } else if (l1.val < l2.val) {
-            l1.next = mergeTwoLists(l1.next,l2);
-            return l1;
-        } else {
-            l2.next = mergeTwoLists(l1,l2.next);
-            return l2;
+        ListNode dummy = new ListNode(-1);
+
+        ListNode head = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                head.next = l1;
+                l1 = l1.next;
+            } else {
+                head.next = l2;
+                l2 = l2.next;
+            }
+            head = head.next;
         }
+
+        head.next = l1 == null ? l2 : l1;
+        return dummy.next;
+//        if (l1 == null) {
+//            return l2;
+//        } else if (l2 == null) {
+//            return l1;
+//        } else if (l1.val < l2.val) {
+//            l1.next = mergeTwoLists(l1.next,l2);
+//            return l1;
+//        } else {
+//            l2.next = mergeTwoLists(l1,l2.next);
+//            return l2;
+//        }
     }
+
+    /**
+     * 23. 合并K个升序链表
+     * 给你一个链表数组，每个链表都已经按升序排列。
+     * <p>
+     * 请你将所有链表合并到一个升序链表中，返回合并后的链表。
+     */
+    public ListNode mergeKLists(ListNode[] lists) {
+//        ListNode ans = null
+//        for (int i = 0; i < lists.length; i++) {
+//            ans = mergeTwoLists(ans, lists[i]);
+//        }
+//        return ans;
+        return merge(lists,0,lists.length - 1);
+    }
+
+    public ListNode merge(ListNode[] lists, int left, int right) {
+        if(left == right){
+            return lists[left];
+        }
+
+        if(left > right){
+            return null;
+        }
+
+        int mid = left + (right - left) / 2;
+        return mergeTwoLists(merge(lists,left,mid - 1),merge(lists,mid + 1,right));
+    }
+
+
 }

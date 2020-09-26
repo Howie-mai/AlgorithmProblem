@@ -14,8 +14,10 @@ public class DpProblem {
     public static void main(String[] args) {
         DpProblem dp = new DpProblem();
 //        System.out.println(dp.findMaxForm(new String[]{"10", "0001", "111001", "1", "0"},5,3));
+
         String s = "aaa";
 //        System.out.println(dp.countPalindromicSubsequences(s));
+        System.out.println(dp.isMatch("aab","c*a*b"));
     }
 
     /**
@@ -187,6 +189,18 @@ public class DpProblem {
         }
 
         return sum;
+    }
+
+    /**
+     * 10. 正则表达式匹配
+     * 给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
+     * '.' 匹配任意单个字符
+     * '*' 匹配零个或多个前面的那一个元素
+     * 所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+     */
+    public boolean isMatch(String s, String p) {
+
+        return true;
     }
 
 }
