@@ -30,7 +30,8 @@ public class ArrayProblem {
 //        }
 //        System.out.println(problem.maximalSquare(new char[][]{{'1','0','1','0'},{'1','0','1','1'},{'1','0','1','1'},{'1','1','1','1'}}));
 //        System.out.println(problem.maximalSquare(new char[][]{{'0','1'}}));
-        System.out.println(problem.removeDuplicates(new int[]{1,1,2,3}));
+//        System.out.println(problem.removeDuplicates(new int[]{1,1,2,3}));
+        System.out.println(problem.threeConsecutiveOdds(new int[]{1,1,1}));
     }
 
     /**
@@ -380,5 +381,30 @@ public class ArrayProblem {
         }
 
         return i + 1;
+    }
+
+    /**
+     * 1550. 存在连续三个奇数的数组
+     * 给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false 。
+     */
+    public boolean threeConsecutiveOdds(int[] arr) {
+        for(int i = 0;i < arr.length;i++){
+            if(arr[i] % 2 == 0){
+                continue;
+            }
+
+            int j = i;
+            i++;
+            while(i < arr.length && arr[i] % 2 != 0 && i - j < 3) {
+                i++;
+            }
+            if(i - j == 3){
+                return true;
+            }
+            if(i == arr.length){
+                return false;
+            }
+        }
+        return false;
     }
 }
