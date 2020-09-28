@@ -13,9 +13,17 @@ public class Competion {
         Competion c = new Competion();
 //        System.out.println(c.breakfastNumber(new int[]{10,20,11,5},new int[]{5,5,2},15));
 //        System.out.println(c.numSpecial(new int[][]{{0,0,0,0,0},{1,0,0,0,0},{0,1,0,0,0},{0,0,1,0,0},{0,0,0,1,1}}));
-        System.out.println(c.unhappyFriends(4, new int[][]{{1, 3, 2}, {2, 3, 0}, {1, 3, 0}, {0, 2, 1}}, new int[][]{{1, 3}, {0, 2}}));
+//        System.out.println(c.unhappyFriends(4, new int[][]{{1, 3, 2}, {2, 3, 0}, {1, 3, 0}, {0, 2, 1}}, new int[][]{{1, 3}, {0, 2}}));
 //        System.out.println(c.minimumOperations("rryryrrryyyrr"));
 //        System.out.println(calculate("AB"));
+
+        int n =2;
+        int count = 0,totalSum = 0;
+        for(;n <= 20;n +=2){
+            count += n;
+            totalSum +=count;
+        }
+        System.out.println(totalSum);
     }
 
     public static int calculate(String s) {
@@ -144,4 +152,5 @@ public class Competion {
         }
        return friend;
     }
+
 }

@@ -24,13 +24,13 @@ public class TreeProblem {
 //        }
 //        treeProblem.sortedListToBST(head);
 
-        TreeNode treeNode1 = new TreeNode(1);
-        TreeNode left1 = new TreeNode(3);
-        left1.left = new TreeNode(5);
+        TreeNode treeNode1 = new TreeNode(-2);
+//        TreeNode left1 = new TreeNode(3);
+//        left1.left = new TreeNode(5);
 //        left.right = new TreeNode(3);
-        treeNode1.left = left1;
+//        treeNode1.left = left1;
 
-        TreeNode right1 = new TreeNode(2);
+        TreeNode right1 = new TreeNode(-3);
 //        right.left = new TreeNode(15);
 //        right.right = new TreeNode(6);
         treeNode1.right = right1;
@@ -53,6 +53,7 @@ public class TreeProblem {
 
 //        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
 //        System.out.println(treeProblem.rangeSumBST(node,3,6));
+        System.out.println(treeProblem.pathSumII(treeNode1,-5));
         Node listNode = new Node();
         List<Node> child1 = new ArrayList<>();
 
@@ -654,6 +655,37 @@ public class TreeProblem {
         for (Node child : children) {
             preOrderByDiGui(child, list);
         }
+    }
+
+    /**
+     * 113. 路径总和 II
+     * 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
+     */
+    public List<List<Integer>> pathSumII(TreeNode root, int sum) {
+        backTrackBy113(root,sum);
+        return ansBy113;
+    }
+
+    List<List<Integer>> ansBy113 = new ArrayList<>();
+    Deque<Integer> tempListBy113 = new ArrayDeque<>();
+    public void backTrackBy113(TreeNode root, int sum){
+
+        sum -= root.val;
+        tempListBy113.add(root.val);
+        if(sum == 0 && root.left == null && root.right == null){
+            ansBy113.add(new ArrayList<>(tempListBy113));
+            tempListBy113.removeLast();
+            return;
+        }
+
+        if(root.left != null){
+            backTrackBy113(root.left,sum);
+        }
+
+        if(root.right != null){
+            backTrackBy113(root.right,sum);
+        }
+        tempListBy113.removeLast();
     }
 
     /**

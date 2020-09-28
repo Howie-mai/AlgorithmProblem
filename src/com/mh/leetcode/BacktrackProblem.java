@@ -21,7 +21,8 @@ public class BacktrackProblem {
 //        System.out.println(backtrack.combinationSum3(3,15));
 //        System.out.println(backtrack.combinationSum4(new int[]{1, 2, 5}, 5));
 //        System.out.println(backtrack.subsets(new int[]{1, 1, 2, 3}));
-        System.out.println(backtrack.canFinish(3,new int[][]{ {1,0},{2,0} }));
+//        System.out.println(backtrack.canFinish(3,new int[][]{ {1,0},{2,0} }));
+        System.out.println(backtrack.permute(new int[]{9,8,7,6,5,4}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start) + "ms");
     }
@@ -394,7 +395,7 @@ public class BacktrackProblem {
     }
 
     public void dfs(int[] nums, int index, List<Integer> list, boolean[] used) {
-        if (index == nums.length) {
+        if (index == nums.length && list.get(list.size() - 1) % 2 != 0) {
             ans46List.add(new ArrayList<>(list));
             return;
         }
