@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class Node {
     public int val;
+    public Node left;
+    public Node right;
+    public Node next;
     public List<Node> children;
 
     public Node() {}
@@ -22,5 +25,12 @@ public class Node {
     public Node(int val, List<Node> children) {
         this.val = val;
         this.children = children;
+    }
+
+    public Node(int val, Node left, Node right, Node next) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+        this.next = next;
     }
 }

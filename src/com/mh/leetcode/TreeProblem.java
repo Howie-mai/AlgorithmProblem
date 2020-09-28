@@ -1252,4 +1252,39 @@ public class TreeProblem {
 
         return root;
     }
+
+    /**
+     * 117. 填充每个节点的下一个右侧节点指针 II
+     * 给定一个二叉树
+     *
+     * 填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL。
+     *
+     * 初始状态下，所有 next 指针都被设置为 NULL。
+     */
+    public Node connect(Node root) {
+        levelTraverse(root,0);
+        return root;
+    }
+
+    List<Deque<Node>> ansBy117 = new ArrayList<>();
+    public void levelTraverse(Node root,int level){
+        if(root == null){
+            return;
+        }
+
+        if(level >= ansBy117.size()){
+            ansBy117.add(new ArrayDeque<>());
+        }
+
+        levelTraverse(root.right,level + 1);
+
+        Deque<Node> nodes = ansBy117.get(level);
+        if(!nodes.isEmpty()){
+            root.next = nodes.getLast();
+        }
+        nodes.add(root);
+
+        levelTraverse(root.left,level + 1);
+    }
+
 }

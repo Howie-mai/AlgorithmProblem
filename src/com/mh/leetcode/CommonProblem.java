@@ -16,7 +16,7 @@ public class CommonProblem {
 //        commonProblem.reverse(123456);
 //        System.out.println(commonProblem.fib(45));
 //        System.out.println(commonProblem.countSubstrings("aaaaa"));
-        System.out.println(commonProblem.judgePoint24(new int[]{2,4,10,10}));
+//        System.out.println(commonProblem.judgePoint24(new int[]{2,4,10,10}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
 //        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
@@ -30,7 +30,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.myAtoi("+1"));
 //        System.out.println(commonProblem.permuteUnique(new int[]{1,1,2}));
 //        System.out.println(commonProblem.romanToInt("IX"));
-        System.out.println(commonProblem.intToRoman(1234343));
+//        System.out.println(commonProblem.intToRoman(1234343));
+        System.out.println(commonProblem.mySqrt(2147395599));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -686,6 +687,28 @@ public class CommonProblem {
         return commonPrefix;
     }
 
+    /**
+     * 69. x 的平方根
+     * 实现 int sqrt(int x) 函数。
+     *
+     * 计算并返回 x 的平方根，其中 x 是非负整数。
+     *
+     * 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
+     */
+    public int mySqrt(int x) {
+        int left = 0, right = x,ans = -1;
+        while (left <= right){
+            int mid = left + (right - left) / 2;
+
+            if((long)mid * mid > x){
+                right = mid - 1;
+            }else {
+                ans = mid;
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
 
 
 }

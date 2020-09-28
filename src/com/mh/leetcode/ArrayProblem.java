@@ -30,7 +30,8 @@ public class ArrayProblem {
 //        }
 //        System.out.println(problem.maximalSquare(new char[][]{{'1','0','1','0'},{'1','0','1','1'},{'1','0','1','1'},{'1','1','1','1'}}));
 //        System.out.println(problem.maximalSquare(new char[][]{{'0','1'}}));
-        System.out.println(problem.removeDuplicates(new int[]{1,1,2,3}));
+//        System.out.println(problem.removeDuplicates(new int[]{1,1,2,3}));
+        System.out.println(problem.threeConsecutiveOdds(new int[]{1,1,1}));
     }
 
     /**
@@ -380,5 +381,49 @@ public class ArrayProblem {
         }
 
         return i + 1;
+    }
+
+    /**
+     * 1550. 存在连续三个奇数的数组
+     * 给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false 。
+     */
+    public boolean threeConsecutiveOdds(int[] arr) {
+        for(int i = 0;i < arr.length;i++){
+            if(arr[i] % 2 == 0){
+                continue;
+            }
+
+            int j = i;
+            i++;
+            while(i < arr.length && arr[i] % 2 != 0 && i - j < 3) {
+                i++;
+            }
+            if(i - j == 3){
+                return true;
+            }
+            if(i == arr.length){
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 27. 移除元素
+     * 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+     *
+     * 不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。
+     *
+     * 元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+     */
+    public int removeElement(int[] nums, int val) {
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if(nums[i] != val){
+                nums[ans] = val;
+                ans++;
+            }
+        }
+        return ans;
     }
 }
