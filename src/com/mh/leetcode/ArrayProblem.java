@@ -31,7 +31,8 @@ public class ArrayProblem {
 //        System.out.println(problem.maximalSquare(new char[][]{{'1','0','1','0'},{'1','0','1','1'},{'1','0','1','1'},{'1','1','1','1'}}));
 //        System.out.println(problem.maximalSquare(new char[][]{{'0','1'}}));
 //        System.out.println(problem.removeDuplicates(new int[]{1,1,2,3}));
-        System.out.println(problem.threeConsecutiveOdds(new int[]{1,1,1}));
+//        System.out.println(problem.threeConsecutiveOdds(new int[]{1,1,1}));
+        System.out.println(problem.threeSum(new int[]{-2,0,0,2,2}));
     }
 
     /**
@@ -426,4 +427,53 @@ public class ArrayProblem {
         }
         return ans;
     }
+
+    /**
+     * 15. 三数之和
+     * 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？
+     * 请你找出所有满足条件且不重复的三元组。
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> ans = new ArrayList<>();
+        Deque<Integer> temp = new ArrayDeque<>();
+        for (int i = 0; i < nums.length; i++) {
+            if(nums[i] > 0){
+                break;
+            }
+            if(i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+
+            int left = i + 1 ;
+            int right = nums.length - 1;
+            int remain = -nums[i];
+            temp.add(nums[i]);
+            while (left < right){
+                int count = nums[left] + nums[right];
+                if(count > remain){
+                    right--;
+                }else if(count < remain){
+                    left++;
+                }else {
+                    temp.add(nums[left]);
+                    temp.add(nums[right]);
+                    ans.add(new ArrayList<>(temp));
+                    temp.removeLast();
+                    temp.removeLast();
+                    while (left < right && nums[left] == nums[left + 1]){
+                        left++;
+                    }
+                    while (left < right && nums[right] == nums[right - 1]){
+                        right--;
+                    }
+                    left++;
+                    right--;
+                }
+            }
+            temp.removeLast();
+        }
+        return ans;
+    }
+
 }
