@@ -22,7 +22,8 @@ public class BacktrackProblem {
 //        System.out.println(backtrack.combinationSum4(new int[]{1, 2, 5}, 5));
 //        System.out.println(backtrack.subsets(new int[]{1, 1, 2, 3}));
 //        System.out.println(backtrack.canFinish(3,new int[][]{ {1,0},{2,0} }));
-        System.out.println(backtrack.permute(new int[]{9,8,7,6,5,4}));
+//        System.out.println(backtrack.permute(new int[]{9, 8, 7, 6, 5, 4}));
+        System.out.println(Arrays.toString(backtrack.sumOfDistancesInTree(6, new int[][]{{0, 1}, {0, 2}, {2, 3}, {2, 4}, {2, 5}})));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start) + "ms");
     }
@@ -612,6 +613,7 @@ public class BacktrackProblem {
     }
 
     List<List<Integer>> ansBy78 = new ArrayList<>();
+
     public void dfsBy78(int[] nums, Deque<Integer> deque, boolean[] used, int index) {
         if (index == nums.length) {
             ansBy78.add(new ArrayList<>(deque));
@@ -623,13 +625,14 @@ public class BacktrackProblem {
         deque.removeLast();
         dfsBy78(nums, deque, used, index + 1);
     }
+
     /**
      * 207. 课程表
      * 你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
-     *
+     * <p>
      * 在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们：[0,1]
      */
-    public boolean backTrackBy207(List<List<Integer>> adjacency,int[] learn,int i){
+    public boolean backTrackBy207(List<List<Integer>> adjacency, int[] learn, int i) {
         /**
          * 借助一个标志列表 flags，用于判断每个节点 i （课程）的状态：
          * 未被 DFS 访问：i == 0；
@@ -638,18 +641,18 @@ public class BacktrackProblem {
          */
 
         // 当 flag[i] == -1，说明当前访问节点已被其他节点启动的 DFS 访问，无需再重复搜索，直接返回 true。
-        if(learn[i] == -1){
+        if (learn[i] == -1) {
             return true;
         }
 
         // 当 flag[i] == 1，说明在本轮 DFS 搜索中节点 i 被第 22 次访问，即 课程安排图有环 ，直接返回 False。
-        if(learn[i] == 1){
+        if (learn[i] == 1) {
             return false;
         }
 
         learn[i] = 1;
         for (Integer index : adjacency.get(i)) {
-            if(!backTrackBy207(adjacency, learn, index)){
+            if (!backTrackBy207(adjacency, learn, index)) {
                 return false;
             }
         }
@@ -660,16 +663,16 @@ public class BacktrackProblem {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
 
         List<List<Integer>> adjacency = new ArrayList<>();
-        for(int i = 0; i < numCourses; i++){
+        for (int i = 0; i < numCourses; i++) {
             adjacency.add(new ArrayList<>());
         }
 
         int[] flags = new int[numCourses];
-        for(int[] cp : prerequisites){
+        for (int[] cp : prerequisites) {
             adjacency.get(cp[1]).add(cp[0]);
         }
-        for(int i = 0; i < numCourses; i++){
-            if(!backTrackBy207(adjacency, flags, i)){
+        for (int i = 0; i < numCourses; i++) {
+            if (!backTrackBy207(adjacency, flags, i)) {
                 return false;
             }
         }
@@ -716,5 +719,69 @@ public class BacktrackProblem {
 //        }
 //
 //        return cnt == numCourses;
+    }
+
+    /**
+     * 834. 树中距离之和
+     * 给定一个无向、连通的树。树中有 N 个标记为 0...N-1 的节点以及 N-1 条边 。
+     * <p>
+     * 第 i 条边连接节点 edges[i][0] 和 edges[i][1] 。
+     * <p>
+     * 返回一个表示节点 i 与其他所有节点距离之和的列表 ans。
+     */
+    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+
+        for(int i = 0; i < N; i++) {
+            graph.add(new ArrayList<Integer>());
+        }
+        for (int[] edge : edges) {
+            int src = edge[0];
+            int dst = edge[1];
+            graph.get(src).add(dst);
+            graph.get(dst).add(src);
+        }
+        distSum = new int[N];
+        nodeNum = new int[N];
+        Arrays.fill(nodeNum, 1);
+        postOrder(0, -1);
+        preOrder(0, -1);
+        return distSum;
+    }
+    /**
+     * 邻接表
+     */
+    private List<List<Integer>> graph = new ArrayList<>();
+    /**
+     * 距离和
+     */
+    int[] distSum;
+    /**
+     * 子树节点个数（包括自己）
+     */
+    int[] nodeNum;
+
+    //求root到子树所有节点的距离和
+    private void postOrder(int root, int parent) {
+        List<Integer> neighbors = graph.get(root);
+        for(Integer neighbor : neighbors) {
+            if(neighbor == parent){
+                //如果邻接点是父节点，则跳过
+                continue;
+            }
+            postOrder(neighbor, root);
+            nodeNum[root] += nodeNum[neighbor];
+            distSum[root] += distSum[neighbor] + nodeNum[neighbor];
+        }
+    }
+    //根据root计算其邻居到所在子树之外的节点的距离和（包括root节点）
+    private void preOrder(int root, int parent) {
+        List<Integer> neighbors = graph.get(root);
+        for(Integer neighbor : neighbors) {
+            if(neighbor == parent){
+                continue;
+            }
+            distSum[neighbor] = distSum[root] - nodeNum[neighbor] + (graph.size() - nodeNum[neighbor]);
+            preOrder(neighbor, root);
+        }
     }
 }

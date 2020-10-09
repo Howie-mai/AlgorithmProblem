@@ -31,7 +31,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.permuteUnique(new int[]{1,1,2}));
 //        System.out.println(commonProblem.romanToInt("IX"));
 //        System.out.println(commonProblem.intToRoman(1234343));
-        System.out.println(commonProblem.mySqrt(2147395599));
+//        System.out.println(commonProblem.mySqrt(2147395599));
+        System.out.println(commonProblem.countAndSay(6));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -708,6 +709,47 @@ public class CommonProblem {
             }
         }
         return ans;
+    }
+
+    /**
+     * 38. 外观数列
+     * 给定一个正整数 n（1 ≤ n ≤ 30），输出外观数列的第 n 项。
+     * 注意：整数序列中的每一项将表示为一个字符串。
+     * 「外观数列」是一个整数序列，从数字 1 开始，序列中的每一项都是对前一项的描述。前五项如下：
+     * 1.     1
+     * 2.     11
+     * 3.     21
+     * 4.     1211
+     * 5.     111221
+     * 第一项是数字 1
+     * 描述前一项，这个数是 1 即 “一个 1 ”，记作 11
+     * 描述前一项，这个数是 11 即 “两个 1 ” ，记作 21
+     * 描述前一项，这个数是 21 即 “一个 2 一个 1 ” ，记作 1211
+     * 描述前一项，这个数是 1211 即 “一个 1 一个 2 两个 1 ” ，记作 111221
+     */
+    public String countAndSay(int n) {
+        String str = "1";
+        StringBuilder sb;
+        for (int i = 1; i < n; i++) {
+            char[] chars = str.toCharArray();
+            sb = new StringBuilder();
+            for (int j = 0; j < chars.length;) {
+                if( (j < chars.length - 1 && chars[j] != chars[j + 1]) || j == chars.length - 1){
+                    sb.append("1").append(chars[j++]);
+                    continue;
+                }
+                int count = 1;
+                char ch = chars[j++];
+                while (j < chars.length && chars[j] == ch){
+                    count++;
+                    j++;
+                }
+
+                sb.append(count).append(ch);
+            }
+            str = sb.toString();
+        }
+        return str;
     }
 
 

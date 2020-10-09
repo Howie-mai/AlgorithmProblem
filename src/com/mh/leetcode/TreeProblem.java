@@ -1287,4 +1287,38 @@ public class TreeProblem {
         levelTraverse(root.left,level + 1);
     }
 
+    /**
+     * 701. 二叉搜索树中的插入操作
+     * 给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。 返回插入后二叉搜索树的根节点。
+     */
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if(root == null){
+            return new TreeNode(val);
+        }
+        traversalBy701(root,val);
+        return root;
+    }
+
+    public void traversalBy701(TreeNode node,int val){
+        if(node == null){
+            return;
+        }
+
+        if(val >= node.val){
+            if(node.right == null){
+                node.right = new TreeNode(val);
+                return;
+            }
+            traversalBy701(node.right,val);
+        }
+
+        if(val <= node.val){
+            if(node.left == null){
+                node.left = new TreeNode(val);
+                return;
+            }
+            traversalBy701(node.left,val);
+        }
+    }
+
 }

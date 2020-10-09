@@ -12,18 +12,9 @@ import java.util.Stack;
 public class StackProblem {
 
     public static void main(String[] args) {
-        StackProblem main7 = new StackProblem();
+        StackProblem stackProblem = new StackProblem();
 
-        String s = "";
-        boolean valid = isValid(s);
-        System.out.println(valid);
-
-        int[] T = new int[]{73, 74, 75, 71, 69, 72, 76, 73};
-        int[] ints = main7.dailyTemperatures(T);
-        for (int anInt : ints) {
-            System.out.print(anInt + " , ");
-        }
-
+        System.out.println(stackProblem.longestValidParentheses("())((())"));
     }
 
     /**
@@ -100,5 +91,28 @@ public class StackProblem {
         }
 
         return result;
+    }
+
+    /**
+     * 32. 最长有效括号
+     * 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+     */
+    public int longestValidParentheses(String s) {
+        int maxans = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (stack.empty()) {
+                    stack.push(i);
+                } else {
+                    maxans = Math.max(maxans, i - stack.peek());
+                }
+            }
+        }
+        return maxans;
     }
 }

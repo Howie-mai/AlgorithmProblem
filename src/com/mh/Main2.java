@@ -1,6 +1,14 @@
 package com.mh;
 
+import jdk.nashorn.internal.objects.annotations.Function;
+
+import javax.xml.bind.annotation.XmlValue;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.text.DecimalFormat;
+import java.util.Map;
 
 /**
  * ClassName：
@@ -10,33 +18,35 @@ import java.text.DecimalFormat;
  */
 public class Main2 {
 
-    public static void main(String[] args) {
-//        DecimalFormat df = new DecimalFormat("#.00");
-//        double kmTotalD = 0.00d;
-//        double calories = 0.00d;
-//
-//        //计算总公里
-//        float kmTotal = getDistanceFromSteps(2922,1,170);
-//        kmTotalD = Double.valueOf(df.format(kmTotal));
-//        // 计算热量：1步约等于0.04千卡
-//        calories = 2922 * 0.04;
-//
-//
-//        System.out.println(Double.valueOf(df.format(calories)));
-//        System.out.println(Double.valueOf(kmTotalD));
-
-//        for (int i = 1;i <= 9;i++){
-//            char x = (char) (i + '0');
-//            System.out.println(x);
-//        }
-
-        int i = 0;
-        String a = "    -123213";
-        int i1 = Integer.parseInt(a);
-        System.out.println(i1);
+    public static void main(String[] args) throws Exception {
+        new Main2().getDistanceFromSteps(111,222,333);
     }
 
-    public static float getDistanceFromSteps(int steps, int gender, int height) {
+    /**
+     * 修改注解的值
+     */
+    @Function(name = "zhushiName")
+    public String testInterface(int a) throws Exception{
+        Method method = Main2.class.getMethod("testInterface", int.class);
+        Function testA = method.getAnnotation(Function.class);
+
+        if (testA == null){
+            throw new RuntimeException("please add testA");
+        }
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(testA);
+        Field value = invocationHandler.getClass().getDeclaredField("memberValues");
+        value.setAccessible(true);
+        Map<String, Object> memberValues = (Map<String, Object>) value.get(invocationHandler);
+        String val = (String) memberValues.get("name");
+        System.out.println("修改前" + val);
+        val = "b";
+        memberValues.put("name", val);
+        System.out.println("修改后" + (String) memberValues.get("name"));
+
+        return val;
+    }
+
+    public float getDistanceFromSteps(int steps, int gender, int height) throws Exception {
         float genderParameter = gender == 2 ? 0.85F : 0.8F;
         float basicStrideLength = genderParameter * (float) height;
         float strideRate = 0.0F;
@@ -57,4 +67,5 @@ public class Main2 {
         }
         return (float) steps * strideRate * basicStrideLength / 100000.0F;
     }
+
 }
