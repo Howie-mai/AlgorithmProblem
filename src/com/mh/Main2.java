@@ -19,15 +19,16 @@ import java.util.Map;
 public class Main2 {
 
     public static void main(String[] args) throws Exception {
-        new Main2().getDistanceFromSteps(111,222,333);
+//        new Main2().getDistanceFromSteps(111,222,333);
+        new Main2().testInterface("hhhhh");
     }
 
     /**
      * 修改注解的值
      */
     @Function(name = "zhushiName")
-    public String testInterface(int a) throws Exception{
-        Method method = Main2.class.getMethod("testInterface", int.class);
+    public String testInterface(String a) throws Exception{
+        Method method = Main2.class.getMethod("testInterface", String.class);
         Function testA = method.getAnnotation(Function.class);
 
         if (testA == null){
@@ -39,7 +40,7 @@ public class Main2 {
         Map<String, Object> memberValues = (Map<String, Object>) value.get(invocationHandler);
         String val = (String) memberValues.get("name");
         System.out.println("修改前" + val);
-        val = "b";
+        val = a;
         memberValues.put("name", val);
         System.out.println("修改后" + (String) memberValues.get("name"));
 

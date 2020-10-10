@@ -386,5 +386,77 @@ public class LinkListProblem {
         return mergeTwoLists(merge(lists,left,mid - 1),merge(lists,mid + 1,right));
     }
 
+    /**
+     * 141. 环形链表
+     * 给定一个链表，判断链表中是否有环。
+     *
+     * 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。
+     * 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+     * 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+     *
+     * 如果链表中存在环，则返回 true 。 否则，返回 false 。
+     *
+     * 龟兔赛跑算法 快慢指针
+     */
+    public boolean hasCycle(ListNode head) {
+        if(head == null){
+            return false;
+        }
+        ListNode slow = head,fast = head.next;
+        while(fast != slow){
+            if(fast == null || fast.next == null){
+                return false;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return true;
+    }
+
+    /**
+     * 142. 环形链表 II
+     * 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+     *
+     * 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+     * 如果 pos 是 -1，则在该链表中没有环。
+     *
+     * 说明：不允许修改给定的链表。
+     */
+    public ListNode detectCycle(ListNode head) {
+        /**
+         * 哈希表重复判断，也可用于141题，返回的结果不同
+         */
+//        Set<ListNode> set = new HashSet<>();
+//        while (head != null){
+//            if(!set.add(head)){
+//                return head;
+//            }
+//            head = head.next;
+//        }
+//        return null;
+
+        /**
+         * 龟兔赛跑算法 快慢指针
+         */
+        if(head == null){
+            return head;
+        }
+        ListNode slow = head,fast = head;
+
+        do {
+            if (fast == null || fast.next == null) {
+                return null;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        } while (fast != slow);
+
+        ListNode ans = head;
+        while (ans != slow) {
+            ans = ans.next;
+            slow = slow.next;
+        }
+        return ans;
+    }
 
 }
