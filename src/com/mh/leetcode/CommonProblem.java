@@ -32,7 +32,9 @@ public class CommonProblem {
 //        System.out.println(commonProblem.romanToInt("IX"));
 //        System.out.println(commonProblem.intToRoman(1234343));
 //        System.out.println(commonProblem.mySqrt(2147395599));
-        System.out.println(commonProblem.countAndSay(6));
+//        System.out.println(commonProblem.countAndSay(6));
+//        System.out.println(commonProblem.backspaceCompare("y#fo##f","y#f#o##f"));
+        System.out.println(commonProblem.isLongPressedName("pyplrz", "ppyypllr"));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -640,21 +642,21 @@ public class CommonProblem {
      * 11. 盛最多水的容器
      * 给你 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，
      * 垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
-     *
+     * <p>
      * 说明：你不能倾斜容器，且 n 的值至少为 2。
-     *
+     * <p>
      * 解法：双指针
      */
     public int maxArea(int[] height) {
-        int left = 0,right = height.length - 1;
+        int left = 0, right = height.length - 1;
         int ans = Integer.MIN_VALUE;
-        while (left < right){
-            int count = Math.min(height[left],height[right]) * (right - left);
-            ans = Math.max(count,ans);
+        while (left < right) {
+            int count = Math.min(height[left], height[right]) * (right - left);
+            ans = Math.max(count, ans);
 
-            if(height[left] > height[right]){
+            if (height[left] > height[right]) {
                 right--;
-            }else {
+            } else {
                 left++;
             }
         }
@@ -664,11 +666,11 @@ public class CommonProblem {
     /**
      * 14. 最长公共前缀
      * 编写一个函数来查找字符串数组中的最长公共前缀。
-     *
+     * <p>
      * 如果不存在公共前缀，返回空字符串 ""。
-     *
+     * <p>
      * 示例 1:
-     *
+     * <p>
      * 输入: ["flower","flow","flight"]
      * 输出: "fl"
      */
@@ -677,11 +679,11 @@ public class CommonProblem {
         for (int i = 1; i < strs.length; i++) {
             int index = 0;
             int minLen = Math.min(commonPrefix.length(), strs[i].length());
-            while (index < minLen && commonPrefix.charAt(index) == strs[i].charAt(index)){
+            while (index < minLen && commonPrefix.charAt(index) == strs[i].charAt(index)) {
                 index++;
             }
-            commonPrefix = commonPrefix.substring(0,index);
-            if(commonPrefix.length() == 0){
+            commonPrefix = commonPrefix.substring(0, index);
+            if (commonPrefix.length() == 0) {
                 break;
             }
         }
@@ -691,19 +693,19 @@ public class CommonProblem {
     /**
      * 69. x 的平方根
      * 实现 int sqrt(int x) 函数。
-     *
+     * <p>
      * 计算并返回 x 的平方根，其中 x 是非负整数。
-     *
+     * <p>
      * 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
      */
     public int mySqrt(int x) {
-        int left = 0, right = x,ans = -1;
-        while (left <= right){
+        int left = 0, right = x, ans = -1;
+        while (left <= right) {
             int mid = left + (right - left) / 2;
 
-            if((long)mid * mid > x){
+            if ((long) mid * mid > x) {
                 right = mid - 1;
-            }else {
+            } else {
                 ans = mid;
                 left = mid + 1;
             }
@@ -733,14 +735,14 @@ public class CommonProblem {
         for (int i = 1; i < n; i++) {
             char[] chars = str.toCharArray();
             sb = new StringBuilder();
-            for (int j = 0; j < chars.length;) {
-                if( (j < chars.length - 1 && chars[j] != chars[j + 1]) || j == chars.length - 1){
+            for (int j = 0; j < chars.length; ) {
+                if ((j < chars.length - 1 && chars[j] != chars[j + 1]) || j == chars.length - 1) {
                     sb.append("1").append(chars[j++]);
                     continue;
                 }
                 int count = 1;
                 char ch = chars[j++];
-                while (j < chars.length && chars[j] == ch){
+                while (j < chars.length && chars[j] == ch) {
                     count++;
                     j++;
                 }
@@ -752,5 +754,106 @@ public class CommonProblem {
         return str;
     }
 
+    /**
+     *
+     */
+    public boolean backspaceCompare(String S, String T) {
+        return getString(S).equals(getString(T));
 
+    }
+
+    public String getString(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (char ch : str.toCharArray()) {
+            if (ch == '#' && sb.length() != 0) {
+                sb.deleteCharAt(sb.length() - 1);
+            } else if (ch != '#') {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 925. 长按键入
+     * 你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
+     * <p>
+     * 你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
+     */
+    public boolean isLongPressedName(String name, String typed) {
+        int i = 0, j = 0;
+        char[] nameArray = name.toCharArray();
+        char[] typeArray = typed.toCharArray();
+        int n = nameArray.length;
+        int n1 = typeArray.length;
+        while (j < n1) {
+            if (i < n && nameArray[i] == typeArray[j]) {
+                i++;
+                j++;
+            } else if (j > 0 && typeArray[j] == typeArray[j - 1]) {
+                j++;
+            } else {
+                return false;
+            }
+        }
+        return i == n;
+    }
+
+    /**
+     * 1365. 有多少小于当前数字的数字
+     * 给你一个数组 nums，对于其中每个元素 nums[i]，请你统计数组中比它小的所有数字的数目。
+     * 换而言之，对于每个 nums[i] 你必须计算出有效的 j 的数量，其中 j 满足 j != i 且 nums[j] < nums[i] 。
+     * 以数组形式返回答案。
+     */
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+        int[] temp = new int[nums.length];
+        System.arraycopy(nums,0,temp,0,nums.length);
+        Arrays.sort(temp);
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i = 0;i < temp.length;i++){
+            if(!map.containsKey(nums[i])){
+                map.put(nums[i],i);
+            }
+        }
+
+        for(int i = 0;i < nums.length;i++){
+            temp[i] = map.get(nums[i]);
+        }
+        return temp;
+    }
+
+    /**
+     * 845. 数组中的最长山脉
+     * 我们把数组 A 中符合下列属性的任意连续子数组 B 称为 “山脉”：
+     * B.length >= 3
+     * 存在 0 < i < B.length - 1 使得 B[0] < B[1] < ... B[i-1] < B[i] > B[i+1] > ... > B[B.length - 1]
+     * （注意：B 可以是 A 的任意子数组，包括整个数组 A。）
+     * 给出一个整数数组 A，返回最长 “山脉” 的长度。
+     * 如果不含有 “山脉” 则返回 0。
+     */
+    public int longestMountain(int[] A) {
+        int result = 0,i = 1,len = A.length,start = 0,end = 0;
+        while(i < len){
+            start = 0;
+            end = 0;
+            while(i < len && A[i - 1] < A[i]){
+                i++;
+                start++;
+            }
+
+            while(i < len && A[i - 1] > A[i]){
+                i++;
+                end++;
+            }
+
+            if(start > 0 && end > 0){
+                result = Math.max(result,start + end + 1);
+            }
+
+            while(i < len && A[i - 1] == A[i]){
+                i++;
+            }
+        }
+        return result;
+    }
 }

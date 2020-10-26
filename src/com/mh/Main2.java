@@ -20,18 +20,24 @@ public class Main2 {
 
     public static void main(String[] args) throws Exception {
 //        new Main2().getDistanceFromSteps(111,222,333);
-        new Main2().testInterface("hhhhh");
+//        new Main2().testInterface("hhhhh");
+        new Main2().demo(0);
+    }
+
+    public void demo(int status){
+        status = 1;
+        System.out.println(status);
     }
 
     /**
      * 修改注解的值
      */
     @Function(name = "zhushiName")
-    public String testInterface(String a) throws Exception{
+    public String testInterface(String a) throws Exception {
         Method method = Main2.class.getMethod("testInterface", String.class);
         Function testA = method.getAnnotation(Function.class);
 
-        if (testA == null){
+        if (testA == null) {
             throw new RuntimeException("please add testA");
         }
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(testA);

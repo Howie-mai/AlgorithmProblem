@@ -203,4 +203,51 @@ public class DpProblem {
         return true;
     }
 
+    /**
+     * 416. 分割等和子集
+     * 给定一个只包含正整数的非空数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+     */
+    public boolean canPartition(int[] nums) {
+        if(nums.length < 2){
+            return false;
+        }
+
+        int sum = 0,maxNum = -1;
+        for (int num : nums) {
+            sum += num;
+            maxNum = Math.max(maxNum,num);
+        }
+
+        // 如果和为奇数 直接返回
+        if(sum % 2 != 0){
+            return false;
+        }
+
+        int target = sum / 2;
+        if(maxNum > target){
+            return false;
+        }
+
+        // 动态规划，dp[i][j]表示 从nums数组中的[0...i]区间中是否有等于j的方案。数字可选可不选
+        // dp[0][nums[0]]持续为true
+        boolean[][] dp = new boolean[nums.length][target + 1];
+
+        for (int i = 0; i < nums.length; i++) {
+            if(i == 0){
+                dp[0][nums[0]] = true;
+                continue;
+            }
+            for (int j = 0; j <= target; j++) {
+                // 当j  < nums[i] ，说明 nums[i] 肯定选择不被选择，所以直接复制上个状态
+                if(j < nums[i]){
+                    dp[i][j] = dp[i - 1][j];
+                }else {
+                    // 当 j >= nums[i] ，可不选择 或 选择 nums[i]
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]];
+                }
+            }
+        }
+        return dp[nums.length - 1][target];
+    }
+
 }

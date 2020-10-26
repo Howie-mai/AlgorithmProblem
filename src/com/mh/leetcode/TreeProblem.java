@@ -3,6 +3,7 @@ package com.mh.leetcode;
 import com.mh.leetcode.bean.ListNode;
 import com.mh.leetcode.bean.Node;
 import com.mh.leetcode.bean.TreeNode;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.*;
 
@@ -24,13 +25,13 @@ public class TreeProblem {
 //        }
 //        treeProblem.sortedListToBST(head);
 
-        TreeNode treeNode1 = new TreeNode(-2);
-//        TreeNode left1 = new TreeNode(3);
-//        left1.left = new TreeNode(5);
-//        left.right = new TreeNode(3);
-//        treeNode1.left = left1;
+        TreeNode treeNode1 = new TreeNode(4);
+        TreeNode left1 = new TreeNode(2);
+        left1.left = new TreeNode(1);
+        left1.right = new TreeNode(3);
+        treeNode1.left = left1;
 
-        TreeNode right1 = new TreeNode(-3);
+        TreeNode right1 = new TreeNode(6);
 //        right.left = new TreeNode(15);
 //        right.right = new TreeNode(6);
         treeNode1.right = right1;
@@ -53,7 +54,8 @@ public class TreeProblem {
 
 //        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
 //        System.out.println(treeProblem.rangeSumBST(node,3,6));
-        System.out.println(treeProblem.pathSumII(treeNode1,-5));
+//        System.out.println(treeProblem.pathSumII(treeNode1,-5));
+        System.out.println(treeProblem.getMinimumDifference(treeNode1));
         Node listNode = new Node();
         List<Node> child1 = new ArrayList<>();
 
@@ -75,7 +77,7 @@ public class TreeProblem {
 //        System.out.println(treeProblem.levelOrderBottom(treeNode));
 //        System.out.println(treeProblem.averageOfLevels(treeNode));
 
-        System.out.println(treeProblem.buildTree(new int[]{9,3,15,20,7},new int[]{9,15,7,20,3}));
+//        System.out.println(treeProblem.buildTree(new int[]{9,3,15,20,7},new int[]{9,15,7,20,3}));
 
     }
 
@@ -1321,4 +1323,31 @@ public class TreeProblem {
         }
     }
 
+    /**
+     * 530. 二叉搜索树的最小绝对差
+     * 给你一棵所有节点为非负值的二叉搜索树，请你计算树中任意两节点的差的绝对值的最小值。
+     */
+    public int getMinimumDifference(TreeNode root) {
+        intAns = Integer.MAX_VALUE;
+        intCommon = -1;
+        getMinAbs(root);
+        return intAns;
+    }
+
+    int intAns;
+    int intCommon;
+    public void getMinAbs(TreeNode root){
+        if(root == null){
+            return;
+        }
+
+        getMinAbs(root.left);
+        if(intCommon == -1){
+            intCommon = root.val;
+        }else {
+            intAns = Math.min(intAns,root.val - intCommon);
+            intCommon = root.val;
+        }
+        getMinAbs(root.right);
+    }
 }
