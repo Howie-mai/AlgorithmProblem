@@ -1350,4 +1350,42 @@ public class TreeProblem {
         }
         getMinAbs(root.right);
     }
+
+    /**
+     * 129. 求根到叶子节点数字之和
+     * 给定一个二叉树，它的每个结点都存放一个 0-9 的数字，每条从根到叶子节点的路径都代表一个数字。
+     *
+     * 例如，从根到叶子节点路径 1->2->3 代表数字 123。
+     *
+     * 计算从根到叶子节点生成的所有数字之和。
+     */
+    public int sumNumbers(TreeNode root) {
+        sumNumber(root);
+        return resultBy129;
+    }
+
+    int resultBy129 = 0;
+    StringBuilder sb = new StringBuilder();
+
+    public void sumNumber(TreeNode root){
+        if(root == null){
+            return;
+        }
+        if(root.left == null && root.right == null){
+            sb.append(root.val);
+            resultBy129 += Integer.parseInt(sb.toString());
+            sb.deleteCharAt(sb.length() - 1);
+            return;
+        }
+
+        sb.append(root.val);
+        if(root.left != null){
+            sumNumbers(root.left);
+        }
+        if(root.right != null){
+            sumNumbers(root.right);
+        }
+        sb.deleteCharAt(sb.length() - 1);
+    }
+
 }
