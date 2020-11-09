@@ -3,6 +3,7 @@ package com.mh;
 import jdk.nashorn.internal.objects.annotations.Function;
 
 import javax.xml.bind.annotation.XmlValue;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -20,11 +21,15 @@ public class Main2 implements Main2Interface {
 
     public static void main(String[] args) throws Exception {
 //        new Main2().getDistanceFromSteps(111,222,333);
-        new Main2().testInterface("hhhhh");
+//        new Main2().testInterface("hhhhh");
 //        new Main2().demo(0);
+        File file = new File("http://nypt.hymbb.cn/Spring%20Boot%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0.pdf");
+        File absoluteFile = file.getAbsoluteFile();
+
+        System.out.println(absoluteFile);
     }
 
-    public void demo(int status){
+    public void demo(int status) {
         status = 1;
         System.out.println(status);
     }

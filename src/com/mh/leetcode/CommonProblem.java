@@ -34,7 +34,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.mySqrt(2147395599));
 //        System.out.println(commonProblem.countAndSay(6));
 //        System.out.println(commonProblem.backspaceCompare("y#fo##f","y#f#o##f"));
-        System.out.println(commonProblem.isLongPressedName("pyplrz", "ppyypllr"));
+//        System.out.println(commonProblem.isLongPressedName("pyplrz", "ppyypllr"));
+        System.out.println(commonProblem.kClosest(new int[][]{{3,3},{5,-1},{-2,4}},2));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -855,5 +856,41 @@ public class CommonProblem {
             }
         }
         return result;
+    }
+
+    /**
+     * 973. 最接近原点的 K 个点
+     * 我们有一个由平面上的点组成的列表 points。需要从中找出 K 个距离原点 (0, 0) 最近的点。
+     */
+    public int[][] kClosest(int[][] points, int K) {
+        Map<Integer,Double> map = new HashMap<>();
+        for (int i = 0; i < points.length; i++) {
+            int x = points[i][0],y = points[i][1];
+            map.put(i,Math.sqrt(x * x + y * y));
+        }
+
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                Double a = map.get(o1);
+                Double b = map.get(o2);
+                return b.compareTo(a);
+            }
+        });
+        for (Integer key : map.keySet()) {
+            if(priorityQueue.size() < K){
+                priorityQueue.add(key);
+            }else if(map.get(key) < map.get(priorityQueue.peek())){
+                priorityQueue.remove();
+                priorityQueue.add(key);
+            }
+        }
+
+        int[][] ans = new int[K][2];
+        int n  = priorityQueue.size();
+        for (int i = 0; i < n; i++) {
+            ans[i] = points[priorityQueue.remove()];
+        }
+        return ans;
     }
 }

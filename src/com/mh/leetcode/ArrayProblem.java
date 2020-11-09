@@ -637,4 +637,45 @@ public class ArrayProblem {
         }
         return result;
     }
+
+    /**
+     * 57. 插入区间
+     * 给出一个无重叠的 ，按照区间起始端点排序的区间列表。
+     *
+     * 在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
+     */
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int left = newInterval[0];
+        int right = newInterval[1];
+        // 判断要插入的区间的右侧是否有数据
+        boolean flag = false;
+        List<int[]> list = new ArrayList<>();
+        for (int[] interval : intervals) {
+
+            // 如果该区间的右边比left小，直接add
+            if(interval[1] < left){
+                list.add(interval);
+            }else if(interval[0] > right){
+                // 如果该区间的左边比left大，说明在右侧且无交集
+                if(!flag) {
+                    // 如果右侧有数据，则先加入要插入的区间，再加入该区间
+                    list.add(new int[]{left, right});
+                    flag = true;
+                }
+                list.add(interval);
+            }else {
+                // 取并集
+                left = Math.min(left,interval[0]);
+                right = Math.max(right,interval[1]);
+            }
+        }
+        if (!flag) {
+            list.add(new int[]{left, right});
+        }
+        int[][] ans = new int[list.size()][2];
+        for (int i = 0; i < list.size(); i++) {
+            ans[i] = list.get(i);
+        }
+        return ans;
+    }
 }
