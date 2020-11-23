@@ -24,15 +24,23 @@ public class Competion {
 //        }
 //        System.out.println(totalSum);
 
-        int ans =  0;
-        for (int i = 20;i <= 25;i++){
-            int count = 1;
-            for (int j = 0;j <= i;j++){
-                count *= i;
+//        int ans =  0;
+//        for (int i = 20;i <= 25;i++){
+//            int count = 1;
+//            for (int j = 0;j <= i;j++){
+//                count *= i;
+//            }
+//            ans += count;
+//        }
+//        System.out.println(ans);
+        Scanner scanner = new Scanner(System.in);
+        while (true){
+            String s = scanner.nextLine();
+            System.out.println("输出" + s);
+            if("1".equals(s)){
+                break;
             }
-            ans += count;
         }
-        System.out.println(ans);
     }
 
     public static int calculate(String s) {

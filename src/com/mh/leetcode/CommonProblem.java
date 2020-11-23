@@ -35,7 +35,10 @@ public class CommonProblem {
 //        System.out.println(commonProblem.countAndSay(6));
 //        System.out.println(commonProblem.backspaceCompare("y#fo##f","y#f#o##f"));
 //        System.out.println(commonProblem.isLongPressedName("pyplrz", "ppyypllr"));
-        System.out.println(commonProblem.kClosest(new int[][]{{3,3},{5,-1},{-2,4}},2));
+//        System.out.println(commonProblem.kClosest(new int[][]{{3,3},{5,-1},{-2,4}},2));
+//        System.out.println(commonProblem.reconstructQueue(new int[][]{{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}}));
+//        System.out.println(commonProblem.allCellsDistOrder(6,5,3,4));
+        System.out.println(commonProblem.canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -869,14 +872,7 @@ public class CommonProblem {
             map.put(i,Math.sqrt(x * x + y * y));
         }
 
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                Double a = map.get(o1);
-                Double b = map.get(o2);
-                return b.compareTo(a);
-            }
-        });
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((o1, o2) -> map.get(o2).compareTo(map.get(o1)));
         for (Integer key : map.keySet()) {
             if(priorityQueue.size() < K){
                 priorityQueue.add(key);
@@ -892,5 +888,79 @@ public class CommonProblem {
             ans[i] = points[priorityQueue.remove()];
         }
         return ans;
+    }
+
+    /**
+     * 406. 根据身高重建队列
+     * 假设有打乱顺序的一群人站成一个队列。
+     * 每个人由一个整数对(h, k)表示，其中h是这个人的身高，k是排在这个人前面且身高大于或等于h的人数。
+     * 编写一个算法来重建这个队列。
+     */
+    public int[][] reconstructQueue(int[][] people) {
+        // 先按身高降序排序，相同身高按k升序排序
+        // 排序的每个元素是一个一维数组，也就是原二维数组的一行数据
+        Arrays.sort(people, new Comparator<int[]>(){
+            @Override
+            public int compare(int[] o1, int[] o2){
+                return o1[0] == o2[0] ? o1[1] - o2[1] : o2[0] - o1[0];
+            }
+        });
+
+        // 遍历数组，把每行元素添加到一个集合的p[1]位置
+        List<int[]> list = new LinkedList<int[]>();
+        // 把二维数组一行元素作为一个对象
+        for(int[] p : people){
+            list.add(p[1], p);
+        }
+        int n = list.size();
+        // 将集合转换成二维数组
+        return list.toArray(new int[n][2]);
+    }
+
+    /**
+     * 1030. 距离顺序排列矩阵单元格
+     * 给出 R 行 C 列的矩阵，其中的单元格的整数坐标为 (r, c)，满足 0 <= r < R 且 0 <= c < C。
+     * 另外，我们在该矩阵中给出了一个坐标为 (r0, c0) 的单元格。
+     * 返回矩阵中的所有单元格的坐标，并按到 (r0, c0) 的距离从最小到最大的顺序排，
+     * 其中，两单元格(r1, c1) 和 (r2, c2) 之间的距离是曼哈顿距离，|r1 - r2| + |c1 - c2|。
+     */
+    public int[][] allCellsDistOrder(int r, int c, int r0, int c0) {
+        int[][] ans = new int[r * c][2];
+        int index = 0;
+        ans[index++] = new int[]{r0,c0};
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                ans[index++] = new int[]{i,j};
+            }
+        }
+
+        Arrays.sort(ans, Comparator.comparingInt(o -> (Math.abs(o[0] - r0) + Math.abs(o[1] - c0))));
+        return ans;
+    }
+
+    /**
+     * 134. 加油站
+     * 在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+     *
+     * 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。
+     * 你从其中的一个加油站出发，开始时油箱为空。
+     *
+     * 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int len = gas.length;
+        int spare = 0;
+        int minSpare = Integer.MAX_VALUE;
+        int minIndex = 0;
+
+        for (int i = 0; i < len; i++) {
+            spare += gas[i] - cost[i];
+            if (spare < minSpare) {
+                minSpare = spare;
+                minIndex = i;
+            }
+        }
+
+        return spare < 0 ? -1 : (minIndex + 1) % len;
     }
 }
