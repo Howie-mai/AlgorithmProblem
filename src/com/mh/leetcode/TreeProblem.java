@@ -1388,4 +1388,39 @@ public class TreeProblem {
         sb.deleteCharAt(sb.length() - 1);
     }
 
+    /**
+     * 222. 完全二叉树的节点个数
+     * 给出一个完全二叉树，求出该树的节点个数。
+     */
+    public int countNodes(TreeNode root) {
+//        if(root == null){
+//            return 0;
+//        }
+//        int count = 1;
+//        count += countNodes(root.left);
+//        count += countNodes(root.right);
+//        return count;
+
+        // 利用完全二叉树的特性 二分查找
+        if(root == null){
+            return 0;
+        }
+        int leftLevel = countNodesLevel(root.left);
+        int rightLevel = countNodesLevel(root.right);
+        if(leftLevel == rightLevel){
+            return countNodes(root.right) + (1<<leftLevel);
+        }else {
+            return countNodes(root.left) + (1<<rightLevel);
+        }
+    }
+
+    public int countNodesLevel(TreeNode root){
+        int level = 0;
+        while (root != null){
+            level++;
+            root = root.left;
+        }
+        return level;
+    }
+
 }
