@@ -2,6 +2,7 @@ package com.mh.leetcode;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  * ClassName：
@@ -13,7 +14,8 @@ import java.util.Comparator;
 public class GreedyProblem {
 
     public static void main(String[] args) {
-
+        GreedyProblem greedyProblem = new GreedyProblem();
+        greedyProblem.reorganizeString("aab");
     }
     /**
      * 452. 用最少数量的箭引爆气球
@@ -40,5 +42,49 @@ public class GreedyProblem {
             }
         }
         return ans;
+    }
+
+    /**
+     * 767. 重构字符串
+     * 给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
+     *
+     * 若可行，输出任意可行的结果。若不可行，返回空字符串。
+     */
+    public String reorganizeString(String s) {
+        int[] count = new int[26];
+        char[] chars = s.toCharArray();
+        for (char ch : chars) {
+            count[ch - 'a']++;
+        }
+
+        PriorityQueue<Character> priorityQueue = new PriorityQueue<>((o1, o2) -> Integer.compare(count[o2 - 'a'], count[o1 - 'a']));
+        for (int i = 0;i < count.length;i++){
+            if(count[i] > 0){
+                priorityQueue.offer((char)(i + 'a'));
+            }
+        }
+
+        if(count[priorityQueue.peek() - 'a'] > (s.length() + 1) / 2){
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (priorityQueue.size() > 1){
+            Character first = priorityQueue.poll();
+            Character second = priorityQueue.poll();
+            sb.append(first).append(second);
+            count[first - 'a']--;
+            count[second - 'a']--;
+            if(count[first - 'a'] > 0){
+                priorityQueue.offer(first);
+            }
+            if(count[second - 'a'] > 0){
+                priorityQueue.offer(second);
+            }
+        }
+        if(priorityQueue.size() > 0){
+            sb.append(priorityQueue.poll());
+        }
+        return sb.toString();
     }
 }

@@ -8,11 +8,30 @@ package com.mh.bean;
  * @author mh
  */
 public class B extends A {
-    public B() {
-        System.out.println("B class");
+    static {
+        System.out.print("(6)");
     }
 
-    public void printf() {
-        System.out.println("printer in B class");
+    private int i = test();
+    private static int j = method();
+
+
+    public B() {
+        System.out.print("(7)");
+    }
+
+    {
+        System.out.print("(8)");
+    }
+
+    @Override
+    public int test() {
+        System.out.print("(9)");
+        return 1;
+    }
+
+    public static int method(){
+        System.out.print("(10)");
+        return 1;
     }
 }

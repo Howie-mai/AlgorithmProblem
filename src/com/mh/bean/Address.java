@@ -33,4 +33,12 @@ public class Address implements Serializable {
         this.id = id;
         this.city = city;
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

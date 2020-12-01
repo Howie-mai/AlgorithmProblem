@@ -1,5 +1,6 @@
 package com.mh;
 
+import com.mh.bean.Address;
 import jdk.nashorn.internal.objects.annotations.Function;
 
 import javax.xml.bind.annotation.XmlValue;
@@ -9,6 +10,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,10 +27,36 @@ public class Main2 implements Main2Interface {
 //        new Main2().getDistanceFromSteps(111,222,333);
 //        new Main2().testInterface("hhhhh");
 //        new Main2().demo(0);
-        File file = new File("http://nypt.hymbb.cn/Spring%20Boot%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-%E7%AC%94%E8%AE%B0.pdf");
-        File absoluteFile = file.getAbsoluteFile();
+        List<Address> resultList = new ArrayList<>();
+        List<String> filterList = new ArrayList<>();
 
-        System.out.println(absoluteFile);
+        resultList.add(new Address(1,"哈哈哈1"));
+        resultList.add(new Address(2,"哈哈哈2"));
+        resultList.add(new Address(3,"哈哈哈3"));
+        resultList.add(new Address(4,"哈哈哈4"));
+        resultList.add(new Address(4,"么么哒"));
+        resultList.add(new Address(2,"嘤嘤嘤"));
+
+        System.out.println(resultList);
+
+        filterList.add("么么哒");
+        filterList.add("嘤嘤嘤");
+
+        resultList.sort((o1, o2) -> {
+            int i = o2.getId().compareTo(o1.getId());
+            if(i != 0){
+                return i;
+            }else if(filterList.contains(o2.getCity()) && !filterList.contains(o1.getCity())){
+                return 1;
+            }else if(filterList.contains(o1.getCity()) && !filterList.contains(o2.getCity())){
+                return -1;
+            }
+            return i;
+        });
+
+        System.out.println(resultList);
+
+
     }
 
     public void demo(int status) {

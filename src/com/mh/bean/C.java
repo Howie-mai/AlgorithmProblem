@@ -7,13 +7,14 @@ package com.mh.bean;
  *
  * @author mh
  */
-public class C extends B {
+public class C {
     public C() {
         System.out.println("C class");
     }
 
     public static void main(String[] args) {
-        A a = new C();
-        a.printf();
+        A b = new A();
+        System.out.println();
+        B b1 = new B();
     }
 }
