@@ -38,7 +38,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.kClosest(new int[][]{{3,3},{5,-1},{-2,4}},2));
 //        System.out.println(commonProblem.reconstructQueue(new int[][]{{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}}));
 //        System.out.println(commonProblem.allCellsDistOrder(6,5,3,4));
-        System.out.println(commonProblem.canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
+//        System.out.println(commonProblem.canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
+        System.out.println(commonProblem.countPrimes(499979));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -1025,5 +1026,82 @@ public class CommonProblem {
             ans = Math.max(ans,nums[index++] - nums[i]);
         }
         return ans;
+    }
+
+    /**
+     * 204. 计数质数
+     * 统计所有小于非负整数 n 的质数的数量。
+     */
+    public int countPrimes(int n) {
+        int result = 0;
+        // 初始化默认值都为 false，为质数标记
+        boolean[] b = new boolean[n];
+        // 如果大于 2 则一定拥有 2 这个质数
+        if (2 < n) {
+            result++;
+        }
+
+        // 从 3 开始遍历，且只遍历奇数
+        for (int i = 3; i < n; i += 2) {
+            // 是质数
+            if (!b[i]) {
+                for (int j = 3; i * j < n; j += 2) {
+                    // 将当前质数的奇数倍都设置成非质数标记 true
+                    b[i * j] = true;
+                }
+                result++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 49. 字母异位词分组
+     * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            int[] count = new int[26];
+            char[] chars = str.toCharArray();
+            for (char ch : chars) {
+                count[(ch - 'a')]++;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i : count) {
+                if(i != 0){
+                    sb.append((char)(i + 'a'));
+                    sb.append(i);
+                }
+            }
+
+            String key = sb.toString();
+            if(!map.containsKey(key)){
+                map.put(key,new ArrayList<>());
+            }
+            map.get(key).add(str);
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
+    /**
+     * 389. 找不同
+     * 给定两个字符串 s 和 t，它们只包含小写字母。
+     * 字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
+     * 请找出在 t 中被添加的字母
+     */
+    public char findTheDifference(String s, String t) {
+        int pre = 0,after = 0;
+        for (int i = 0; i < s.length(); i++) {
+            pre += s.charAt(i);
+        }
+
+        for (int i = 0; i < t.length(); i++) {
+            after += t.charAt(i);
+        }
+
+        return (char) (after - pre);
     }
 }

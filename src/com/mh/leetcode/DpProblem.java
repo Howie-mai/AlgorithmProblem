@@ -17,7 +17,8 @@ public class DpProblem {
 
         String s = "aaa";
 //        System.out.println(dp.countPalindromicSubsequences(s));
-        System.out.println(dp.isMatch("aab","c*a*b"));
+//        System.out.println(dp.isMatch("aab","c*a*b"));
+        System.out.println(dp.robWithCircle(new int[]{2,3,2}));
     }
 
     /**
@@ -248,6 +249,101 @@ public class DpProblem {
             }
         }
         return dp[nums.length - 1][target];
+    }
+
+    /**
+     * 62. 不同路径
+     * 一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
+     *
+     * 机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为“Finish”）。
+     *
+     * 问总共有多少条不同的路径？
+     */
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = 1;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
+            }
+        }
+
+        return dp[m - 1][n - 1];
+    }
+
+    /**
+     * 198. 打家劫舍
+     * 你是一个专业的小偷，计划偷窃沿街的房屋。
+     * 每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+     * 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+     */
+    public int rob(int[] nums) {
+//        memo = new int[nums.length];
+//        Arrays.fill(memo,-1);
+//        return dp(nums,0);
+
+        // 递归备忘录模式相当于自底向上的动态规划
+        int n = nums.length;
+        int[] dp = new int[n + 2];
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = Math.max(dp[i + 1],dp[i + 2] + nums[i]);
+        }
+        return dp[0];
+    }
+
+    int[] memo;
+    public int dp(int[] nums,int index){
+        if(index >= nums.length){
+            return 0;
+        }
+
+        if(memo[index] != -1){
+            return memo[index];
+        }
+
+        // 不抢直接去下一家
+        int noRob = dp(nums,index + 1);
+        // 抢 去下下家
+        int yesRob = nums[index] + dp(nums,index + 2);
+        int res = Math.max(noRob,yesRob);
+        memo[index] = res;
+        return res;
+    }
+
+    /**
+     * 213. 打家劫舍 II
+     * 你是一个专业的小偷，计划偷窃沿街的房屋，每间房内都藏有一定的现金。
+     * 这个地方所有的房屋都 围成一圈 ，这意味着第一个房屋和最后一个房屋是紧挨着的。
+     * 同时，相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警 。
+     * 给定一个代表每个房屋存放金额的非负整数数组，计算你 在不触动警报装置的情况下 ，能够偷窃到的最高金额。
+     */
+    public int robWithCircle(int[] nums) {
+        int n  = nums.length;
+        // 成环就需要再第一题的基础上再考虑两种情况
+        //  1. 偷第一间，不偷最后一间，所以区间为[0,n-2]
+        //  2. 不偷第一间，偷最后一间，所以区间为[1,n-1]
+        //  在两种情况下取最大值即为正确答案
+        return Math.max(
+                rob(nums,0,n - 2),
+                rob(nums,1,n - 1)
+        );
+    }
+
+    public int rob(int[] nums,int start,int end){
+        // 为了不溢出
+        int[] dp = new int[end - start + 4];
+        for (int i = end; i >= start; i--) {
+            dp[i] = Math.max(dp[i + 1],dp[i + 2] + nums[i]);
+        }
+        return dp[start];
     }
 
 }
