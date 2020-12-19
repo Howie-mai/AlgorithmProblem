@@ -16,7 +16,7 @@ public class CommonProblem {
 //        commonProblem.reverse(123456);
 //        System.out.println(commonProblem.fib(45));
 //        System.out.println(commonProblem.countSubstrings("aaaaa"));
-//        System.out.println(commonProblem.judgePoint24(new int[]{2,4,10,10}));
+        System.out.println(commonProblem.judgePoint24(new int[]{1, 8, 8, 10}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
 //        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
@@ -32,7 +32,7 @@ public class CommonProblem {
 //        System.out.println(commonProblem.romanToInt("IX"));
 //        System.out.println(commonProblem.intToRoman(1234343));
 //        System.out.println(commonProblem.mySqrt(2147395599));
-        System.out.println(commonProblem.countAndSay(6));
+//        System.out.println(commonProblem.countAndSay(6));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -92,9 +92,22 @@ public class CommonProblem {
      * 你有 4 张写有 1 到 9 数字的牌。你需要判断是否能通过 *，/，+，-，(，) 的运算得到 24。
      */
     public boolean judgePoint24(int[] nums) {
-        //转成double数组计算
-        double[] doubles = Arrays.stream(nums).asDoubleStream().toArray();
-        return solve(doubles);
+        while (true){
+            Scanner in = new Scanner(System.in);
+            String[] a = in.nextLine().split(" ");
+            if(a.length != 4){
+                break;
+            }
+            //转成double数组计算
+    //        double[] doubles = Arrays.stream(nums).asDoubleStream().toArray();
+            double[] doubles = Arrays.stream(new int[]{Integer.parseInt(a[0]),Integer.parseInt(a[1]),
+                                                    Integer.parseInt(a[2]),Integer.parseInt(a[3])})
+                                    .asDoubleStream().toArray();
+//            return solve(doubles);
+            System.out.println(solve(doubles));
+            System.out.println("");
+        }
+        return false;
     }
 
     public static boolean solve(double[] nums) {
@@ -640,21 +653,21 @@ public class CommonProblem {
      * 11. 盛最多水的容器
      * 给你 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，
      * 垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
-     *
+     * <p>
      * 说明：你不能倾斜容器，且 n 的值至少为 2。
-     *
+     * <p>
      * 解法：双指针
      */
     public int maxArea(int[] height) {
-        int left = 0,right = height.length - 1;
+        int left = 0, right = height.length - 1;
         int ans = Integer.MIN_VALUE;
-        while (left < right){
-            int count = Math.min(height[left],height[right]) * (right - left);
-            ans = Math.max(count,ans);
+        while (left < right) {
+            int count = Math.min(height[left], height[right]) * (right - left);
+            ans = Math.max(count, ans);
 
-            if(height[left] > height[right]){
+            if (height[left] > height[right]) {
                 right--;
-            }else {
+            } else {
                 left++;
             }
         }
@@ -664,11 +677,11 @@ public class CommonProblem {
     /**
      * 14. 最长公共前缀
      * 编写一个函数来查找字符串数组中的最长公共前缀。
-     *
+     * <p>
      * 如果不存在公共前缀，返回空字符串 ""。
-     *
+     * <p>
      * 示例 1:
-     *
+     * <p>
      * 输入: ["flower","flow","flight"]
      * 输出: "fl"
      */
@@ -677,11 +690,11 @@ public class CommonProblem {
         for (int i = 1; i < strs.length; i++) {
             int index = 0;
             int minLen = Math.min(commonPrefix.length(), strs[i].length());
-            while (index < minLen && commonPrefix.charAt(index) == strs[i].charAt(index)){
+            while (index < minLen && commonPrefix.charAt(index) == strs[i].charAt(index)) {
                 index++;
             }
-            commonPrefix = commonPrefix.substring(0,index);
-            if(commonPrefix.length() == 0){
+            commonPrefix = commonPrefix.substring(0, index);
+            if (commonPrefix.length() == 0) {
                 break;
             }
         }
@@ -691,19 +704,19 @@ public class CommonProblem {
     /**
      * 69. x 的平方根
      * 实现 int sqrt(int x) 函数。
-     *
+     * <p>
      * 计算并返回 x 的平方根，其中 x 是非负整数。
-     *
+     * <p>
      * 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
      */
     public int mySqrt(int x) {
-        int left = 0, right = x,ans = -1;
-        while (left <= right){
+        int left = 0, right = x, ans = -1;
+        while (left <= right) {
             int mid = left + (right - left) / 2;
 
-            if((long)mid * mid > x){
+            if ((long) mid * mid > x) {
                 right = mid - 1;
-            }else {
+            } else {
                 ans = mid;
                 left = mid + 1;
             }
@@ -733,14 +746,14 @@ public class CommonProblem {
         for (int i = 1; i < n; i++) {
             char[] chars = str.toCharArray();
             sb = new StringBuilder();
-            for (int j = 0; j < chars.length;) {
-                if( (j < chars.length - 1 && chars[j] != chars[j + 1]) || j == chars.length - 1){
+            for (int j = 0; j < chars.length; ) {
+                if ((j < chars.length - 1 && chars[j] != chars[j + 1]) || j == chars.length - 1) {
                     sb.append("1").append(chars[j++]);
                     continue;
                 }
                 int count = 1;
                 char ch = chars[j++];
-                while (j < chars.length && chars[j] == ch){
+                while (j < chars.length && chars[j] == ch) {
                     count++;
                     j++;
                 }

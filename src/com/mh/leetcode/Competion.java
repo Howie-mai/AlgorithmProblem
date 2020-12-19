@@ -1,5 +1,10 @@
 package com.mh.leetcode;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 /**
@@ -11,28 +16,19 @@ import java.util.*;
 public class Competion {
     public static void main(String[] args) {
         Competion c = new Competion();
-//        System.out.println(c.breakfastNumber(new int[]{10,20,11,5},new int[]{5,5,2},15));
-//        System.out.println(c.numSpecial(new int[][]{{0,0,0,0,0},{1,0,0,0,0},{0,1,0,0,0},{0,0,1,0,0},{0,0,0,1,1}}));
-//        System.out.println(c.unhappyFriends(4, new int[][]{{1, 3, 2}, {2, 3, 0}, {1, 3, 0}, {0, 2, 1}}, new int[][]{{1, 3}, {0, 2}}));
-//        System.out.println(c.minimumOperations("rryryrrryyyrr"));
-//        System.out.println(calculate("AB"));
-//        int n =2;
-//        int count = 0,totalSum = 0;
-//        for(;n <= 20;n +=2){
-//            count += n;
-//            totalSum +=count;
-//        }
-//        System.out.println(totalSum);
+        try {
+            URL url = new URL("https://itdage.com/kkb/kkbsms?key=xzk&number=15812350780&code=fscgll");
+            URLConnection content = url.openConnection();
+            InputStream inputStream = content.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            String s = br.readLine();
+            System.out.println(s);
+            br.close();
 
-        int ans =  0;
-        for (int i = 20;i <= 25;i++){
-            int count = 1;
-            for (int j = 0;j <= i;j++){
-                count *= i;
-            }
-            ans += count;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        System.out.println(ans);
+
     }
 
     public static int calculate(String s) {
@@ -110,5 +106,4 @@ public class Competion {
 
         return total < 0 ? -1 : ans;
     }
-
 }
