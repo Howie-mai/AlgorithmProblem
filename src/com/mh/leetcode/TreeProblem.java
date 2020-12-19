@@ -3,6 +3,7 @@ package com.mh.leetcode;
 import com.mh.leetcode.bean.ListNode;
 import com.mh.leetcode.bean.Node;
 import com.mh.leetcode.bean.TreeNode;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.*;
 
@@ -24,13 +25,13 @@ public class TreeProblem {
 //        }
 //        treeProblem.sortedListToBST(head);
 
-        TreeNode treeNode1 = new TreeNode(-2);
-//        TreeNode left1 = new TreeNode(3);
-//        left1.left = new TreeNode(5);
-//        left.right = new TreeNode(3);
-//        treeNode1.left = left1;
+        TreeNode treeNode1 = new TreeNode(4);
+        TreeNode left1 = new TreeNode(2);
+        left1.left = new TreeNode(1);
+        left1.right = new TreeNode(3);
+        treeNode1.left = left1;
 
-        TreeNode right1 = new TreeNode(-3);
+        TreeNode right1 = new TreeNode(6);
 //        right.left = new TreeNode(15);
 //        right.right = new TreeNode(6);
         treeNode1.right = right1;
@@ -53,7 +54,8 @@ public class TreeProblem {
 
 //        System.out.println(treeProblem.sortedArrayToBST(new int[]{-10,-3,0,5,9}));
 //        System.out.println(treeProblem.rangeSumBST(node,3,6));
-        System.out.println(treeProblem.pathSumII(treeNode1,-5));
+//        System.out.println(treeProblem.pathSumII(treeNode1,-5));
+        System.out.println(treeProblem.getMinimumDifference(treeNode1));
         Node listNode = new Node();
         List<Node> child1 = new ArrayList<>();
 
@@ -75,7 +77,7 @@ public class TreeProblem {
 //        System.out.println(treeProblem.levelOrderBottom(treeNode));
 //        System.out.println(treeProblem.averageOfLevels(treeNode));
 
-        System.out.println(treeProblem.buildTree(new int[]{9,3,15,20,7},new int[]{9,15,7,20,3}));
+//        System.out.println(treeProblem.buildTree(new int[]{9,3,15,20,7},new int[]{9,15,7,20,3}));
 
     }
 
@@ -1319,6 +1321,106 @@ public class TreeProblem {
             }
             traversalBy701(node.left,val);
         }
+    }
+
+    /**
+     * 530. 二叉搜索树的最小绝对差
+     * 给你一棵所有节点为非负值的二叉搜索树，请你计算树中任意两节点的差的绝对值的最小值。
+     */
+    public int getMinimumDifference(TreeNode root) {
+        intAns = Integer.MAX_VALUE;
+        intCommon = -1;
+        getMinAbs(root);
+        return intAns;
+    }
+
+    int intAns;
+    int intCommon;
+    public void getMinAbs(TreeNode root){
+        if(root == null){
+            return;
+        }
+
+        getMinAbs(root.left);
+        if(intCommon == -1){
+            intCommon = root.val;
+        }else {
+            intAns = Math.min(intAns,root.val - intCommon);
+            intCommon = root.val;
+        }
+        getMinAbs(root.right);
+    }
+
+    /**
+     * 129. 求根到叶子节点数字之和
+     * 给定一个二叉树，它的每个结点都存放一个 0-9 的数字，每条从根到叶子节点的路径都代表一个数字。
+     *
+     * 例如，从根到叶子节点路径 1->2->3 代表数字 123。
+     *
+     * 计算从根到叶子节点生成的所有数字之和。
+     */
+    public int sumNumbers(TreeNode root) {
+        sumNumber(root);
+        return resultBy129;
+    }
+
+    int resultBy129 = 0;
+    StringBuilder sb = new StringBuilder();
+
+    public void sumNumber(TreeNode root){
+        if(root == null){
+            return;
+        }
+        if(root.left == null && root.right == null){
+            sb.append(root.val);
+            resultBy129 += Integer.parseInt(sb.toString());
+            sb.deleteCharAt(sb.length() - 1);
+            return;
+        }
+
+        sb.append(root.val);
+        if(root.left != null){
+            sumNumbers(root.left);
+        }
+        if(root.right != null){
+            sumNumbers(root.right);
+        }
+        sb.deleteCharAt(sb.length() - 1);
+    }
+
+    /**
+     * 222. 完全二叉树的节点个数
+     * 给出一个完全二叉树，求出该树的节点个数。
+     */
+    public int countNodes(TreeNode root) {
+//        if(root == null){
+//            return 0;
+//        }
+//        int count = 1;
+//        count += countNodes(root.left);
+//        count += countNodes(root.right);
+//        return count;
+
+        // 利用完全二叉树的特性 二分查找
+        if(root == null){
+            return 0;
+        }
+        int leftLevel = countNodesLevel(root.left);
+        int rightLevel = countNodesLevel(root.right);
+        if(leftLevel == rightLevel){
+            return countNodes(root.right) + (1<<leftLevel);
+        }else {
+            return countNodes(root.left) + (1<<rightLevel);
+        }
+    }
+
+    public int countNodesLevel(TreeNode root){
+        int level = 0;
+        while (root != null){
+            level++;
+            root = root.left;
+        }
+        return level;
     }
 
 }

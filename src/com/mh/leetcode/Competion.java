@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -14,7 +15,7 @@ import java.util.*;
  * Author： mh
  */
 public class Competion {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Competion c = new Competion();
         try {
             URL url = new URL("https://itdage.com/kkb/kkbsms?key=xzk&number=15812350780&code=fscgll");
@@ -29,6 +30,21 @@ public class Competion {
             e.printStackTrace();
         }
 
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入关机时间：");
+        String s = scanner.nextLine();
+        try {
+            String exec = "shutdown -s -t " + s;
+            Runtime.getRuntime().exec(exec);
+            int second = Integer.parseInt(s);
+            for (int i = second; i >= 0; i--) {
+                System.out.println(i + "秒后将关机");
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("关机啦~");
     }
 
     public static int calculate(String s) {
@@ -54,24 +70,24 @@ public class Competion {
             if (remain < 0) {
                 break;
             }
-            while (r >= 0 && remain > drinks[r]){
+            while (r >= 0 && remain > drinks[r]) {
                 r++;
             }
-            ans += r+ 1;
+            ans += r + 1;
         }
-       return (int)ans % 10000007;
+        return (int) ans % 10000007;
     }
 
     public int minOperations(String[] logs) {
         int ans = 0;
         for (String log : logs) {
-            if("./".equals(log)){
-            }else if("../".equals(log)){
-                if(ans == 0){
+            if ("./".equals(log)) {
+            } else if ("../".equals(log)) {
+                if (ans == 0) {
                     continue;
                 }
                 ans--;
-            }else {
+            } else {
                 ans++;
             }
         }
@@ -81,24 +97,24 @@ public class Competion {
     public int minOperationsMaxProfit(int[] customers, int boardingCost, int runningCost) {
         int total = Integer.MIN_VALUE;
         int ans = 0;
-        int customer = 0,pay = 0;
+        int customer = 0, pay = 0;
         for (int i = 0; i < customers.length || customer > 0; i++) {
-            if(i < customers.length){
+            if (i < customers.length) {
                 customer += customers[i];
             }
             int x;
-            if(customer > 4){
+            if (customer > 4) {
                 pay += 4;
                 x = pay * boardingCost;
                 customer -= 4;
-            }else {
+            } else {
                 pay += customer;
                 x = pay * boardingCost;
                 customer -= customer;
             }
 
             int y = (i + 1) * runningCost;
-            if(x - y > total){
+            if (x - y > total) {
                 ans = i + 1;
                 total = x - y;
             }

@@ -12,8 +12,8 @@ public class BinarySearchProblem {
         BinarySearchProblem binarySearch = new BinarySearchProblem();
         Long start = System.currentTimeMillis();
 
-        System.out.println(binarySearch.searchInsert(new int[]{1,3,5,6},2));
-
+//        System.out.println(binarySearch.searchInsert(new int[]{1,3,5,6},2));
+        System.out.println(binarySearch.searchRange(new int[]{1,1},1));
 
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：  " + (end - start) + "ms" );
@@ -93,5 +93,48 @@ public class BinarySearchProblem {
             }
         }
         return ans;
+    }
+
+    /**
+     * 34. 在排序数组中查找元素的第一个和最后一个位置
+     * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+     *
+     * 如果数组中不存在目标值 target，返回 [-1, -1]。
+     */
+    public int[] searchRange(int[] nums, int target) {
+        int index = findTarget(nums,target);
+        if(index == -1){
+            return new int[]{-1,-1};
+        }
+        int[] ans = new int[2];
+        int first = index - 1;
+        while (first > 0 && nums[first] == target){
+            ans[0] = first;
+            first--;
+        }
+
+        int last = index + 1;
+        while (last < nums.length && nums[last] == target){
+            ans[1] = last;
+            last++;
+        }
+
+        return ans;
+    }
+
+    public int findTarget(int[] nums, int target){
+        int left = 0,right = nums.length - 1;
+        int mid;
+        while (left <= right){
+            mid = (left + right) / 2;
+            if(nums[mid] == target){
+                return mid;
+            }else if(nums[mid] < target){
+                left = mid + 1;
+            }else if(nums[mid] > target){
+                right = mid - 1;
+            }
+        }
+        return -1;
     }
 }

@@ -33,6 +33,13 @@ public class CommonProblem {
 //        System.out.println(commonProblem.intToRoman(1234343));
 //        System.out.println(commonProblem.mySqrt(2147395599));
 //        System.out.println(commonProblem.countAndSay(6));
+//        System.out.println(commonProblem.backspaceCompare("y#fo##f","y#f#o##f"));
+//        System.out.println(commonProblem.isLongPressedName("pyplrz", "ppyypllr"));
+//        System.out.println(commonProblem.kClosest(new int[][]{{3,3},{5,-1},{-2,4}},2));
+//        System.out.println(commonProblem.reconstructQueue(new int[][]{{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}}));
+//        System.out.println(commonProblem.allCellsDistOrder(6,5,3,4));
+//        System.out.println(commonProblem.canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
+        System.out.println(commonProblem.countPrimes(499979));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -765,5 +772,349 @@ public class CommonProblem {
         return str;
     }
 
+    /**
+     *
+     */
+    public boolean backspaceCompare(String S, String T) {
+        return getString(S).equals(getString(T));
 
+    }
+
+    public String getString(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (char ch : str.toCharArray()) {
+            if (ch == '#' && sb.length() != 0) {
+                sb.deleteCharAt(sb.length() - 1);
+            } else if (ch != '#') {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 925. 长按键入
+     * 你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
+     * <p>
+     * 你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
+     */
+    public boolean isLongPressedName(String name, String typed) {
+        int i = 0, j = 0;
+        char[] nameArray = name.toCharArray();
+        char[] typeArray = typed.toCharArray();
+        int n = nameArray.length;
+        int n1 = typeArray.length;
+        while (j < n1) {
+            if (i < n && nameArray[i] == typeArray[j]) {
+                i++;
+                j++;
+            } else if (j > 0 && typeArray[j] == typeArray[j - 1]) {
+                j++;
+            } else {
+                return false;
+            }
+        }
+        return i == n;
+    }
+
+    /**
+     * 1365. 有多少小于当前数字的数字
+     * 给你一个数组 nums，对于其中每个元素 nums[i]，请你统计数组中比它小的所有数字的数目。
+     * 换而言之，对于每个 nums[i] 你必须计算出有效的 j 的数量，其中 j 满足 j != i 且 nums[j] < nums[i] 。
+     * 以数组形式返回答案。
+     */
+    public int[] smallerNumbersThanCurrent(int[] nums) {
+        int[] temp = new int[nums.length];
+        System.arraycopy(nums,0,temp,0,nums.length);
+        Arrays.sort(temp);
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i = 0;i < temp.length;i++){
+            if(!map.containsKey(nums[i])){
+                map.put(nums[i],i);
+            }
+        }
+
+        for(int i = 0;i < nums.length;i++){
+            temp[i] = map.get(nums[i]);
+        }
+        return temp;
+    }
+
+    /**
+     * 845. 数组中的最长山脉
+     * 我们把数组 A 中符合下列属性的任意连续子数组 B 称为 “山脉”：
+     * B.length >= 3
+     * 存在 0 < i < B.length - 1 使得 B[0] < B[1] < ... B[i-1] < B[i] > B[i+1] > ... > B[B.length - 1]
+     * （注意：B 可以是 A 的任意子数组，包括整个数组 A。）
+     * 给出一个整数数组 A，返回最长 “山脉” 的长度。
+     * 如果不含有 “山脉” 则返回 0。
+     */
+    public int longestMountain(int[] A) {
+        int result = 0,i = 1,len = A.length,start = 0,end = 0;
+        while(i < len){
+            start = 0;
+            end = 0;
+            while(i < len && A[i - 1] < A[i]){
+                i++;
+                start++;
+            }
+
+            while(i < len && A[i - 1] > A[i]){
+                i++;
+                end++;
+            }
+
+            if(start > 0 && end > 0){
+                result = Math.max(result,start + end + 1);
+            }
+
+            while(i < len && A[i - 1] == A[i]){
+                i++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 973. 最接近原点的 K 个点
+     * 我们有一个由平面上的点组成的列表 points。需要从中找出 K 个距离原点 (0, 0) 最近的点。
+     */
+    public int[][] kClosest(int[][] points, int K) {
+        Map<Integer,Double> map = new HashMap<>();
+        for (int i = 0; i < points.length; i++) {
+            int x = points[i][0],y = points[i][1];
+            map.put(i,Math.sqrt(x * x + y * y));
+        }
+
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((o1, o2) -> map.get(o2).compareTo(map.get(o1)));
+        for (Integer key : map.keySet()) {
+            if(priorityQueue.size() < K){
+                priorityQueue.add(key);
+            }else if(map.get(key) < map.get(priorityQueue.peek())){
+                priorityQueue.remove();
+                priorityQueue.add(key);
+            }
+        }
+
+        int[][] ans = new int[K][2];
+        int n  = priorityQueue.size();
+        for (int i = 0; i < n; i++) {
+            ans[i] = points[priorityQueue.remove()];
+        }
+        return ans;
+    }
+
+    /**
+     * 406. 根据身高重建队列
+     * 假设有打乱顺序的一群人站成一个队列。
+     * 每个人由一个整数对(h, k)表示，其中h是这个人的身高，k是排在这个人前面且身高大于或等于h的人数。
+     * 编写一个算法来重建这个队列。
+     */
+    public int[][] reconstructQueue(int[][] people) {
+        // 先按身高降序排序，相同身高按k升序排序
+        // 排序的每个元素是一个一维数组，也就是原二维数组的一行数据
+        Arrays.sort(people, new Comparator<int[]>(){
+            @Override
+            public int compare(int[] o1, int[] o2){
+                return o1[0] == o2[0] ? o1[1] - o2[1] : o2[0] - o1[0];
+            }
+        });
+
+        // 遍历数组，把每行元素添加到一个集合的p[1]位置
+        List<int[]> list = new LinkedList<int[]>();
+        // 把二维数组一行元素作为一个对象
+        for(int[] p : people){
+            list.add(p[1], p);
+        }
+        int n = list.size();
+        // 将集合转换成二维数组
+        return list.toArray(new int[n][2]);
+    }
+
+    /**
+     * 1030. 距离顺序排列矩阵单元格
+     * 给出 R 行 C 列的矩阵，其中的单元格的整数坐标为 (r, c)，满足 0 <= r < R 且 0 <= c < C。
+     * 另外，我们在该矩阵中给出了一个坐标为 (r0, c0) 的单元格。
+     * 返回矩阵中的所有单元格的坐标，并按到 (r0, c0) 的距离从最小到最大的顺序排，
+     * 其中，两单元格(r1, c1) 和 (r2, c2) 之间的距离是曼哈顿距离，|r1 - r2| + |c1 - c2|。
+     */
+    public int[][] allCellsDistOrder(int r, int c, int r0, int c0) {
+        int[][] ans = new int[r * c][2];
+        int index = 0;
+        ans[index++] = new int[]{r0,c0};
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                ans[index++] = new int[]{i,j};
+            }
+        }
+
+        Arrays.sort(ans, Comparator.comparingInt(o -> (Math.abs(o[0] - r0) + Math.abs(o[1] - c0))));
+        return ans;
+    }
+
+    /**
+     * 134. 加油站
+     * 在一条环路上有 N 个加油站，其中第 i 个加油站有汽油 gas[i] 升。
+     *
+     * 你有一辆油箱容量无限的的汽车，从第 i 个加油站开往第 i+1 个加油站需要消耗汽油 cost[i] 升。
+     * 你从其中的一个加油站出发，开始时油箱为空。
+     *
+     * 如果你可以绕环路行驶一周，则返回出发时加油站的编号，否则返回 -1。
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int len = gas.length;
+        int spare = 0;
+        int minSpare = Integer.MAX_VALUE;
+        int minIndex = 0;
+
+        for (int i = 0; i < len; i++) {
+            spare += gas[i] - cost[i];
+            if (spare < minSpare) {
+                minSpare = spare;
+                minIndex = i;
+            }
+        }
+
+        return spare < 0 ? -1 : (minIndex + 1) % len;
+    }
+
+    /**
+     * 1370. 上升下降字符串
+     * 给你一个字符串 s ，请你根据下面的算法重新构造字符串：
+     *
+     * 从 s 中选出 最小 的字符，将它 接在 结果字符串的后面。
+     * 从 s 剩余字符中选出 最小 的字符，且该字符比上一个添加的字符大，将它 接在 结果字符串后面。
+     * 重复步骤 2 ，直到你没法从 s 中选择字符。
+     * 从 s 中选出 最大 的字符，将它 接在 结果字符串的后面。
+     * 从 s 剩余字符中选出 最大 的字符，且该字符比上一个添加的字符小，将它 接在 结果字符串后面。
+     * 重复步骤 5 ，直到你没法从 s 中选择字符。
+     * 重复步骤 1 到 6 ，直到 s 中所有字符都已经被选过。
+     * 在任何一步中，如果最小或者最大字符不止一个 ，你可以选择其中任意一个，并将其添加到结果字符串。
+     *
+     * 请你返回将 s 中字符重新排序后的 结果字符串 。
+     */
+    public String sortString(String s) {
+        StringBuilder sb = new StringBuilder();
+        int[] nums = new int[26];
+        char[] chars = s.toCharArray();
+        for (char c : chars) {
+            nums[c - 'a']++;
+        }
+
+        int index = 0;
+        while (index < chars.length){
+            for (int i = 0; i < 26; i++) {
+                if(nums[i] > 0){
+                    sb.append((char) i + 'a');
+                    nums[i]--;
+                }
+            }
+
+            for (int i = 25; i >= 0; i--) {
+                if(nums[i] < 0){
+                    sb.append((char) i + 'a');
+                    nums[i]--;
+                }
+            }
+
+            index++;
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 164. 最大间距
+     * 给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。
+     *
+     * 如果数组元素个数小于 2，则返回 0。
+     */
+    public int maximumGap(int[] nums) {
+        if(nums.length < 2){
+            return 0;
+        }
+        int ans = Integer.MIN_VALUE;
+        Arrays.sort(nums);
+        int index = 1;
+        for (int i = 0; i < nums.length - 1; i++) {
+            ans = Math.max(ans,nums[index++] - nums[i]);
+        }
+        return ans;
+    }
+
+    /**
+     * 204. 计数质数
+     * 统计所有小于非负整数 n 的质数的数量。
+     */
+    public int countPrimes(int n) {
+        int result = 0;
+        // 初始化默认值都为 false，为质数标记
+        boolean[] b = new boolean[n];
+        // 如果大于 2 则一定拥有 2 这个质数
+        if (2 < n) {
+            result++;
+        }
+
+        // 从 3 开始遍历，且只遍历奇数
+        for (int i = 3; i < n; i += 2) {
+            // 是质数
+            if (!b[i]) {
+                for (int j = 3; i * j < n; j += 2) {
+                    // 将当前质数的奇数倍都设置成非质数标记 true
+                    b[i * j] = true;
+                }
+                result++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 49. 字母异位词分组
+     * 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            int[] count = new int[26];
+            char[] chars = str.toCharArray();
+            for (char ch : chars) {
+                count[(ch - 'a')]++;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i : count) {
+                if(i != 0){
+                    sb.append((char)(i + 'a'));
+                    sb.append(i);
+                }
+            }
+
+            String key = sb.toString();
+            if(!map.containsKey(key)){
+                map.put(key,new ArrayList<>());
+            }
+            map.get(key).add(str);
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
+    /**
+     * 389. 找不同
+     * 给定两个字符串 s 和 t，它们只包含小写字母。
+     * 字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
+     * 请找出在 t 中被添加的字母
+     */
+    public char findTheDifference(String s, String t) {
+        int pre = 0,after = 0;
+        for (int i = 0; i < s.length(); i++) {
+            pre += s.charAt(i);
+        }
+
+        for (int i = 0; i < t.length(); i++) {
+            after += t.charAt(i);
+        }
+
+        return (char) (after - pre);
+    }
 }

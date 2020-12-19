@@ -17,19 +17,19 @@ public class LinkListProblem {
     public static void main(String[] args) {
 //        LinkedList<int> list = new LinkedList<>();
         LinkListProblem linkListProblem = new LinkListProblem();
-        ListNode listNode1 = new ListNode(1);
-        ListNode listNode2 = new ListNode(2);
-        ListNode listNode3 = new ListNode(3);
-        ListNode listNode4 = new ListNode(3);
-        ListNode listNode5 = new ListNode(4);
-        ListNode listNode6 = new ListNode(4);
-        ListNode listNode7 = new ListNode(5);
+        ListNode listNode1 = new ListNode(-129);
+        ListNode listNode2 = new ListNode(-129);
+//        ListNode listNode3 = new ListNode(3);
+//        ListNode listNode4 = new ListNode(4);
+//        ListNode listNode5 = new ListNode(5);
+//        ListNode listNode6 = new ListNode(4);
+//        ListNode listNode7 = new ListNode(5);
 
-        listNode6.next = listNode7;
-        listNode5.next = listNode6;
-        listNode4.next = listNode5;
-        listNode3.next = listNode4;
-        listNode2.next = listNode3;
+//        listNode6.next = listNode7;
+//        listNode5.next = listNode6;
+//        listNode4.next = listNode5;
+//        listNode3.next = listNode4;
+//        listNode2.next = listNode3;
         listNode1.next = listNode2;
 
 //        ListNode listNode2 = new ListNode(1);
@@ -50,7 +50,10 @@ public class LinkListProblem {
         // 541 + 762 = 613
 //        linkListProblem.addTwoNumbers(listNode1,listNode2);
 //        linkListProblem.deleteDuplicatesKeep(listNode1);
-        linkListProblem.removeNthFromEnd(listNode1, 2);
+//        linkListProblem.removeNthFromEnd(listNode1, 2);
+//        linkListProblem.reorderList(listNode1);
+        linkListProblem.isPalindrome(listNode1);
+        System.out.println(listNode1);
     }
 
     /**
@@ -459,4 +462,81 @@ public class LinkListProblem {
         return ans;
     }
 
+    /**
+     * 143. 重排链表
+     * 给定一个单链表 L：L0→L1→…→Ln-1→Ln ，
+     * 将其重新排列后变为： L0→Ln→L1→Ln-1→L2→Ln-2→…
+     *
+     * 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+     */
+    public void reorderList(ListNode head) {
+        if(head == null){
+            return;
+        }
+        ListNode dummy = head.next;
+        Deque<ListNode> list = new ArrayDeque<>();
+        while (dummy != null){
+            list.add(dummy);
+            dummy = dummy.next;
+        }
+
+        ListNode p1 = head.next,pre = head;
+        while (p1 != null && p1.next != null){
+            ListNode node = list.removeLast();
+            pre.next = node;
+            node.next = p1;
+            list.getLast().next = null;
+
+            pre = p1;
+            p1 = p1.next;
+        }
+    }
+
+    /**
+     * 234. 回文链表
+     * 请判断一个链表是否为回文链表。
+     */
+    public boolean isPalindrome(ListNode head) {
+        List<Integer> list = new ArrayList<>();
+        while(head != null){
+            list.add(head.val);
+            head = head.next;
+        }
+
+        int x = 0,y = list.size() - 1;
+        while(x < y){
+            Integer integer = list.get(x++);
+
+            Integer integer1 = list.get(y--);
+            if(!integer . equals(integer1)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 328. 奇偶链表
+     * 给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。
+     * 请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。
+     * 示例 1:
+     * 输入: 1->2->3->4->5->NULL
+     * 输出: 1->3->5->2->4->NULL
+     */
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode evenHead = head.next;
+        ListNode odd = head, even = evenHead;
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+        odd.next = evenHead;
+        return head;
+    }
 }

@@ -32,7 +32,13 @@ public class ArrayProblem {
 //        System.out.println(problem.maximalSquare(new char[][]{{'0','1'}}));
 //        System.out.println(problem.removeDuplicates(new int[]{1,1,2,3}));
 //        System.out.println(problem.threeConsecutiveOdds(new int[]{1,1,1}));
-        System.out.println(problem.threeSum(new int[]{-2,0,0,2,2}));
+//        System.out.println(problem.threeSum(new int[]{-2,0,0,2,2}));
+        Integer[] nums = {-959151711,623836953,209446690,-1950418142,1339915067,-733626417,481171539,-2125997010,-1225423476,1462109565,147434687,-1800073781,-1431212205,-450443973,50097298,753533734,-747189404,-2070885638,0,-1484353894,-340296594,-2133744570,619639811,-1626162038,669689561,0,112220218,502447212,-787793179,0,-726846372,-1611013491,204107194,1605165582,-566891128,2082852116,0,532995238,-1502590712,0,2136989777,-2031153343,371398938,-1907397429,342796391,609166045,-2007448660,-1096076344,-323570318,0,-2082980371,2129956379,-243553361,-1549960929,1502383415,0,-1394618779,694799815,78595689,-1439173023,-1416578800,685225786,-333502212,-1181308536,-380569313,772035354,0,-915266376,663709718,1443496021,-777017729,-883300731,-387828385,1907473488,-725483724,-972961871,-1255712537,383120918,1383877998,1722751914,0,-1156050682,1952527902,-560244497,1304305692,1173974542,-1313227247,-201476579,-298899493,-1828496581,-1724396350,1933643204,1531804925,1728655262,-955565449,0,-69843702,-461760848,268336768,1446130876};
+        problem.moveZeroes(nums);
+        for (Integer num : nums) {
+            System.out.print(num + "\t");
+        }
+
     }
 
     /**
@@ -541,4 +547,210 @@ public class ArrayProblem {
         return ans;
     }
 
+    /**
+     * 454. 四数相加 II
+     * 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+     *
+     * 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。
+     * 所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1 。
+     */
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        Map<Integer,Integer> countAB = new HashMap<>();
+        for (int a : A) {
+            for (int b : B) {
+                countAB.put(a + b,countAB.getOrDefault(a + b,0) + 1);
+            }
+        }
+
+        int ans = 0;
+        for (int c : C) {
+            for (int d : D) {
+                if(countAB.containsKey(-1 * (c + d))){
+                    ans += countAB.get(-1 * (c + d));
+                }
+            }
+        }
+        return ans;
+    }
+
+
+    /**
+     * 75. 颜色分类
+     * 给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+     *
+     * 此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+     *
+     * 注意:
+     * 不能使用代码库中的排序函数来解决这道题。
+     */
+    public void sortColors(int[] nums) {
+        if(nums.length < 2){
+            return;
+        }
+        int p0 = 0,p1 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            if(num == 0){
+                swap(nums,i,p0);
+                if(p0 < p1){
+                    swap(nums,i,p1);
+                }
+                p0++;
+                p1++;
+            }else if(num == 1){
+                swap(nums,i,p1);
+                p1++;
+            }
+        }
+    }
+
+    public void swap(int[] nums,int i,int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    /**
+     * 1207. 独一无二的出现次数
+     * 给你一个整数数组 arr，请你帮忙统计数组中每个数的出现次数。
+     *
+     * 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
+     */
+    public boolean uniqueOccurrences(int[] arr) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int x : arr) {
+            map.put(x, map.getOrDefault(x, 0) + 1);
+        }
+
+        Set<Integer> set = new HashSet<>();
+        Iterator<Map.Entry<Integer,Integer>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()){
+            Integer value = iterator.next().getValue();
+            if(!set.add(value)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 463. 岛屿的周长
+     * 给定一个包含 0 和 1 的二维网格地图，其中 1 表示陆地 0 表示水域。
+     * 网格中的格子水平和垂直方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
+     * 岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。
+     * 计算这个岛屿的周长。
+     */
+    public int islandPerimeter(int[][] grid) {
+        int result = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(grid[i][j] == 0){
+                    continue;
+                }
+                result += getPerimeter(grid,i,j);
+            }
+        }
+        return result;
+    }
+
+    public int getPerimeter(int[][] grid,int x,int y){
+        int result = 0;
+        if(x - 1 < 0 || grid[x - 1][y] == 0){
+            result++;
+        }
+        if(y - 1 < 0 || grid[x][y - 1] == 0){
+            result++;
+        }
+        if(x + 1 == grid.length || grid[x + 1][y] == 0){
+            result++;
+        }
+        if(y + 1 == grid[x].length || grid[x][y + 1] == 0){
+            result++;
+        }
+        return result;
+    }
+
+    /**
+     * 57. 插入区间
+     * 给出一个无重叠的 ，按照区间起始端点排序的区间列表。
+     *
+     * 在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
+     */
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int left = newInterval[0];
+        int right = newInterval[1];
+        // 判断要插入的区间的右侧是否有数据
+        boolean flag = false;
+        List<int[]> list = new ArrayList<>();
+        for (int[] interval : intervals) {
+
+            // 如果该区间的右边比left小，直接add
+            if(interval[1] < left){
+                list.add(interval);
+            }else if(interval[0] > right){
+                // 如果该区间的左边比left大，说明在右侧且无交集
+                if(!flag) {
+                    // 如果右侧有数据，则先加入要插入的区间，再加入该区间
+                    list.add(new int[]{left, right});
+                    flag = true;
+                }
+                list.add(interval);
+            }else {
+                // 取并集
+                left = Math.min(left,interval[0]);
+                right = Math.max(right,interval[1]);
+            }
+        }
+        if (!flag) {
+            list.add(new int[]{left, right});
+        }
+        int[][] ans = new int[list.size()][2];
+        for (int i = 0; i < list.size(); i++) {
+            ans[i] = list.get(i);
+        }
+        return ans;
+    }
+
+    /**
+     * 283. 移动零
+     * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+     * 示例:
+     * 输入: [0,1,0,3,12]
+     * 输出: [1,3,12,0,0]
+     */
+    public void moveZeroes(Integer[] nums) {
+//        int a = 0,b = 0;
+//        while (b < nums.length){
+//            if(nums[b] != 0){
+//                swap(nums,a,b);
+//                a++;
+//            }
+//            b++;
+//        }
+
+//        int index = 0;
+//        for (int i = 0; i < nums.length; i++) {
+//            if(nums[i] != 0){
+//                nums[index++] = nums[i];
+//            }
+//        }
+//        while (index < nums.length){
+//            nums[index++] = 0;
+//        }
+        List<Integer> list = new ArrayList<>(Arrays.asList(nums));
+        list.sort((o1, o2) -> {
+            if (o1 != 0 && o2 == 0) {
+                return -1;
+            } else if (o1 == 0 && o2 != 0){
+                return 1;
+            }else {
+                return 0;
+            }
+        });
+
+        int index = 0;
+        for (Integer integer : list) {
+          nums[index++] = integer;
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.mh.leetcode;
 
+import com.mh.leetcode.bean.TreeNode;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.*;
@@ -783,5 +784,59 @@ public class BacktrackProblem {
             distSum[neighbor] = distSum[root] - nodeNum[neighbor] + (graph.size() - nodeNum[neighbor]);
             preOrder(neighbor, root);
         }
+    }
+
+    /**
+     * 337. 打家劫舍 III
+     * 在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。
+     * 这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。
+     * 一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。
+     * 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+     * 计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+     */
+    public int rob(TreeNode root) {
+//        int[] ans = dp(root);
+//        return Math.max(ans[0],ans[1]);
+
+        // 备忘录解法
+        if(root == null){
+            return 0;
+        }
+        if(map.containsKey(root)){
+            return map.get(root);
+        }
+
+        // 抢这家,去下下家
+        int yesRob = root.val
+                + ( root.left == null ? 0 : rob(root.left.left) + rob(root.left.right))
+                + ( root.right == null ? 0 : rob(root.right.left) + rob(root.right.right));
+
+        // 不抢这家，去左右两边下家
+        int noRob = rob(root.right) + rob(root.left);
+
+        int res = Math.max(yesRob,noRob);
+        map.put(root,res);
+        return res;
+
+    }
+    Map<TreeNode,Integer> map = new HashMap<>();
+
+    public int[] dp(TreeNode node){
+        // int[0] 表示这个节点不被抢的收益 int[1] 被抢的收益
+        if(node == null){
+            return new int[]{0,0};
+        }
+
+        // 左节点
+        int[] left = dp(node.left);
+        int[] right = dp(node.right);
+
+        // 抢这个节点
+        int yesRob = node.val + left[0] + right[0];
+
+        // 不抢这个 判断左边 和 右边的情况哪个大
+        int noRob = Math.max(left[0],left[1]) + Math.max(right[0],right[1]);
+
+        return new int[]{noRob,yesRob};
     }
 }
