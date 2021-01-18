@@ -122,4 +122,6 @@ public class Competion {
 
         return total < 0 ? -1 : ans;
     }
+
+
 }
