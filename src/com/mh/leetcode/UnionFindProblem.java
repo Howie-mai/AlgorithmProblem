@@ -13,7 +13,7 @@ public class UnionFindProblem {
 
     public static void main(String[] args) {
         UnionFindProblem problem = new UnionFindProblem();
-        problem.trulyMostPopular(new String[]{"John(15)","Jon(12)","Chris(13)","Kris(4)","Christopher(19)"},new String[]{"(Jon,John)","(John,Johnny)","(Chris,Kris)","(Chris,Christopher)"});
+        problem.minCostConnectPoints(new int[][]{{0,0},{2,2},{3,10},{5,2},{7,0}});
     }
 
     /**
@@ -32,26 +32,26 @@ public class UnionFindProblem {
         Map<String, String> names = new HashMap<>();
         for (List<String> account : accounts) {
             for (int i = 1; i < account.size(); i++) {
-                if(!map.containsKey(account.get(i))){
+                if (!map.containsKey(account.get(i))) {
                     // 建立关系
-                    map.put(account.get(i),account.get(i));
+                    map.put(account.get(i), account.get(i));
                     // 建立名字关系
-                    names.put(account.get(i),account.get(0));
+                    names.put(account.get(i), account.get(0));
                 }
                 // 如果该用户有多个邮箱，建立并查集关系
-                if(i > 1){
-                    map.put(findStrByMap(map,account.get(i)),findStrByMap(map,account.get(i - 1)));
+                if (i > 1) {
+                    map.put(findStrByMap(map, account.get(i)), findStrByMap(map, account.get(i - 1)));
                 }
             }
         }
 
-        Map<String,List<String>> temp = new HashMap<>();
+        Map<String, List<String>> temp = new HashMap<>();
         // 把相同用户整合起来
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String parent = findStrByMap(map, key);
-            if(!temp.containsKey(parent)){
-                temp.put(parent,new ArrayList<>());
+            if (!temp.containsKey(parent)) {
+                temp.put(parent, new ArrayList<>());
             }
             temp.get(parent).add(key);
         }
@@ -62,14 +62,21 @@ public class UnionFindProblem {
             List<String> list = temp.get(key);
             ans.add(list);
             Collections.sort(list);
-            list.add(0,names.get(key));
+            list.add(0, names.get(key));
         }
         return ans;
     }
 
     private String findStrByMap(Map<String, String> map, String s) {
-        while (!map.get(s).equals(s)){
+        while (!map.get(s).equals(s)) {
             s = map.get(s);
+        }
+        return s;
+    }
+
+    private int findByInt(int[] parent, int s) {
+        while (parent[s] != s) {
+            s = parent[s];
         }
         return s;
     }
@@ -88,31 +95,31 @@ public class UnionFindProblem {
         Map<String, String> map = new HashMap<>();
         for (String name : names) {
             int beginIndex = name.indexOf("(");
-            String key = name.substring(0,beginIndex);
+            String key = name.substring(0, beginIndex);
             int endIndex = name.lastIndexOf(")");
             int num = Integer.parseInt(name.substring(beginIndex + 1, endIndex));
-            map.put(key,key);
-            count.put(key,num);
+            map.put(key, key);
+            count.put(key, num);
         }
 
         for (String synonym : synonyms) {
             String[] split = synonym.substring(1, synonym.length() - 1).split(",");
-            if(!map.containsKey(split[0])){
-                map.put(split[0],split[0]);
+            if (!map.containsKey(split[0])) {
+                map.put(split[0], split[0]);
             }
-            if(!map.containsKey(split[1])){
-                map.put(split[1],split[1]);
+            if (!map.containsKey(split[1])) {
+                map.put(split[1], split[1]);
             }
-            map.put(findStrByMap(map,split[1]),findStrByMap(map,split[0]));
+            map.put(findStrByMap(map, split[1]), findStrByMap(map, split[0]));
         }
 
-        Map<String,List<String>> relation = new HashMap<>();
+        Map<String, List<String>> relation = new HashMap<>();
         // 把相同用户整合起来
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String parent = findStrByMap(map, key);
-            if(!relation.containsKey(parent)){
-                relation.put(parent,new ArrayList<>());
+            if (!relation.containsKey(parent)) {
+                relation.put(parent, new ArrayList<>());
             }
             relation.get(parent).add(key);
         }
@@ -126,11 +133,63 @@ public class UnionFindProblem {
             sb.append(value.get(0)).append("(");
             int sum = 0;
             for (String s : value) {
-                sum += count.getOrDefault(s,0);
+                sum += count.getOrDefault(s, 0);
             }
             sb.append(sum).append(")");
             ans[index++] = sb.toString();
         }
         return ans;
+    }
+
+    /**
+     * 1584. 连接所有点的最小费用
+     * 给你一个points 数组，表示 2D 平面上的一些点，其中 points[i] = [xi, yi] 。
+     * 连接点 [xi, yi] 和点 [xj, yj] 的费用为它们之间的 曼哈顿距离 ：|xi - xj| + |yi - yj| ，其中 |val| 表示 val 的绝对值。
+     * 请你返回将所有点连接的最小总费用。只有任意两点之间 有且仅有 一条简单路径时，才认为所有点都已连接。
+     */
+    public int minCostConnectPoints(int[][] points) {
+        int length = points.length;
+        List<Edge> list = new LinkedList<>();
+        for (int i = 0; i < length; i++) {
+            for (int j = i + 1; j < length; j++) {
+                list.add(new Edge(i,j,getManhattanDistance(points[i][0],points[i][1],points[j][0],points[j][1])));
+            }
+        }
+
+        int[] parent = new int[length];
+        for (int i = 0; i < length; i++) {
+            parent[i] = i;
+        }
+        list.sort(Comparator.comparingInt(o -> o.val));
+
+        int ans = 0;
+        while (length > 1){
+            Edge edge = list.get(0);
+            int xParent = findByInt(parent,edge.a);
+            int yParent = findByInt(parent,edge.b);
+            if(xParent != yParent){
+                parent[xParent] = yParent;
+                ans += edge.val;
+                length--;
+            }
+            list.remove(0);
+        }
+        return ans;
+    }
+
+    public int getManhattanDistance(int x,int y,int x1,int y1){
+        return Math.abs(y1 - y) + Math.abs(x1 - x);
+    }
+}
+
+class Edge{
+    int a;
+    int b;
+    int val;
+
+    public Edge(int a, int b, int val) {
+        this.a = a;
+        this.b = b;
+        this.val = val;
     }
 }
