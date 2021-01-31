@@ -1,5 +1,7 @@
 package com.mh;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
@@ -13,7 +15,11 @@ import java.util.regex.Pattern;
  */
 public class Main3 {
     public static void main(String[] args) {
-       deadLine();
+        Date date = new Date(1577511903000L);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+        String format = dateFormat.format(date);
+        System.out.println(format);
+//       deadLine();
     }
 
     public static void deadLine(){

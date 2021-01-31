@@ -16,7 +16,7 @@ public class CommonProblem {
 //        commonProblem.reverse(123456);
 //        System.out.println(commonProblem.fib(45));
 //        System.out.println(commonProblem.countSubstrings("aaaaa"));
-        System.out.println(commonProblem.judgePoint24(new int[]{1, 8, 8, 10}));
+//        System.out.println(commonProblem.judgePoint24(new int[]{1, 8, 8, 10}));
 //        System.out.println(commonProblem.rangeBitwiseAnd(1,7));
 //        System.out.println(commonProblem.repeatedSubstringPattern("abaababaababaab"));
 //        System.out.println(commonProblem.reverseWords("Let's take LeetCode contest"));
@@ -39,7 +39,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.reconstructQueue(new int[][]{{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}}));
 //        System.out.println(commonProblem.allCellsDistOrder(6,5,3,4));
 //        System.out.println(commonProblem.canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
-        System.out.println(commonProblem.countPrimes(499979));
+//        System.out.println(commonProblem.countPrimes(499979));
+        System.out.println(commonProblem.prefixesDivBy5(new int[]{1,1,0,0,0,1,0,0,1}));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -1116,5 +1117,49 @@ public class CommonProblem {
         }
 
         return (char) (after - pre);
+    }
+
+    /**
+     * 830. 较大分组的位置
+     * 在一个由小写字母构成的字符串 s 中，包含由一些连续的相同字符所构成的分组。
+     * 例如，在字符串 s = "abbxxxxzyy" 中，就含有 "a", "bb", "xxxx", "z" 和 "yy" 这样的一些分组。
+     * 分组可以用区间 [start, end] 表示，其中 start 和 end 分别表示该分组的起始和终止位置的下标。
+     * 上例中的 "xxxx" 分组用区间表示为 [3,6] 。
+     * 我们称所有包含大于或等于三个连续字符的分组为 较大分组 。
+     * 找到每一个 较大分组 的区间，按起始位置下标递增顺序排序后，返回结果。
+     */
+    public List<List<Integer>> largeGroupPositions(String s) {
+        List<List<Integer>> ret = new ArrayList<>();
+        int n = s.length();
+        int num = 1;
+        for (int i = 0; i < n; i++) {
+            if (i == n - 1 || s.charAt(i) != s.charAt(i + 1)) {
+                if (num >= 3) {
+                    ret.add(Arrays.asList(i - num + 1, i));
+                }
+                num = 1;
+            } else {
+                num++;
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * 1018. 可被 5 整除的二进制前缀
+     * 给定由若干 0 和 1 组成的数组 A。我们定义 N_i：从 A[0] 到 A[i] 的第 i 个子数组被解释为一个二进制数（从最高有效位到最低有效位）。
+     *
+     * 返回布尔值列表 answer，只有当 N_i 可以被 5 整除时，答案 answer[i] 为 true，否则为 false。
+     */
+    public List<Boolean> prefixesDivBy5(int[] A) {
+        List<Boolean> ans = new ArrayList<>();
+        int num = 0;
+        for (int value : A) {
+            num += value;
+            num %= 10;
+            ans.add(num % 5 == 0);
+            num *= 2;
+        }
+        return ans;
     }
 }

@@ -10,7 +10,6 @@ import java.util.*;
  * @author mh
  */
 public class GreedyProblem {
-
     public static void main(String[] args) {
         GreedyProblem greedyProblem = new GreedyProblem();
         int[] nums1 = new int[]{2, 5, 6, 4, 4, 0};
@@ -19,7 +18,7 @@ public class GreedyProblem {
 //        System.out.println(Arrays.toString(greedyProblem.getMaxSubsequence(new int[]{9, 1, 2, 5, 8, 3}, 1)));
 //        System.out.println(Arrays.toString(greedyProblem.merge(nums1, nums2, 15)));
 //        System.out.println(greedyProblem.removeKdigits("99899",1));
-        System.out.println(greedyProblem.monotoneIncreasingDigits(332));
+//        System.out.println(greedyProblem.monotoneIncreasingDigits(332));
     }
 
     /**
@@ -321,5 +320,61 @@ public class GreedyProblem {
             }
         }
         return Integer.parseInt(new String(strN));
+    }
+
+    /**
+     * 135. 分发糖果
+     * 老师想给孩子们分发糖果，有 N 个孩子站成了一条直线，老师会根据每个孩子的表现，预先给他们评分。
+     * 你需要按照以下要求，帮助老师给这些孩子分发糖果：
+     * 每个孩子至少分配到 1 个糖果。
+     * 相邻的孩子中，评分高的孩子必须获得更多的糖果。
+     * 那么这样下来，老师至少需要准备多少颗糖果呢？
+     */
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        int[] left = new int[n];
+        for (int i = 0; i < n; i++) {
+            if(i > 0 && ratings[i] > ratings[i - 1]){
+                left[i] = left[i - 1] + 1;
+            }else {
+                left[i] = 1;
+            }
+        }
+
+        int right = 0,ans = 0;
+        for (int i = n - 1; i >=0 ; i--) {
+            if(i < n - 1 && ratings[i] > ratings[i + 1]){
+                right++;
+            }else {
+                right = 1;
+            }
+
+            ans += Math.max(left[i],right);
+        }
+        return ans;
+    }
+
+    /**
+     * 455. 分发饼干
+     * 假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。
+     * 对每个孩子 i，都有一个胃口值 g[i]，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 j，都有一个尺寸 s[j] 。
+     * 如果 s[j] >= g[i]，我们可以将这个饼干 j 分配给孩子 i ，这个孩子会得到满足。
+     * 你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
+     */
+    public int findContentChildren(int[] g, int[] s) {
+        int ans = 0;
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int a = 0, b = 0;
+        while (a < g.length && b < s.length){
+            if(s[b] >= g[a]){
+                a++;
+                b++;
+                ans++;
+            }else if(g[a] > s[b]){
+                b++;
+            }
+        }
+        return ans;
     }
 }

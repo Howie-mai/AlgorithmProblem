@@ -34,7 +34,9 @@ public class ArrayProblem {
 //        System.out.println(problem.threeConsecutiveOdds(new int[]{1,1,1}));
 //        System.out.println(problem.threeSum(new int[]{-2,0,0,2,2}));
         problem.rotate(new int[][]{{1,2,3},{4,5,6},{7,8,9}});
-
+        int[] nums = new int[]{1,2};
+        problem.rotate(nums,2);
+        System.out.println(Arrays.toString(nums));
     }
 
     /**
@@ -281,7 +283,7 @@ public class ArrayProblem {
      * 在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。
      */
     public int maximalSquare(char[][] matrix) {
-        if(matrix.length == 0){
+        if (matrix.length == 0) {
             return 0;
         }
 
@@ -296,25 +298,61 @@ public class ArrayProblem {
 //            dp[i][0] = matrix[i][0] - '0';
 //        }
 
-        for (int i = 0;i < matrix.length;i++){
-            for (int j = 0;j < matrix[i].length;j++){
-                if(matrix[i][j] == '0'){
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] == '0') {
                     continue;
                 }
 
-                if(i == 0 || j == 0){
+                if (i == 0 || j == 0) {
                     dp[i][j] = matrix[i][j] - '0';
-                    sum = Math.max(sum,dp[i][j]);
+                    sum = Math.max(sum, dp[i][j]);
                     continue;
                 }
 
-                int a =  Math.min(dp[i][j - 1],dp[i - 1][j]);
-                int b =  Math.min(a,dp[i - 1][j - 1]) + 1;
+                int a = Math.min(dp[i][j - 1], dp[i - 1][j]);
+                int b = Math.min(a, dp[i - 1][j - 1]) + 1;
                 dp[i][j] = b;
-                sum = Math.max(b * b , sum);
+                sum = Math.max(b * b, sum);
             }
         }
         return sum;
+    }
+
+    /**
+     * 85. 最大矩形
+     * 给定一个仅包含 0 和 1 、大小为 rows x cols 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
+     */
+    public int maximalRectangle(char[][] matrix) {
+        int rows = matrix.length;
+        if (rows == 0){
+            return 0;
+        }
+        int columns = matrix[0].length;
+        int[][] dp = new int[rows][columns];
+        //求长度
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == '1') {
+                    dp[i][j] = j == 0 ? 1 : dp[i][j - 1] + 1;
+                }
+            }
+        }
+        int area = 0;
+        //求面积
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == '0'){
+                    continue;
+                }
+                int len = dp[i][j];
+                for (int k = i; k >= 0 && matrix[k][j] == '1'; k--) {
+                    len = Math.min(len, dp[k][j]);
+                    area = Math.max(area, (i - k + 1) * len);
+                }
+            }
+        }
+        return area;
     }
 
     /**
@@ -330,26 +368,26 @@ public class ArrayProblem {
     public void nextPermutation(int[] nums) {
         int start = -1;
         for (int i = nums.length - 2; i >= 0; i--) {
-            if(nums[i] <= nums[i + 1]){
+            if (nums[i] <= nums[i + 1]) {
                 start = i;
                 break;
             }
         }
 
-        if(start == -1){
+        if (start == -1) {
             Arrays.sort(nums);
             return;
         }
 
         for (int i = nums.length - 1; i >= 0; i--) {
-            if(nums[i] > nums[start]){
+            if (nums[i] > nums[start]) {
                 // 交换
-                swapNum(nums,i,start);
+                swapNum(nums, i, start);
                 break;
             }
         }
         // 把[end,nums.length-1]区间的数变为升序
-        reverse(nums,start + 1);
+        reverse(nums, start + 1);
     }
 
     private void swapNum(int[] nums, int i, int start) {
@@ -371,13 +409,13 @@ public class ArrayProblem {
     /**
      * 26. 删除排序数组中的重复项
      * 给定一个排序数组，你需要在 原地 删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。
-     *
+     * <p>
      * 不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
      */
     public int removeDuplicates(int[] nums) {
         int i = 0;
         for (int j = 1; j < nums.length; j++) {
-            if(nums[i] != nums[j]){
+            if (nums[i] != nums[j]) {
                 i++;
                 nums[i] = nums[j];
             }
@@ -391,20 +429,20 @@ public class ArrayProblem {
      * 给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false 。
      */
     public boolean threeConsecutiveOdds(int[] arr) {
-        for(int i = 0;i < arr.length;i++){
-            if(arr[i] % 2 == 0){
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] % 2 == 0) {
                 continue;
             }
 
             int j = i;
             i++;
-            while(i < arr.length && arr[i] % 2 != 0 && i - j < 3) {
+            while (i < arr.length && arr[i] % 2 != 0 && i - j < 3) {
                 i++;
             }
-            if(i - j == 3){
+            if (i - j == 3) {
                 return true;
             }
-            if(i == arr.length){
+            if (i == arr.length) {
                 return false;
             }
         }
@@ -414,15 +452,15 @@ public class ArrayProblem {
     /**
      * 27. 移除元素
      * 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
-     *
+     * <p>
      * 不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。
-     *
+     * <p>
      * 元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
      */
     public int removeElement(int[] nums, int val) {
         int ans = 0;
         for (int i = 0; i < nums.length; i++) {
-            if(nums[i] != val){
+            if (nums[i] != val) {
                 nums[ans] = val;
                 ans++;
             }
@@ -440,33 +478,33 @@ public class ArrayProblem {
         List<List<Integer>> ans = new ArrayList<>();
         Deque<Integer> temp = new ArrayDeque<>();
         for (int i = 0; i < nums.length; i++) {
-            if(nums[i] > 0){
+            if (nums[i] > 0) {
                 break;
             }
-            if(i > 0 && nums[i] == nums[i - 1]){
+            if (i > 0 && nums[i] == nums[i - 1]) {
                 continue;
             }
 
-            int left = i + 1 ;
+            int left = i + 1;
             int right = nums.length - 1;
             int remain = -nums[i];
             temp.add(nums[i]);
-            while (left < right){
+            while (left < right) {
                 int count = nums[left] + nums[right];
-                if(count > remain){
+                if (count > remain) {
                     right--;
-                }else if(count < remain){
+                } else if (count < remain) {
                     left++;
-                }else {
+                } else {
                     temp.add(nums[left]);
                     temp.add(nums[right]);
                     ans.add(new ArrayList<>(temp));
                     temp.removeLast();
                     temp.removeLast();
-                    while (left < right && nums[left] == nums[left + 1]){
+                    while (left < right && nums[left] == nums[left + 1]) {
                         left++;
                     }
-                    while (left < right && nums[right] == nums[right - 1]){
+                    while (left < right && nums[right] == nums[right - 1]) {
                         right--;
                     }
                     left++;
@@ -546,22 +584,22 @@ public class ArrayProblem {
     /**
      * 454. 四数相加 II
      * 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
-     *
+     * <p>
      * 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。
      * 所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1 。
      */
     public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
-        Map<Integer,Integer> countAB = new HashMap<>();
+        Map<Integer, Integer> countAB = new HashMap<>();
         for (int a : A) {
             for (int b : B) {
-                countAB.put(a + b,countAB.getOrDefault(a + b,0) + 1);
+                countAB.put(a + b, countAB.getOrDefault(a + b, 0) + 1);
             }
         }
 
         int ans = 0;
         for (int c : C) {
             for (int d : D) {
-                if(countAB.containsKey(-1 * (c + d))){
+                if (countAB.containsKey(-1 * (c + d))) {
                     ans += countAB.get(-1 * (c + d));
                 }
             }
@@ -573,34 +611,34 @@ public class ArrayProblem {
     /**
      * 75. 颜色分类
      * 给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
-     *
+     * <p>
      * 此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
-     *
+     * <p>
      * 注意:
      * 不能使用代码库中的排序函数来解决这道题。
      */
     public void sortColors(int[] nums) {
-        if(nums.length < 2){
+        if (nums.length < 2) {
             return;
         }
-        int p0 = 0,p1 = 0;
+        int p0 = 0, p1 = 0;
         for (int i = 0; i < nums.length; i++) {
             int num = nums[i];
-            if(num == 0){
-                swap(nums,i,p0);
-                if(p0 < p1){
-                    swap(nums,i,p1);
+            if (num == 0) {
+                swap(nums, i, p0);
+                if (p0 < p1) {
+                    swap(nums, i, p1);
                 }
                 p0++;
                 p1++;
-            }else if(num == 1){
-                swap(nums,i,p1);
+            } else if (num == 1) {
+                swap(nums, i, p1);
                 p1++;
             }
         }
     }
 
-    public void swap(int[] nums,int i,int j){
+    public void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
@@ -609,20 +647,20 @@ public class ArrayProblem {
     /**
      * 1207. 独一无二的出现次数
      * 给你一个整数数组 arr，请你帮忙统计数组中每个数的出现次数。
-     *
+     * <p>
      * 如果每个数的出现次数都是独一无二的，就返回 true；否则返回 false。
      */
     public boolean uniqueOccurrences(int[] arr) {
-        Map<Integer,Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         for (int x : arr) {
             map.put(x, map.getOrDefault(x, 0) + 1);
         }
 
         Set<Integer> set = new HashSet<>();
-        Iterator<Map.Entry<Integer,Integer>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()){
+        Iterator<Map.Entry<Integer, Integer>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
             Integer value = iterator.next().getValue();
-            if(!set.add(value)){
+            if (!set.add(value)) {
                 return false;
             }
         }
@@ -640,27 +678,27 @@ public class ArrayProblem {
         int result = 0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                if(grid[i][j] == 0){
+                if (grid[i][j] == 0) {
                     continue;
                 }
-                result += getPerimeter(grid,i,j);
+                result += getPerimeter(grid, i, j);
             }
         }
         return result;
     }
 
-    public int getPerimeter(int[][] grid,int x,int y){
+    public int getPerimeter(int[][] grid, int x, int y) {
         int result = 0;
-        if(x - 1 < 0 || grid[x - 1][y] == 0){
+        if (x - 1 < 0 || grid[x - 1][y] == 0) {
             result++;
         }
-        if(y - 1 < 0 || grid[x][y - 1] == 0){
+        if (y - 1 < 0 || grid[x][y - 1] == 0) {
             result++;
         }
-        if(x + 1 == grid.length || grid[x + 1][y] == 0){
+        if (x + 1 == grid.length || grid[x + 1][y] == 0) {
             result++;
         }
-        if(y + 1 == grid[x].length || grid[x][y + 1] == 0){
+        if (y + 1 == grid[x].length || grid[x][y + 1] == 0) {
             result++;
         }
         return result;
@@ -669,7 +707,7 @@ public class ArrayProblem {
     /**
      * 57. 插入区间
      * 给出一个无重叠的 ，按照区间起始端点排序的区间列表。
-     *
+     * <p>
      * 在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
      */
     public int[][] insert(int[][] intervals, int[] newInterval) {
@@ -681,20 +719,20 @@ public class ArrayProblem {
         for (int[] interval : intervals) {
 
             // 如果该区间的右边比left小，直接add
-            if(interval[1] < left){
+            if (interval[1] < left) {
                 list.add(interval);
-            }else if(interval[0] > right){
+            } else if (interval[0] > right) {
                 // 如果该区间的左边比left大，说明在右侧且无交集
-                if(!flag) {
+                if (!flag) {
                     // 如果右侧有数据，则先加入要插入的区间，再加入该区间
                     list.add(new int[]{left, right});
                     flag = true;
                 }
                 list.add(interval);
-            }else {
+            } else {
                 // 取并集
-                left = Math.min(left,interval[0]);
-                right = Math.max(right,interval[1]);
+                left = Math.min(left, interval[0]);
+                right = Math.max(right, interval[1]);
             }
         }
         if (!flag) {
@@ -737,16 +775,42 @@ public class ArrayProblem {
         list.sort((o1, o2) -> {
             if (o1 != 0 && o2 == 0) {
                 return -1;
-            } else if (o1 == 0 && o2 != 0){
+            } else if (o1 == 0 && o2 != 0) {
                 return 1;
-            }else {
+            } else {
                 return 0;
             }
         });
 
         int index = 0;
         for (Integer integer : list) {
-          nums[index++] = integer;
+            nums[index++] = integer;
+        }
+    }
+
+    /**
+     * 189. 旋转数组
+     * 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+     * 示例 1:
+     * 输入: [1,2,3,4,5,6,7] 和 k = 3
+     * 输出: [5,6,7,1,2,3,4]
+     * 解释:
+     * 向右旋转 1 步: [7,1,2,3,4,5,6]
+     * 向右旋转 2 步: [6,7,1,2,3,4,5]
+     * 向右旋转 3 步: [5,6,7,1,2,3,4]
+     */
+    public void rotate(int[] nums, int k) {
+        k %= nums.length;
+        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+    }
+
+    public void reverse(int[] arr,int start,int end){
+        for(int min = start, max = end; min < max; min++, max--) {
+            int temp = arr[min];
+            arr[min] = arr[max];
+            arr[max] = temp;
         }
     }
 
