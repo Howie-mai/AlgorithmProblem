@@ -1,5 +1,7 @@
 package com.mh.leetcode;
 
+import com.mh.bean.User;
+
 import java.util.*;
 
 /**
@@ -14,6 +16,11 @@ public class UnionFindProblem {
     public static void main(String[] args) {
         UnionFindProblem problem = new UnionFindProblem();
         problem.minCostConnectPoints(new int[][]{{0,0},{2,2},{3,10},{5,2},{7,0}});
+
+        String gameUrl = "https://gm14548272331.ssl.minihaowan.com/web/game/game_id/1454827233";
+        int last = gameUrl.lastIndexOf("/");
+        String gameId = gameUrl.substring(last + 1,gameUrl.length());
+        System.out.println(gameId);
     }
 
     /**

@@ -40,7 +40,8 @@ public class CommonProblem {
 //        System.out.println(commonProblem.allCellsDistOrder(6,5,3,4));
 //        System.out.println(commonProblem.canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
 //        System.out.println(commonProblem.countPrimes(499979));
-        System.out.println(commonProblem.prefixesDivBy5(new int[]{1,1,0,0,0,1,0,0,1}));
+//        System.out.println(commonProblem.prefixesDivBy5(new int[]{1,1,0,0,0,1,0,0,1}));
+        System.out.println(commonProblem.addToArrayForm(new int[]{9,9,9,9,9,9,9,9,9},1));
         Long end = System.currentTimeMillis();
         System.out.println("执行时间：" + (end - start));
     }
@@ -1161,5 +1162,59 @@ public class CommonProblem {
             num *= 2;
         }
         return ans;
+    }
+
+    public List<Integer> addToArrayForm(int[] A, int K) {
+        int n = A.length;
+        int x = 0;
+        List<Integer> ans = new LinkedList<>();
+
+        for(int i = n - 1;i >= 0;i--){
+            int temp = A[i] + K % 10 + x;
+
+            if(temp >= 10){
+                ans.add(0,temp % 10);
+            }else {
+                ans.add(0,temp);
+            }
+
+            K /= 10;
+            x = temp / 10;
+        }
+
+        if(x > 0){
+            ans.add(0,x);
+        }
+
+        return ans;
+    }
+
+    public int[] plusOne(int[] digits) {
+        int n = digits.length;
+        int x = 0;
+        int K = 1;
+        List<Integer> ans = new LinkedList<>();
+
+        for(int i = n - 1;i >= 0;i--){
+            int temp = digits[i] + K % 10 + x;
+            if(temp >= 10){
+                ans.add(0,temp % 10);
+            }else {
+                ans.add(0,temp);
+            }
+            K = 0;
+            x = temp / 10;
+        }
+
+        if(x > 0){
+            ans.add(0,x);
+        }
+
+        int[] res = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            res[i] = ans.get(i);
+        }
+
+        return res;
     }
 }
