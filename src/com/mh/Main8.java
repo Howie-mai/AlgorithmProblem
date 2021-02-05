@@ -14,6 +14,10 @@ import java.util.*;
 public class Main8 {
     public static void main(String[] args) {
         Main8 main8 = new Main8();
+        String url = "https://wxj2021.gzyiwo.club";
+        String[] split = url.split("/");
+        System.out.println(Arrays.toString(split));
+        System.out.println(split.length);
     }
 
 }

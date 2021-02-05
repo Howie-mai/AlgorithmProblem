@@ -45,4 +45,13 @@ public class Admin implements Serializable {
         this.name = name;
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address=" + address +
+                '}';
+    }
 }
