@@ -180,7 +180,6 @@ public class SlideWindowProblem {
     /**
      * 438. 找到字符串中所有字母异位词
      * 给定一个字符串 s 和一个非空字符串 p，找到 s 中所有是 p 的字母异位词的子串，返回这些子串的起始索引。
-     *
      * 字符串只包含小写英文字母，并且字符串 s 和 p 的长度都不超过 20100。
      */
     public List<Integer> findAnagrams(String s, String p) {
@@ -245,4 +244,78 @@ public class SlideWindowProblem {
         }
         return max * 1.0 / k;
     }
+
+    /**
+     * 978. 最长湍流子数组
+     * 当 A 的子数组 A[i], A[i+1], ..., A[j] 满足下列条件时，我们称其为湍流子数组：
+     * 若 i <= k < j，当 k 为奇数时， A[k] > A[k+1]，且当 k 为偶数时，A[k] < A[k+1]；
+     * 或 若 i <= k < j，当 k 为偶数时，A[k] > A[k+1] ，且当 k 为奇数时， A[k] < A[k+1]。
+     * 也就是说，如果比较符号在子数组中的每个相邻元素对之间翻转，则该子数组是湍流子数组。
+     * 返回 A 的最大湍流子数组的长度。
+     */
+    public int maxTurbulenceSize(int[] arr) {
+        int left = 0,right = 0,ans = 1,n = arr.length;
+
+        while (right < n - 1 ){
+            if(left == right){
+                if (arr[left] == arr[left + 1]){
+                    left++;
+                }
+                right++;
+            }else {
+                if(arr[right] > arr[right - 1] && arr[right] > arr[right + 1]){
+                    right++;
+                }else if(arr[right] < arr[right - 1] && arr[right] < arr[right + 1]){
+                    right++;
+                }else {
+                    left = right;
+                }
+            }
+            ans = Math.max(ans,right - left + 1);
+        }
+        return ans;
+    }
+
+    /**
+     * 992. K 个不同整数的子数组
+     * 给定一个正整数数组 A，如果 A 的某个子数组中不同整数的个数恰好为 K，则称 A 的这个连续、不一定独立的子数组为好子数组。
+     * （例如，[1,2,3,1,2] 中有 3 个不同的整数：1，2，以及 3。）
+     * 返回 A 中好子数组的数目。
+     */
+    public int subarraysWithKDistinct(int[] A, int K) {
+        int n = A.length;
+        int[] num1 = new int[n + 1];
+        int[] num2 = new int[n + 1];
+        int tot1 = 0, tot2 = 0;
+        int left1 = 0, left2 = 0, right = 0;
+        int ret = 0;
+        while (right < n) {
+            if (num1[A[right]] == 0) {
+                tot1++;
+            }
+            num1[A[right]]++;
+            if (num2[A[right]] == 0) {
+                tot2++;
+            }
+            num2[A[right]]++;
+            while (tot1 > K) {
+                num1[A[left1]]--;
+                if (num1[A[left1]] == 0) {
+                    tot1--;
+                }
+                left1++;
+            }
+            while (tot2 > K - 1) {
+                num2[A[left2]]--;
+                if (num2[A[left2]] == 0) {
+                    tot2--;
+                }
+                left2++;
+            }
+            ret += left2 - left1;
+            right++;
+        }
+        return ret;
+    }
+
 }
