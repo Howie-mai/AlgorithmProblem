@@ -13,11 +13,13 @@ import java.util.*;
  */
 public class Main8 {
     public static void main(String[] args) {
-        Main8 main8 = new Main8();
-        String url = "https://wxj2021.gzyiwo.club";
-        String[] split = url.split("/");
-        System.out.println(Arrays.toString(split));
-        System.out.println(split.length);
+        double sum = 250;
+        for (int i = 1; i <= 9; i++) {
+            double a = Math.pow(1.5,i);
+            double b = 250 / a;
+            sum += b;
+        }
+        System.out.println(sum);
     }
 
 }

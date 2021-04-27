@@ -40,16 +40,16 @@ public class Main {
     }
 
     public synchronized void printf(char[] ch){
-//        for(;i < ch.length;i++){
-//            this.notify();
-//            try {
-//                this.wait();
-//                Thread.sleep(1000L);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println(Thread.currentThread().getName() + ch[i]);
-//        }
+        for(;i < ch.length;i++){
+            this.notify();
+            try {
+                this.wait();
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + ch[i]);
+        }
         System.out.println("123");
     }
 

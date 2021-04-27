@@ -15,11 +15,11 @@ import java.util.regex.Pattern;
  */
 public class Main3 {
     public static void main(String[] args) {
-        Date date = new Date(1577511903000L);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
-        String format = dateFormat.format(date);
-        System.out.println(format);
-//       deadLine();
+//        Date date = new Date(1577511903000L);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+//        String format = dateFormat.format(date);
+//        System.out.println(format);
+       deadLine();
     }
 
     public static void deadLine(){
