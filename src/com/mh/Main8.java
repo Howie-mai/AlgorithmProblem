@@ -12,14 +12,15 @@ import java.util.*;
  * @author mh
  */
 public class Main8 {
-    public static void main(String[] args) {
-        double sum = 250;
-        for (int i = 1; i <= 9; i++) {
-            double a = Math.pow(1.5,i);
-            double b = 250 / a;
-            sum += b;
+    public static void main(String[] args){
+        double sum = 0;
+        int i = 10;
+        while (true){
+            double a = Math.pow(2,i);
+            System.out.println(a);
+            i++;
+            sum += (500/a);
+            System.out.println(sum);
         }
-        System.out.println(sum);
     }
-
 }
